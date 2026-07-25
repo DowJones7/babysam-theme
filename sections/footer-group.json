@@ -14,6 +14,59 @@
     "footer": {
       "type": "footer",
       "blocks": {
+        "group_contact": {
+          "type": "group",
+          "name": "t:names.group",
+          "settings": {
+            "content_direction": "column",
+            "horizontal_alignment_flex_direction_column": "center",
+            "vertical_alignment_flex_direction_column": "center",
+            "gap": 8,
+            "width": "fill",
+            "padding-block-start": 0,
+            "padding-block-end": 16
+          },
+          "blocks": {
+            "text_contact_heading": {
+              "type": "text",
+              "settings": {
+                "text": "<h4>Contáctanos</h4>",
+                "alignment": "center",
+                "type_preset": "rte"
+              },
+              "blocks": {}
+            },
+            "text_contact_centro": {
+              "type": "text",
+              "settings": {
+                "text": "<p><a href=\"https://maps.app.goo.gl/P9nXXy3pyGvTc6QAA\" target=\"_blank\">Sede Centro — C.C. Zamoraco, Cra. 8 #13-82 Local 112A, Cali</a></p>",
+                "alignment": "center",
+                "type_preset": "rte"
+              },
+              "blocks": {}
+            },
+            "text_contact_sur": {
+              "type": "text",
+              "settings": {
+                "text": "<p><a href=\"https://maps.app.goo.gl/dh33xqzote4onHD79\" target=\"_blank\">Sede Sur — Cra. 70 #10A-66, Comuna 17, Cali</a></p>",
+                "alignment": "center",
+                "type_preset": "rte"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": ["text_contact_heading", "text_contact_centro", "text_contact_sur"]
+        },
+        "menu_footer_categories": {
+          "type": "menu",
+          "name": "t:names.menu",
+          "settings": {
+            "menu": "menu-principal-1",
+            "heading": "Categorías",
+            "menu_spacing": 8,
+            "show_as_accordion": false
+          }
+        },
         "group_gnypdT": {
           "type": "group",
           "name": "t:names.group",
@@ -181,6 +234,8 @@
         }
       },
       "block_order": [
+        "group_contact",
+        "menu_footer_categories",
         "group_gnypdT",
         "payment_icons_byxFbY",
         "logo_etVmm6"
