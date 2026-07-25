@@ -7,6 +7,9 @@
 >
   <div class="footer-utilities__group footer-utilities__group--left">
     {% content_for 'block', type: '_footer-copyright', id: 'copyright' %}
+    <p class="footer-utilities__credit">
+      <a href="https://storyset.com/people" target="_blank" rel="noopener">People illustrations by Storyset</a>
+    </p>
     {% content_for 'block', type: '_footer-policy-list', id: 'policy_list' %}
   </div>
 
@@ -37,6 +40,11 @@
 
   .footer-utilities a {
     color: var(--color-foreground-muted);
+  }
+
+  .footer-utilities__credit {
+    font-size: 12px;
+    opacity: 0.7;
   }
 
   .footer-utilities__group {
