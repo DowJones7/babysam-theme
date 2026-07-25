@@ -1,0 +1,178 @@
+{% comment %}
+  The `button` block settings must include the following keys:
+  - `label` (text)
+  - `link` (url)
+  - `whatsapp_number` (text)
+  - `whatsapp_message` (text)
+  - `open_in_new_tab` (checkbox)
+  - `style_class` (select)
+  - `width` (select)
+  - `custom_width` (range)
+  - `width_mobile` (select)
+  - `custom_width_mobile` (range)
+{% endcomment %}
+
+{% liquid
+  assign button_label = block.settings.label
+  assign button_link = block.settings.link
+  assign whatsapp_number = block.settings.whatsapp_number | replace: ' ', '' | replace: '(', '' | replace: ')', '' | replace: '-', ''
+  assign whatsapp_message = block.settings.whatsapp_message | url_encode
+  assign button_target = ''
+
+  if block.settings.open_in_new_tab
+    assign button_target = 'target="_blank"'
+  endif
+
+  assign button_style = block.settings.style_class
+  assign button_width = block.settings.width
+  assign button_custom_width = block.settings.custom_width
+  assign button_width_mobile = block.settings.width_mobile
+  assign button_custom_width_mobile = block.settings.custom_width_mobile
+
+  if whatsapp_number != blank
+    assign button_link = 'https://wa.me/' | append: whatsapp_number
+    if whatsapp_message != blank
+      assign button_link = button_link | append: '?text=' | append: whatsapp_message
+    endif
+  endif
+%}
+
+<a
+  href="{{ button_link }}"
+  class="button {{ button_style }} button--desktop-{{ button_width }} button--mobile-{{ button_width_mobile }}"
+  {{ button_target }}
+  {% if button_width == 'custom' %}
+    style="--button-width-desktop: {{ button_custom_width }}%;"
+  {% endif %}
+  {% if button_width_mobile == 'custom' %}
+    style="--button-width-mobile: {{ button_custom_width_mobile }}%;"
+  {% endif %}
+>
+  {{- button_label -}}
+</a>
+
+{% schema %}
+{
+  "name": "t:names.button",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "t:settings.label",
+      "default": "t:text_defaults.button_label"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "t:settings.link",
+      "info": "Si se especifica un número y mensaje de WhatsApp, este enlace será ignorado."
+    },
+    {
+      "type": "text",
+      "id": "whatsapp_number",
+      "label": "Número de WhatsApp",
+      "info": "Incluye el código de país sin el '+' (Ejemplo: 573155555555). Esto anulará el enlace de arriba."
+    },
+    {
+      "type": "textarea",
+      "id": "whatsapp_message",
+      "label": "Mensaje predefinido de WhatsApp",
+      "info": "El texto que aparecerá automáticamente en el chat. Puedes usar variables de Liquid como `{{ product.title }}` si el bloque se usa en una página de producto."
+    },
+    {
+      "type": "checkbox",
+      "id": "open_in_new_tab",
+      "label": "t:settings.open_new_tab",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "style_class",
+      "label": "t:settings.style",
+      "options": [
+        {
+          "value": "button",
+          "label": "t:options.primary"
+        },
+        {
+          "value": "button-secondary",
+          "label": "t:options.secondary"
+        },
+        {
+          "value": "link",
+          "label": "t:options.link"
+        }
+      ],
+      "default": "button"
+    },
+    {
+      "type": "header",
+      "content": "t:content.size"
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "t:settings.width_desktop",
+      "options": [
+        {
+          "value": "fit-content",
+          "label": "t:options.fit_content"
+        },
+        {
+          "value": "custom",
+          "label": "t:options.custom"
+        }
+      ],
+      "default": "fit-content"
+    },
+    {
+      "type": "range",
+      "id": "custom_width",
+      "label": "t:settings.custom_width",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 100,
+      "visible_if": "{{ block.settings.width == \"custom\" }}"
+    },
+    {
+      "type": "select",
+      "id": "width_mobile",
+      "label": "t:settings.width_mobile",
+      "options": [
+        {
+          "value": "fit-content",
+          "label": "t:options.fit_content"
+        },
+        {
+          "value": "custom",
+          "label": "t:options.custom"
+        }
+      ],
+      "default": "fit-content"
+    },
+    {
+      "type": "range",
+      "id": "custom_width_mobile",
+      "label": "t:settings.custom_width",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 100,
+      "visible_if": "{{ block.settings.width_mobile == \"custom\" }}"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:names.button",
+      "category": "t:categories.basic",
+      "settings": {
+        "link": "shopify://collections/all"
+      }
+    }
+  ]
+}
+{% endschema %}

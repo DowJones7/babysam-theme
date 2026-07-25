@@ -1,0 +1,403 @@
+{% comment %}
+  Este bloque es la versión anterior del formulario,
+  sin las correcciones para la visibilidad en dispositivos móviles.
+  El código JavaScript para el manejo de la URL de WhatsApp
+  y la lógica del formulario siguen siendo funcionales.
+{% endcomment %}
+
+<div class="baby-shower-form-container color-scheme-{{ block.settings.color_scheme }}">
+  <div class="form-header-ribbon">
+    <h2 class="form-title">{{ block.settings.form_title }}</h2>
+  </div>
+  
+  <div class="form-description-paper">
+    {{ block.settings.form_description }}
+  </div>
+
+  <form id="whatsapp-form" onsubmit="handleWhatsappSubmit(event)">
+    <div id="form-message" class="form-message"></div>
+
+    <div class="form-fields">
+      <div class="form-field-group">
+        <div class="form-field">
+          <label for="ParentName-{{ block.id }}">Nombre de los futuros padres</label>
+          <input type="text" id="ParentName-{{ block.id }}" name="parent_name" placeholder="Ej. Ana y Carlos" required>
+        </div>
+
+        <div class="form-field">
+          <label for="Email-{{ block.id }}">Correo electrónico</label>
+          <input type="email" id="Email-{{ block.id }}" name="email" placeholder="ejemplo@correo.com" required>
+        </div>
+      </div>
+
+      <div class="form-field-group">
+        <div class="form-field">
+          <label for="Phone-{{ block.id }}">Número de teléfono</label>
+          <input type="tel" id="Phone-{{ block.id }}" name="phone" placeholder="Ej. 123-456-7890" required>
+        </div>
+        
+        <div class="form-field">
+          <label for="Date-{{ block.id }}">Fecha probable para la cita en tienda</label>
+          <input type="date" id="Date-{{ block.id }}" name="date">
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label for="GuestCount-{{ block.id }}">Número de invitados estimados</label>
+        <input type="number" id="GuestCount-{{ block.id }}" name="guest_count">
+      </div>
+
+      <div class="form-field">
+        <label for="Comments-{{ block.id }}">Comentarios adicionales</label>
+        <textarea id="Comments-{{ block.id }}" name="comments" placeholder="¿Tienes alguna preferencia de horario o pregunta?"></textarea>
+      </div>
+    </div>
+
+    <div class="form-button-container">
+      <button type="submit" class="button">Agendar Cita</button>
+    </div>
+  </form>
+</div>
+
+<script>
+  function handleWhatsappSubmit(e) {
+    e.preventDefault();
+
+    const parentName = document.getElementById('ParentName-{{ block.id }}').value;
+    const email = document.getElementById('Email-{{ block.id }}').value;
+    const phone = document.getElementById('Phone-{{ block.id }}').value;
+    const date = document.getElementById('Date-{{ block.id }}').value;
+    const guestCount = document.getElementById('GuestCount-{{ block.id }}').value;
+    const comments = document.getElementById('Comments-{{ block.id }}').value;
+    
+    // Obtener el número de WhatsApp desde la configuración del bloque
+    const whatsappNumber = '{{ block.settings.whatsapp_number }}';
+    const messageDiv = document.getElementById('form-message');
+
+    if (!whatsappNumber || whatsappNumber.trim() === '') {
+      messageDiv.innerHTML = '<p>Error: El número de WhatsApp no ha sido configurado. Por favor, revisa la configuración del bloque en el editor.</p>';
+      messageDiv.style.backgroundColor = '#f8d7da';
+      messageDiv.style.color = '#721c24';
+      messageDiv.style.padding = '1rem';
+      messageDiv.style.marginBottom = '1rem';
+      messageDiv.style.borderRadius = '8px';
+      return;
+    }
+
+    // Construir el mensaje de WhatsApp
+    let message = `¡Hola! Me gustaría agendar una cita para la Lista de Baby Shower.\n\n`;
+    message += `*Nombre de los padres:* ${parentName}\n`;
+    message += `*Correo electrónico:* ${email}\n`;
+    message += `*Número de teléfono:* ${phone}\n`;
+    if (date) {
+      message += `*Fecha sugerida:* ${date}\n`;
+    }
+    if (guestCount) {
+      message += `*Número de invitados:* ${guestCount}\n`;
+    }
+    if (comments) {
+      message += `*Comentarios adicionales:* ${comments}\n`;
+    }
+    
+    // Codificar el mensaje para la URL
+    const encodedMessage = encodeURIComponent(message);
+    
+    // Construir la URL completa de WhatsApp
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+
+    // Abrir el enlace en una nueva pestaña
+    window.open(whatsappUrl, '_blank');
+
+    // Mostrar un mensaje de éxito más útil
+    messageDiv.innerHTML = '<p>¡Listo! Se ha abierto una nueva pestaña para iniciar el chat en WhatsApp. Por favor, revisa si se abrió la aplicación o la versión web para enviar el mensaje.</p>';
+    messageDiv.style.backgroundColor = '#d4edda';
+    messageDiv.style.color = '#155724';
+    messageDiv.style.padding = '1rem';
+    messageDiv.style.marginBottom = '1rem';
+    messageDiv.style.borderRadius = '8px';
+  }
+</script>
+
+<style>
+  .baby-shower-form-container {
+    padding: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+    border-radius: 12px;
+    position: relative;
+  }
+
+  /* Estilo del título con efecto de lazo */
+  .form-header-ribbon {
+    position: relative;
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .form-title {
+    display: inline-block;
+    padding: 0.5rem 2rem;
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    font-weight: bold;
+    color: var(--color-text); /* Herencia del esquema de color del tema */
+    background: var(--color-background-accent); /* Color de fondo del esquema */
+    position: relative;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Efecto de "cinta" en el título */
+  .form-title::before,
+  .form-title::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 30px;
+    height: 100%;
+    background-color: var(--color-background-accent);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: -1;
+  }
+
+  .form-title::before {
+    left: -20px;
+    border-radius: 8px 0 0 8px;
+    transform: translateY(-50%) skewY(-10deg);
+  }
+
+  .form-title::after {
+    right: -20px;
+    border-radius: 0 8px 8px 0;
+    transform: translateY(-50%) skewY(10deg);
+  }
+
+  /* Estilo de la descripción con efecto de "hoja de papel" */
+  .form-description-paper {
+    background-color: var(--color-background); /* Color de fondo del esquema */
+    border: 1px solid var(--color-border); /* Color de borde del esquema */
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    line-height: 1.5;
+    color: var(--color-text);
+  }
+
+  .form-description-paper p {
+    margin-bottom: 0;
+  }
+
+  /* Estilos para los campos del formulario */
+  .form-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .form-field-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+
+  .form-field {
+    flex: 1 1 45%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .form-field label {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    color: var(--color-text);
+  }
+
+  .form-field input,
+  .form-field textarea {
+    padding: 0.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    color: var(--color-text);
+    background-color: var(--color-background-input); /* Fondo de campos del esquema */
+    transition: border-color 0.2s ease-in-out;
+  }
+
+  .form-field input:focus,
+  .form-field textarea:focus {
+    outline: none;
+    border-color: var(--color-primary-focus);
+    box-shadow: 0 0 0 1px var(--color-primary-focus);
+  }
+  
+  .form-button-container {
+    text-align: center;
+    margin-top: 2rem;
+  }
+  
+  .button {
+    background-color: var(--color-primary); /* Color primario del esquema */
+    color: var(--color-on-primary); /* Color de texto sobre primario */
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 25px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+  }
+
+  .button:hover {
+    background-color: var(--color-primary-hover);
+  }
+
+  /* Estilos para la respuesta del formulario */
+  .form-message {
+    padding: 0;
+    margin-bottom: 0;
+    border-radius: 8px;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .form-message p {
+    margin: 0;
+  }
+
+  /* Media queries para adaptar a dispositivos móviles */
+  @media (max-width: 768px) {
+    .form-field-group {
+      flex-direction: column;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Formulario de Baby Shower",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "form_title",
+      "label": "Título del formulario",
+      "default": "Crea tu Lista de Baby Shower"
+    },
+    {
+      "type": "richtext",
+      "id": "form_description",
+      "label": "Descripción del formulario",
+      "default": "<p>Agenda un recorrido personalizado en nuestra tienda para preparar la lista de regalos perfecta para tu bebé.</p><p>Además, evitas regalos repetidos o cosas que no usarás.</p>"
+    },
+    {
+      "type": "text",
+      "id": "whatsapp_number",
+      "label": "Número de WhatsApp (con código de país, sin +)",
+      "info": "Ejemplo: 573123456789"
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "Ancho en escritorio",
+      "options": [
+        { "value": "fit-content", "label": "Ajustar al contenido" },
+        { "value": "custom", "label": "Ancho personalizado" }
+      ],
+      "default": "fit-content"
+    },
+    {
+      "type": "range",
+      "id": "custom_width",
+      "label": "Ancho",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 100,
+      "visible_if": "{{ block.settings.width == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "width_mobile",
+      "label": "Ancho en móvil",
+      "options": [
+        { "value": "fit-content", "label": "Ajustar al contenido" },
+        { "value": "custom", "label": "Ancho personalizado" }
+      ],
+      "default": "fit-content"
+    },
+    {
+      "type": "range",
+      "id": "custom_width_mobile",
+      "label": "Ancho",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 100,
+      "visible_if": "{{ block.settings.width_mobile == 'custom' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "inherit_color_scheme",
+      "label": "Heredar esquema de color",
+      "default": true
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Esquema de color",
+      "default": "scheme-1",
+      "visible_if": "{{ block.settings.inherit_color_scheme == false }}"
+    },
+    {
+      "type": "header",
+      "content": "Espaciado"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Superior",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Inferior",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start",
+      "label": "Izquierda",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end",
+      "label": "Derecha",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Formulario de Baby Shower",
+      "category": "Formularios"
+    }
+  ]
+}
+{% endschema %}

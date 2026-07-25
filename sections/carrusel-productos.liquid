@@ -1,0 +1,134 @@
+{% if section.settings.title != blank %}
+  <div class="title-wrapper-with-link title-wrapper--self-padded-mobile title-wrapper--no-top-margin" style="text-align: center;">
+    <h2 class="title inline-richtext {{ section.settings.heading_color }} {{ section.settings.heading_size }}">
+      {{ section.settings.title }}
+    </h2>
+  </div>
+{% endif %}
+
+<div class="collection-list-wrapper color-{{ section.settings.color_scheme }}">
+  <div class="collection-list-header page-width">
+    <ul
+      class="collection-carousel"
+      id="Slider-{{ section.id }}"
+      role="list"
+    >
+      {%- for block in section.blocks -%}
+        <li
+          id="Slide-{{ section.id }}-{{ forloop.index }}"
+          class="collection-card-item"
+          {{ block.shopify_attributes }}
+          role="listitem"
+        >
+          {%- render 'card-collection',
+            card_collection: block.settings.collection,
+            media_aspect_ratio: section.settings.image_ratio,
+            columns: section.settings.columns_desktop,
+            extend_height: section.settings.extend_height,
+            collection_title_align: section.settings.collection_title_align,
+            show_description: section.settings.show_description,
+            show_products_count: section.settings.show_products_count -%}
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Lista de colecciones",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "text", "id": "title", "default": "Colecciones", "label": "Título" },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Esquema de color",
+      "default": "scheme-1",
+      "options": [
+        { "value": "scheme-1", "label": "Esquema 1" },
+        { "value": "scheme-2", "label": "Esquema 2" },
+        { "value": "scheme-3", "label": "Esquema 3" },
+        { "value": "scheme-4", "label": "Esquema 4" },
+        { "value": "scheme-5", "label": "Esquema 5" },
+        { "value": "scheme-6", "label": "Esquema 6" },
+        { "value": "scheme-7", "label": "Esquema 7" },
+        { "value": "scheme-8", "label": "Esquema 8" },
+        { "value": "scheme-9", "label": "Esquema 9" },
+        { "value": "scheme-10", "label": "Esquema 10" }
+      ]
+    },
+    { "type": "select", "id": "heading_color", "label": "Color del título", "default": "heading", "options": [
+      { "value": "heading", "label": "Color de encabezado" },
+      { "value": "accent", "label": "Color de acento" },
+      { "value": "subdued", "label": "Color atenuado" }
+    ]},
+    { "type": "select", "id": "heading_size", "label": "Tamaño de tipografía", "default": "h2", "options": [
+      { "value": "h1", "label": "Grande (H1)" },
+      { "value": "h2", "label": "Medio (H2)" },
+      { "value": "h3", "label": "Pequeño (H3)" }
+    ]},
+    { "type": "range", "id": "columns_desktop", "min": 1, "max": 6, "default": 4, "label": "Columnas en escritorio" },
+    { "type": "range", "id": "columns_mobile", "min": 1, "max": 3, "step": 1, "default": 1, "label": "Columnas en móvil" },
+    { "type": "checkbox", "id": "swipe_on_mobile", "default": true, "label": "Habilitar deslizamiento en móvil" },
+    { "type": "select", "id": "layout_type", "label": "Formato de visualización", "default": "carousel", "options": [
+      { "value": "carousel", "label": "Carrusel" },
+      { "value": "grid", "label": "Cuadrícula" },
+      { "value": "list", "label": "Lista vertical" }
+    ]},
+    { "type": "select", "id": "image_ratio", "default": "square", "label": "Proporción de imagen", "options": [
+      { "value": "square", "label": "1:1" },
+      { "value": "portrait", "label": "Retrato" },
+      { "value": "landscape", "label": "Paisaje" },
+      { "value": "adapt", "label": "Adaptar a imagen" }
+    ]},
+    { "type": "checkbox", "id": "show_description", "default": false, "label": "Mostrar descripción de la colección" },
+    { "type": "checkbox", "id": "show_products_count", "default": false, "label": "Mostrar número de productos" },
+    { "type": "checkbox", "id": "extend_height", "default": false, "label": "Extender altura de tarjeta" },
+    { "type": "select", "id": "collection_title_align", "label": "Alineación del título", "default": "center", "options": [
+      { "value": "left", "label": "Izquierda" },
+      { "value": "center", "label": "Centro" },
+      { "value": "right", "label": "Derecha" }
+    ]}
+  ],
+  "blocks": [
+    { "type": "collection", "name": "Colección", "settings": [
+      { "type": "collection", "id": "collection", "label": "Colección" }
+    ]}
+  ],
+  "presets": [
+    { "name": "Lista de colecciones", "blocks": [
+      { "type": "collection" },
+      { "type": "collection" },
+      { "type": "collection" },
+      { "type": "collection" }
+    ]}
+  ]
+}
+{% endschema %}
+
+{% stylesheet %}
+.collection-carousel {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding: 10px;
+  list-style: none;
+  margin: 0;
+}
+
+.collection-carousel::-webkit-scrollbar {
+  display: none;
+}
+
+.collection-card-item {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  border: 2px solid var(--color-foreground);
+  border-radius: 12px;
+  background-size: cover;
+  width: 200px;
+}
+{% endstylesheet %}

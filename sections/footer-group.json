@@ -1,0 +1,213 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "footer",
+  "name": "Footer",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "group_gnypdT": {
+          "type": "group",
+          "name": "t:names.group",
+          "settings": {
+            "link": "",
+            "open_in_new_tab": false,
+            "content_direction": "column",
+            "vertical_on_mobile": true,
+            "horizontal_alignment": "flex-start",
+            "vertical_alignment": "center",
+            "align_baseline": false,
+            "horizontal_alignment_flex_direction_column": "flex-start",
+            "vertical_alignment_flex_direction_column": "center",
+            "gap": 11,
+            "width": "fill",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "custom_height": 100,
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "background_media": "none",
+            "video_position": "cover",
+            "background_image_position": "cover",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "placeholder": "",
+            "toggle_overlay": false,
+            "overlay_color": "#00000026",
+            "overlay_style": "solid",
+            "gradient_direction": "to top",
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 40,
+            "padding-inline-end": 40
+          },
+          "blocks": {
+            "footer_utilities_cD3HPK": {
+              "type": "footer-utilities",
+              "name": "t:names.footer_utilities",
+              "settings": {
+                "divider_thickness": 2.5,
+                "padding-block-start": 10,
+                "padding-block-end": 0
+              },
+              "blocks": {
+                "copyright": {
+                  "type": "_footer-copyright",
+                  "static": true,
+                  "settings": {
+                    "show_powered_by": true,
+                    "font_size": "0.625rem",
+                    "case": "none"
+                  },
+                  "blocks": {}
+                },
+                "policy_list": {
+                  "type": "_footer-policy-list",
+                  "static": true,
+                  "settings": {
+                    "font_size": "0.625rem",
+                    "case": "none"
+                  },
+                  "blocks": {}
+                },
+                "social_icons": {
+                  "type": "_footer-social-icons",
+                  "static": true,
+                  "settings": {},
+                  "blocks": {
+                    "social_link_8QnHyH": {
+                      "type": "_social-link",
+                      "name": "Facebook",
+                      "settings": {
+                        "link": "https://www.facebook.com/share/1Ecr1gN2FS/?mibextid=wwXIfr"
+                      },
+                      "blocks": {}
+                    },
+                    "social_link_epHMmC": {
+                      "type": "_social-link",
+                      "name": "Instagram",
+                      "settings": {
+                        "link": "https://www.instagram.com/babysamcolombia?igsh=MXkxdW5kNjg3MDYzeQ%3D%3D&utm_source=qr"
+                      },
+                      "blocks": {}
+                    },
+                    "social_link_xc4WR6": {
+                      "type": "_social-link",
+                      "name": "TikTok",
+                      "settings": {
+                        "link": "https://www.tiktok.com/@babysamcolombia"
+                      },
+                      "blocks": {}
+                    },
+                    "social_link_F7HDMn": {
+                      "type": "_social-link",
+                      "name": "X / Twitter",
+                      "disabled": true,
+                      "settings": {
+                        "link": "https://www.x.com/"
+                      },
+                      "blocks": {}
+                    },
+                    "social_link_Mmez7c": {
+                      "type": "_social-link",
+                      "name": "Youtube",
+                      "disabled": true,
+                      "settings": {
+                        "link": "https://www.youtube.com/"
+                      },
+                      "blocks": {}
+                    }
+                  },
+                  "block_order": [
+                    "social_link_8QnHyH",
+                    "social_link_epHMmC",
+                    "social_link_xc4WR6",
+                    "social_link_F7HDMn",
+                    "social_link_Mmez7c"
+                  ]
+                }
+              },
+              "block_order": []
+            }
+          },
+          "block_order": [
+            "footer_utilities_cD3HPK"
+          ]
+        },
+        "payment_icons_byxFbY": {
+          "type": "payment-icons",
+          "name": "t:names.payment_icons",
+          "settings": {
+            "horizontal_alignment": "center",
+            "gap": 10,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "logo_etVmm6": {
+          "type": "logo",
+          "name": "t:names.logo",
+          "settings": {
+            "inverse": false,
+            "font": "heading",
+            "unit": "pixel",
+            "percent_width": 100,
+            "pixel_height": 48,
+            "custom_mobile_size": false,
+            "unit_mobile": "percent",
+            "percent_width_mobile": 100,
+            "pixel_height_mobile": 120,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "group_gnypdT",
+        "payment_icons_byxFbY",
+        "logo_etVmm6"
+      ],
+      "name": "Footer",
+      "settings": {
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "center",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 5,
+        "section_width": "full-width",
+        "section_height": "",
+        "color_scheme": "scheme-6166ed72-e775-4823-8866-396200e09a22",
+        "background_media": "image",
+        "video_position": "cover",
+        "background_image": "shopify://shop_images/fondo_2.png",
+        "background_image_position": "cover",
+        "padding-block-start": 20,
+        "padding-block-end": 0
+      }
+    }
+  },
+  "order": [
+    "footer"
+  ]
+}
