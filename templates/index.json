@@ -17,7 +17,8 @@
           "settings": {
             "text": "<h1>Todo para tu bebé, en un solo lugar</h1>",
             "type_preset": "h1",
-            "max_width": "narrow"
+            "max_width": "narrow",
+            "color": "#fffaf7"
           }
         },
         "text_hero_subheading": {
@@ -25,14 +26,16 @@
           "settings": {
             "text": "<p>Productos pensados con amor para acompañar cada etapa de tu bebé.</p>",
             "max_width": "narrow",
-            "padding-block-end": 32
+            "padding-block-end": 32,
+            "color": "#fffaf7"
           }
         },
         "button_hero_cta": {
           "type": "button",
           "settings": {
             "label": "Comprar ahora",
-            "link": "shopify://collections/all"
+            "link": "shopify://collections/all",
+            "style_class": "button-secondary"
           }
         }
       },
@@ -44,7 +47,6 @@
       "name": "t:names.hero",
       "settings": {
         "media_type_1": "image",
-        "image_1": "shopify://shop_images/banner_5_ecb2f24d-b654-4069-a17d-8008fbac567c.png",
         "media_type_2": "image",
         "content_direction": "column",
         "horizontal_alignment_flex_direction_column": "center",
@@ -54,7 +56,7 @@
         "section_height": "large",
         "color_scheme": "scheme-7",
         "toggle_overlay": true,
-        "overlay_color": "#00000045",
+        "overlay_color": "#e44068",
         "overlay_style": "solid",
         "padding-block-start": 40,
         "padding-block-end": 40
