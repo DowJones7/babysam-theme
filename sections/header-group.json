@@ -95,25 +95,11 @@
           "type": "_announcement",
           "name": "t:names.announcement",
           "settings": {
-            "text": "Sign up for our newsletter",
-            "link": "shopify://pages/contact",
+            "text": "Todo para tu bebé, en un solo lugar",
+            "link": "shopify://collections/all",
             "font": "var(--font-body--family)",
             "font_size": "var(--font-size--body-sm)",
-            "weight": "",
-            "letter_spacing": "normal",
-            "case": "none"
-          },
-          "blocks": {}
-        },
-        "announcement_UNyCWD": {
-          "type": "_announcement",
-          "name": "t:names.announcement",
-          "settings": {
-            "text": "Just launched: bestselling skincare bundles",
-            "link": "shopify://collections/all",
-            "font": "var(--font-primary--family)",
-            "font_size": "var(--font-size--body-sm)",
-            "weight": "",
+            "weight": "600",
             "letter_spacing": "normal",
             "case": "none"
           },
@@ -121,8 +107,7 @@
         }
       },
       "block_order": [
-        "announcement_MHUQgy",
-        "announcement_UNyCWD"
+        "announcement_MHUQgy"
       ],
       "settings": {
         "speed": 5,
