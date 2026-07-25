@@ -1151,12 +1151,12 @@
                 "align_baseline": false,
                 "horizontal_alignment_flex_direction_column": "center",
                 "vertical_alignment_flex_direction_column": "center",
-                "gap": 0,
+                "gap": 20,
                 "width": "fit-content",
                 "custom_width": 100,
                 "width_mobile": "fill",
                 "custom_width_mobile": 100,
-                "height": "custom",
+                "height": "fit",
                 "custom_height": 85,
                 "inherit_color_scheme": true,
                 "color_scheme": "",
@@ -1167,41 +1167,40 @@
                 "border": "none",
                 "border_width": 1,
                 "border_opacity": 100,
-                "border_radius": 50,
+                "border_radius": 32,
                 "placeholder": "",
                 "toggle_overlay": false,
                 "overlay_color": "rgba(0,0,0,0)",
                 "overlay_style": "solid",
                 "gradient_direction": "to top",
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
+                "padding-block-start": 48,
+                "padding-block-end": 48,
+                "padding-inline-start": 48,
+                "padding-inline-end": 48
               },
               "blocks": {
-                "baby_shower_form_Qgribm": {
-                  "type": "baby-shower-form",
-                  "name": "Formulario de Baby Shower",
+                "text_baby_shower_heading": {
+                  "type": "text",
                   "settings": {
-                    "form_title": "Crea tu Lista de Baby Shower",
-                    "form_description": "<p>Agenda un recorrido personalizado en nuestra tienda para preparar la lista de regalos perfecta para tu bebé.</p><p>Además, evitas regalos repetidos o cosas que no usarás.</p>",
-                    "whatsapp_number": "",
-                    "width": "fit-content",
-                    "custom_width": 100,
-                    "width_mobile": "fit-content",
-                    "custom_width_mobile": 100,
-                    "inherit_color_scheme": true,
-                    "color_scheme": "",
-                    "padding-block-start": 0,
-                    "padding-block-end": 0,
-                    "padding-inline-start": 0,
-                    "padding-inline-end": 0
+                    "text": "<h3>Crea tu Lista de Baby Shower</h3><p>Agenda un recorrido personalizado en tienda para armar la lista de regalos perfecta.</p>",
+                    "alignment": "center",
+                    "max_width": "narrow"
+                  },
+                  "blocks": {}
+                },
+                "button_baby_shower_cta": {
+                  "type": "button",
+                  "settings": {
+                    "label": "Agendar cita",
+                    "link": "shopify://pages/club-de-mamas",
+                    "style_class": "button"
                   },
                   "blocks": {}
                 }
               },
               "block_order": [
-                "baby_shower_form_Qgribm"
+                "text_baby_shower_heading",
+                "button_baby_shower_cta"
               ]
             }
           },

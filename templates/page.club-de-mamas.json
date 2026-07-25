@@ -30,10 +30,31 @@
             "animation_repeat": false
           },
           "blocks": {}
+        },
+        "baby_shower_form_Qgribm": {
+          "type": "baby-shower-form",
+          "name": "Formulario de Baby Shower",
+          "settings": {
+            "form_title": "Crea tu Lista de Baby Shower",
+            "form_description": "<p>Agenda un recorrido personalizado en nuestra tienda para preparar la lista de regalos perfecta para tu bebé.</p><p>Además, evitas regalos repetidos o cosas que no usarás.</p>",
+            "whatsapp_number": "",
+            "width": "fit-content",
+            "custom_width": 100,
+            "width_mobile": "fit-content",
+            "custom_width_mobile": 100,
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
         }
       },
       "block_order": [
-        "jumbo_text_T4MXf8"
+        "jumbo_text_T4MXf8",
+        "baby_shower_form_Qgribm"
       ],
       "settings": {
         "content_direction": "column",
