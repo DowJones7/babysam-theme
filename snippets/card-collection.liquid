@@ -1,6 +1,6 @@
 {% comment %}
   Snippet: card-collection.liquid
-  Muestra una tarjeta de colección con imagen y contador de productos (sin título)
+  Muestra una tarjeta de colección con imagen, título y contador de productos
 {% endcomment %}
 
 {% assign collection = card_collection %}
@@ -8,13 +8,15 @@
 {% if collection != blank %}
   <a href="{{ collection.url }}" class="card-collection" style="display:block; text-align:center;">
     {% if collection.image %}
-      <div style="overflow:hidden; border-radius:15px; margin-bottom:10px;">
-        <img 
-          src="{{ collection.image | image_url: width: 600 }}" 
-          alt="{{ collection.image.alt | escape }}" 
+      <div class="card-collection__media" style="overflow:hidden; border-radius:15px; margin-bottom:14px;">
+        <img
+          src="{{ collection.image | image_url: width: 600 }}"
+          alt="{{ collection.image.alt | escape }}"
           style="width:100%; height:auto;">
       </div>
     {% endif %}
+
+    <h3 class="card-collection__title">{{ collection.title }}</h3>
 
     {% if show_products_count %}
       <p style="font-size:0.9em; color:#8B4513;">

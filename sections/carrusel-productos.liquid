@@ -34,6 +34,73 @@
   </div>
 </div>
 
+<script>
+  (function () {
+    var slider = document.getElementById('Slider-{{ section.id }}');
+    if (!slider) return;
+
+    var isDown = false;
+    var moved = false;
+    var startX = 0;
+    var startScrollLeft = 0;
+
+    function endDrag() {
+      if (!isDown) return;
+      isDown = false;
+      slider.classList.remove('is-dragging');
+      snapToNearest();
+    }
+
+    function snapToNearest() {
+      var items = slider.querySelectorAll('.collection-card-item');
+      if (!items.length) return;
+      var closest = null;
+      var closestDist = Infinity;
+      items.forEach(function (item) {
+        var dist = Math.abs(item.offsetLeft - slider.scrollLeft);
+        if (dist < closestDist) {
+          closestDist = dist;
+          closest = item;
+        }
+      });
+      if (closest) {
+        slider.scrollTo({ left: closest.offsetLeft, behavior: 'smooth' });
+      }
+    }
+
+    slider.addEventListener('mousedown', function (e) {
+      isDown = true;
+      moved = false;
+      slider.classList.add('is-dragging');
+      startX = e.pageX;
+      startScrollLeft = slider.scrollLeft;
+    });
+
+    slider.addEventListener('mousemove', function (e) {
+      if (!isDown) return;
+      e.preventDefault();
+      var walk = e.pageX - startX;
+      if (Math.abs(walk) > 5) moved = true;
+      slider.scrollLeft = startScrollLeft - walk;
+    });
+
+    slider.addEventListener('mouseup', endDrag);
+    slider.addEventListener('mouseleave', endDrag);
+
+    slider.addEventListener(
+      'click',
+      function (e) {
+        if (moved) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+        moved = false;
+      },
+      true
+    );
+  })();
+</script>
+
 {% schema %}
 {
   "name": "Lista de colecciones",
@@ -114,13 +181,29 @@
   gap: 16px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   padding: 10px;
   list-style: none;
   margin: 0;
+  cursor: grab;
+  user-select: none;
 }
 
 .collection-carousel::-webkit-scrollbar {
   display: none;
+}
+
+.collection-carousel.is-dragging {
+  cursor: grabbing;
+  scroll-snap-type: none;
+}
+
+.collection-carousel img {
+  -webkit-user-drag: none;
+  user-drag: none;
+  pointer-events: none;
 }
 
 .collection-card-item {
@@ -129,6 +212,25 @@
   border: 2px solid var(--color-foreground);
   border-radius: 12px;
   background-size: cover;
-  width: 200px;
+  width: 68%;
+}
+
+@media screen and (min-width: 750px) {
+  .collection-card-item {
+    width: 40%;
+  }
+}
+
+@media screen and (min-width: 990px) {
+  .collection-card-item {
+    width: 22%;
+  }
+}
+
+.card-collection__title {
+  font-size: 1.35rem;
+  font-weight: 600;
+  margin: 0 0 4px;
+  line-height: 1.2;
 }
 {% endstylesheet %}
