@@ -62,6 +62,25 @@
     max-width: none;
   }
 
+  .marquee__repeated-items .image-block {
+    width: 130px;
+    flex-shrink: 0;
+  }
+
+  .marquee__repeated-items .image-block__image {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .marquee__repeated-items .group-block {
+    flex-shrink: 0;
+  }
+
+  .marquee__repeated-items .group-block .image-block {
+    width: 90px;
+  }
+
   .marquee__repeated-items {
     min-width: max-content;
     display: flex;
@@ -102,6 +121,12 @@
     },
     {
       "type": "logo"
+    },
+    {
+      "type": "image"
+    },
+    {
+      "type": "group"
     },
     {
       "type": "_divider"
