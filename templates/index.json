@@ -598,12 +598,78 @@
             }
           },
           "block_order": ["image_brand_rascal"]
+        },
+        "image_brand_palmers": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/Palmers_logo.svg",
+            "image_ratio": "adapt",
+            "width": "fit-content",
+            "height": "fit"
+          },
+          "blocks": {}
+        },
+        "image_brand_genial": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/genial_logo.png",
+            "image_ratio": "adapt",
+            "width": "fit-content",
+            "height": "fit"
+          },
+          "blocks": {}
+        },
+        "image_brand_avent": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/avents_logo.png",
+            "image_ratio": "adapt",
+            "width": "fit-content",
+            "height": "fit"
+          },
+          "blocks": {}
+        },
+        "image_brand_littleme": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/little_me_logo.webp",
+            "image_ratio": "adapt",
+            "width": "fit-content",
+            "height": "fit"
+          },
+          "blocks": {}
+        },
+        "image_brand_momcozy": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/momcozy-logo-480x480.webp",
+            "image_ratio": "adapt",
+            "width": "fit-content",
+            "height": "fit"
+          },
+          "blocks": {}
+        },
+        "image_brand_kidilo": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/kidilo_logo.png",
+            "image_ratio": "adapt",
+            "width": "fit-content",
+            "height": "fit"
+          },
+          "blocks": {}
         }
       },
       "block_order": [
         "image_brand_drbrowns",
         "image_brand_pigeon",
-        "group_brand_rascal"
+        "group_brand_rascal",
+        "image_brand_palmers",
+        "image_brand_genial",
+        "image_brand_avent",
+        "image_brand_littleme",
+        "image_brand_momcozy",
+        "image_brand_kidilo"
       ],
       "name": "Marcas",
       "settings": {
