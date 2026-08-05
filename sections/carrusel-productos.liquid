@@ -1,6 +1,6 @@
 {% if section.settings.title != blank %}
-  <div class="title-wrapper-with-link title-wrapper--self-padded-mobile title-wrapper--no-top-margin" style="text-align: center;">
-    <h2 class="title inline-richtext {{ section.settings.heading_color }} {{ section.settings.heading_size }}">
+  <div class="title-wrapper-with-link title-wrapper--self-padded-mobile title-wrapper--no-top-margin" style="text-align: center; padding-block: 40px 28px;">
+    <h2 class="title inline-richtext home-section-title {{ section.settings.heading_color }} {{ section.settings.heading_size }}">
       {{ section.settings.title }}
     </h2>
   </div>
@@ -12,8 +12,40 @@
       class="collection-carousel"
       id="Slider-{{ section.id }}"
       role="list"
+      style="--card-pattern-url: url('{{ 'backupd_catalogo.png' | file_img_url: '400x400' }}');"
     >
       {%- for block in section.blocks -%}
+        {% liquid
+          assign card_image = blank
+          case block.settings.collection.handle
+            when 'accesorios'
+              assign card_image = section.settings.image_accesorios
+            when 'caminadores'
+              assign card_image = section.settings.image_caminadores
+            when 'cobijas'
+              assign card_image = section.settings.image_cobijas
+            when 'coches'
+              assign card_image = section.settings.image_coches
+            when 'comedores'
+              assign card_image = section.settings.image_comedores
+            when 'coleccion-mi-primer-dia'
+              assign card_image = section.settings.image_mi_primer_dia
+            when 'jugueteria'
+              assign card_image = section.settings.image_jugueteria
+            when 'lenceria'
+              assign card_image = section.settings.image_lenceria
+            when 'panaleras'
+              assign card_image = section.settings.image_panaleras
+            when 'panales-premium'
+              assign card_image = section.settings.image_panales_premium
+            when 'teteros'
+              assign card_image = section.settings.image_teteros
+            when 'teteros-avent'
+              assign card_image = section.settings.image_teteros_avent
+            when 'toallas'
+              assign card_image = section.settings.image_toallas
+          endcase
+        %}
         <li
           id="Slide-{{ section.id }}-{{ forloop.index }}"
           class="collection-card-item"
@@ -22,6 +54,7 @@
         >
           {%- render 'card-collection',
             card_collection: block.settings.collection,
+            card_image: card_image,
             media_aspect_ratio: section.settings.image_ratio,
             columns: section.settings.columns_desktop,
             extend_height: section.settings.extend_height,
@@ -157,7 +190,22 @@
       { "value": "left", "label": "Izquierda" },
       { "value": "center", "label": "Centro" },
       { "value": "right", "label": "Derecha" }
-    ]}
+    ]},
+    { "type": "header", "content": "Fotos de las categorías" },
+    { "type": "paragraph", "content": "Sube aquí la foto de cada categoría del catálogo. Si se deja vacía, la tarjeta muestra solo el fondo decorativo, igual que ahora." },
+    { "type": "image_picker", "id": "image_accesorios", "label": "Foto de Accesorios" },
+    { "type": "image_picker", "id": "image_caminadores", "label": "Foto de Caminadores" },
+    { "type": "image_picker", "id": "image_cobijas", "label": "Foto de Cobijas" },
+    { "type": "image_picker", "id": "image_coches", "label": "Foto de Coches" },
+    { "type": "image_picker", "id": "image_comedores", "label": "Foto de Comedores" },
+    { "type": "image_picker", "id": "image_mi_primer_dia", "label": "Foto de Mi Primer Día" },
+    { "type": "image_picker", "id": "image_jugueteria", "label": "Foto de Juguetería" },
+    { "type": "image_picker", "id": "image_lenceria", "label": "Foto de Lencería" },
+    { "type": "image_picker", "id": "image_panaleras", "label": "Foto de Pañaleras" },
+    { "type": "image_picker", "id": "image_panales_premium", "label": "Foto de Pañales Premium" },
+    { "type": "image_picker", "id": "image_teteros", "label": "Foto de Teteros" },
+    { "type": "image_picker", "id": "image_teteros_avent", "label": "Foto de Teteros Avent" },
+    { "type": "image_picker", "id": "image_toallas", "label": "Foto de Toallas" }
   ],
   "blocks": [
     { "type": "collection", "name": "Colección", "settings": [
@@ -178,6 +226,7 @@
 {% stylesheet %}
 .collection-carousel {
   display: flex;
+  align-items: flex-start;
   gap: 16px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
@@ -210,8 +259,11 @@
   flex: 0 0 auto;
   scroll-snap-align: start;
   border: 2px solid var(--color-foreground);
-  border-radius: 12px;
-  background-size: cover;
+  border-radius: 15px;
+  overflow: hidden;
+  background-image: var(--card-pattern-url);
+  background-repeat: repeat;
+  background-size: 120px 120px;
   width: 68%;
 }
 
@@ -223,7 +275,7 @@
 
 @media screen and (min-width: 990px) {
   .collection-card-item {
-    width: 22%;
+    width: 33%;
   }
 }
 

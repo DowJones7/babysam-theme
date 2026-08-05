@@ -764,7 +764,7 @@ h1,
   line-height: var(--font-h1--line-height);
   letter-spacing: var(--font-h1--letter-spacing);
   text-transform: var(--font-h1--case);
-  color: var(--color, var(--font-h1-color));
+  color: var(--color, var(--font-h1--color));
 }
 
 @media screen and (max-width: 1200px) {
@@ -785,7 +785,7 @@ h2,
   line-height: var(--font-h2--line-height);
   letter-spacing: var(--font-h2--letter-spacing);
   text-transform: var(--font-h2--case);
-  color: var(--color, var(--font-h2-color));
+  color: var(--color, var(--font-h2--color));
 }
 
 @media screen and (max-width: 1200px) {
@@ -807,7 +807,7 @@ h3,
   line-height: var(--font-h3--line-height);
   letter-spacing: var(--font-h3--letter-spacing);
   text-transform: var(--font-h3--case);
-  color: var(--color, var(--font-h3-color));
+  color: var(--color, var(--font-h3--color));
 }
 
 @media screen and (max-width: 1200px) {
@@ -828,7 +828,7 @@ h4,
   line-height: var(--font-h4--line-height);
   letter-spacing: var(--font-h4--letter-spacing);
   text-transform: var(--font-h4--case);
-  color: var(--color, var(--font-h4-color));
+  color: var(--color, var(--font-h4--color));
 }
 
 @media screen and (max-width: 1200px) {
@@ -849,7 +849,7 @@ h5,
   line-height: var(--font-h5--line-height);
   letter-spacing: var(--font-h5--letter-spacing);
   text-transform: var(--font-h5--case);
-  color: var(--color, var(--font-h5-color));
+  color: var(--color, var(--font-h5--color));
 }
 
 @media screen and (max-width: 1200px) {
@@ -870,7 +870,7 @@ h6,
   line-height: var(--font-h6--line-height);
   letter-spacing: var(--font-h6--letter-spacing);
   text-transform: var(--font-h6--case);
-  color: var(--color, var(--font-h6-color));
+  color: var(--color, var(--font-h6--color));
 }
 
 @media screen and (max-width: 1200px) {
