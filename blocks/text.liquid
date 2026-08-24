@@ -34,14 +34,14 @@
     {%- endcomment -%}
     {% if block.settings.text != blank %}
       {%- comment -%}
-        Este bloque de estilo aplica la alineación del texto.
+        Alineación vía style inline directo: el <style> con selector
+        #shopify-section-{{ block.id }} nunca funcionaba porque ese ID no
+        existe en el DOM (es el ID de un bloque, no el de una sección — el
+        wrapper automático de Shopify usa section.id, no block.id), así que
+        text-align nunca se aplicaba en ningún lugar del tema que use este
+        bloque.
       {%- endcomment -%}
-      <style>
-        #shopify-section-{{ block.id }} .richtext-content {
-          text-align: {{ block.settings.alignment }};
-        }
-      </style>
-      <div class="richtext richtext-content">
+      <div class="richtext richtext-content" style="text-align: {{ block.settings.alignment }};">
         {{ block.settings.text }}
       </div>
     {% endif %}

@@ -260,11 +260,44 @@
     font-size: var(--font-size--xs);
   }
 
-  .cart-bubble--animating .cart-bubble__background {
-    animation: grow var(--animation-speed) var(--animation-easing);
+  /* Feedback de "producto agregado": duración propia (300ms) en vez de
+     var(--animation-speed) (125ms, muy rápido para notarse bien acá) sin
+     tocar la variable global que usan botones y otros componentes. Se suma
+     un wiggle corto del ícono de la bolsa, ausente hasta ahora. */
+  @media (prefers-reduced-motion: no-preference) {
+    .cart-bubble--animating .cart-bubble__background {
+      animation: grow 0.3s var(--animation-easing);
+    }
+
+    .cart-bubble--animating .cart-bubble__text {
+      animation: cartBubbleSlideIn 0.3s var(--animation-easing);
+    }
+
+    cart-icon:has(.cart-bubble--animating) > .svg-wrapper {
+      animation: cart-icon-wiggle 0.3s ease-out;
+    }
   }
 
-  .cart-bubble--animating .cart-bubble__text {
-    animation: cartBubbleSlideIn var(--animation-speed) var(--animation-easing);
+  @keyframes cart-icon-wiggle {
+    0%,
+    100% {
+      transform: rotate(0deg);
+    }
+
+    20% {
+      transform: rotate(-8deg);
+    }
+
+    40% {
+      transform: rotate(7deg);
+    }
+
+    60% {
+      transform: rotate(-5deg);
+    }
+
+    80% {
+      transform: rotate(3deg);
+    }
   }
 {% endstylesheet %}

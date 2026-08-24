@@ -11,6 +11,7 @@
   "current": {
     "logo": "shopify://shop_images/Babysam_lo_pag_2.png",
     "favicon": "shopify://shop_images/LOGO_BABY_SAM.png",
+    "card_hover_effect": "subtle-zoom",
     "type_body_font": "poppins_n4",
     "type_subheading_font": "poppins_n6",
     "type_heading_font": "poppins_n6",
@@ -605,6 +606,45 @@
           "selected_variant_border_color": "#ffffff",
           "selected_variant_hover_background_color": "#fffaf7",
           "selected_variant_hover_text_color": "#e44068",
+          "selected_variant_hover_border_color": "#fffaf7"
+        }
+      },
+      "scheme-trust-turquoise": {
+        "settings": {
+          "background": "#78c0b3",
+          "foreground_heading": "#ffffff",
+          "foreground": "#ffffff",
+          "primary": "#ffffff",
+          "primary_hover": "#fffaf7",
+          "border": "#ffffff",
+          "shadow": "#000000",
+          "primary_button_background": "#ffffff",
+          "primary_button_text": "#78c0b3",
+          "primary_button_border": "#ffffff",
+          "primary_button_hover_background": "#e44068",
+          "primary_button_hover_text": "#ffffff",
+          "primary_button_hover_border": "#e44068",
+          "secondary_button_background": "rgba(0,0,0,0)",
+          "secondary_button_text": "#ffffff",
+          "secondary_button_border": "#ffffff",
+          "secondary_button_hover_background": "#ffffff",
+          "secondary_button_hover_text": "#78c0b3",
+          "secondary_button_hover_border": "#ffffff",
+          "input_background": "#ffffff",
+          "input_text_color": "#78c0b3",
+          "input_border_color": "#ffffff",
+          "input_hover_background": "#ffffff",
+          "variant_background_color": "#ffffff",
+          "variant_text_color": "#78c0b3",
+          "variant_border_color": "#ffffff",
+          "variant_hover_background_color": "#fffaf7",
+          "variant_hover_text_color": "#78c0b3",
+          "variant_hover_border_color": "#fffaf7",
+          "selected_variant_background_color": "#ffffff",
+          "selected_variant_text_color": "#78c0b3",
+          "selected_variant_border_color": "#ffffff",
+          "selected_variant_hover_background_color": "#fffaf7",
+          "selected_variant_hover_text_color": "#78c0b3",
           "selected_variant_hover_border_color": "#fffaf7"
         }
       }

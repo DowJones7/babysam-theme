@@ -1,0 +1,115 @@
+<div class="section-background color-{{ section.settings.color_scheme }}"></div>
+<div class="instagram-feed-section color-{{ section.settings.color_scheme }}" style="padding-block: 24px;">
+{% if section.settings.title != blank %}
+  <div style="text-align: center; padding-block: 0 20px;">
+    <h2 class="title inline-richtext home-section-title">
+      {{ section.settings.title }}
+    </h2>
+  </div>
+{% endif %}
+
+<div class="instagram-feed-wrapper page-width">
+  <ul class="instagram-feed-grid" role="list">
+    {%- for block in section.blocks -%}
+      <li class="instagram-feed-item" {{ block.shopify_attributes }}>
+        <a
+          href="{{ block.settings.link | default: 'https://www.instagram.com/babysamcolombia/' }}"
+          target="_blank"
+          rel="noopener"
+          class="instagram-feed-item__link"
+          aria-label="Ver en Instagram"
+        >
+          {% if block.settings.image != blank %}
+            <img
+              src="{{ block.settings.image | image_url: width: 400 }}"
+              alt=""
+              loading="lazy"
+              class="instagram-feed-item__image"
+              style="object-position: {{ block.settings.focal_position | default: 'center' }};"
+            >
+          {% else %}
+            <span class="instagram-feed-item__placeholder"></span>
+          {% endif %}
+        </a>
+      </li>
+    {%- endfor -%}
+  </ul>
+</div>
+</div>
+
+{% schema %}
+{
+  "name": "Instagram (compacto)",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "text", "id": "title", "default": "Síguenos @babysamcolombia", "label": "Título" },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Esquema de color",
+      "default": "scheme-7",
+      "options": [
+        { "value": "scheme-1", "label": "Esquema 1" },
+        { "value": "scheme-7", "label": "Esquema 7" }
+      ]
+    }
+  ],
+  "blocks": [
+    { "type": "photo", "name": "Foto", "settings": [
+      { "type": "image_picker", "id": "image", "label": "Imagen" },
+      { "type": "url", "id": "link", "label": "Enlace", "info": "Por defecto va al perfil de Instagram" },
+      { "type": "text", "id": "focal_position", "label": "Posición de enfoque (CSS object-position)", "info": "Ej: center, top, center 30%. Dejar vacío usa 'center'." }
+    ]}
+  ],
+  "presets": [
+    { "name": "Instagram (compacto)", "blocks": [
+      { "type": "photo" },
+      { "type": "photo" },
+      { "type": "photo" },
+      { "type": "photo" },
+      { "type": "photo" },
+      { "type": "photo" }
+    ]}
+  ]
+}
+{% endschema %}
+
+{% stylesheet %}
+.instagram-feed-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+@media screen and (min-width: 750px) {
+  .instagram-feed-grid {
+    grid-template-columns: repeat(6, 1fr);
+    gap: 12px;
+  }
+}
+
+.instagram-feed-item__link {
+  display: block;
+  aspect-ratio: 1 / 1;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.instagram-feed-item__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.instagram-feed-item__placeholder {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-color: #78c0b326;
+}
+{% endstylesheet %}

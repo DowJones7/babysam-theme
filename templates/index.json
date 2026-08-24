@@ -17,7 +17,8 @@
           "settings": {
             "text": "<h1>Todo para tu bebé, en un solo lugar</h1>",
             "type_preset": "h1",
-            "max_width": "narrow"
+            "max_width": "narrow",
+            "alignment": "center"
           }
         },
         "text_hero_subheading": {
@@ -25,39 +26,30 @@
           "settings": {
             "text": "<p>Productos pensados con amor para acompañar cada etapa de tu bebé.</p>",
             "max_width": "narrow",
-            "padding-block-end": 32
-          }
-        },
-        "button_hero_cta": {
-          "type": "button",
-          "settings": {
-            "label": "Comprar ahora",
-            "link": "shopify://collections/all",
-            "style_class": "button"
+            "alignment": "center",
+            "padding-block-end": 0
           }
         }
       },
       "block_order": [
         "text_hero_heading",
-        "text_hero_subheading",
-        "button_hero_cta"
+        "text_hero_subheading"
       ],
       "name": "t:names.hero",
       "settings": {
         "media_type_1": "image",
+        "image_1": "shopify://shop_images/banner_2_solo.png",
         "media_type_2": "image",
         "content_direction": "column",
         "horizontal_alignment_flex_direction_column": "center",
-        "vertical_alignment_flex_direction_column": "center",
+        "vertical_alignment_flex_direction_column": "flex-end",
         "gap": 16,
         "section_width": "full-width",
         "section_height": "large",
-        "color_scheme": "scheme-2",
-        "toggle_overlay": true,
-        "overlay_color": "#78c0b3",
-        "overlay_style": "solid",
+        "color_scheme": "scheme-1",
+        "toggle_overlay": false,
         "padding-block-start": 40,
-        "padding-block-end": 40
+        "padding-block-end": 56
       }
     },
     "carrusel_productos_w3cKLp": {
@@ -67,12 +59,6 @@
           "type": "collection",
           "settings": {
             "collection": "accesorios"
-          }
-        },
-        "collection_x8xrNh": {
-          "type": "collection",
-          "settings": {
-            "collection": "caminadores"
           }
         },
         "collection_CBzpik": {
@@ -114,13 +100,7 @@
         "collection_cP9MiB": {
           "type": "collection",
           "settings": {
-            "collection": "panaleras"
-          }
-        },
-        "collection_JErM7F": {
-          "type": "collection",
-          "settings": {
-            "collection": "panales-premium"
+            "collection": "panaleras-1"
           }
         },
         "collection_AHAWd7": {
@@ -129,22 +109,63 @@
             "collection": "teteros"
           }
         },
-        "collection_tXrqKk": {
-          "type": "collection",
-          "settings": {
-            "collection": "teteros-avent"
-          }
-        },
         "collection_8wdaDV": {
           "type": "collection",
           "settings": {
             "collection": "toallas"
           }
+        },
+        "collection_1OFFtD": {
+          "type": "collection",
+          "settings": {
+            "collection": "cuidado-materno"
+          }
+        },
+        "collection_yHU0nj": {
+          "type": "collection",
+          "settings": {
+            "collection": "lactancia"
+          }
+        },
+        "collection_Voq3Vy": {
+          "type": "collection",
+          "settings": {
+            "collection": "aseo"
+          }
+        },
+        "collection_VQUuBE": {
+          "type": "collection",
+          "settings": {
+            "collection": "ajuares"
+          }
+        },
+        "collection_9dvEDH": {
+          "type": "collection",
+          "settings": {
+            "collection": "baneras"
+          }
+        },
+        "collection_EKXfsQ": {
+          "type": "collection",
+          "settings": {
+            "collection": "gimnasios"
+          }
+        },
+        "collection_yqCKNi": {
+          "type": "collection",
+          "settings": {
+            "collection": "silla-de-carro"
+          }
+        },
+        "collection_gggLaT": {
+          "type": "collection",
+          "settings": {
+            "collection": "sillas-mecedoras"
+          }
         }
       },
       "block_order": [
         "collection_6zcfY4",
-        "collection_x8xrNh",
         "collection_CBzpik",
         "collection_fNg4mh",
         "collection_iP8a4x",
@@ -152,14 +173,20 @@
         "collection_JLFptB",
         "collection_7xQYij",
         "collection_cP9MiB",
-        "collection_JErM7F",
         "collection_AHAWd7",
-        "collection_tXrqKk",
-        "collection_8wdaDV"
+        "collection_8wdaDV",
+        "collection_1OFFtD",
+        "collection_yHU0nj",
+        "collection_Voq3Vy",
+        "collection_VQUuBE",
+        "collection_9dvEDH",
+        "collection_EKXfsQ",
+        "collection_yqCKNi",
+        "collection_gggLaT"
       ],
       "name": "Lista de colecciones",
       "settings": {
-        "title": "Compra por categoría",
+        "title": "Catálogo",
         "color_scheme": "scheme-7",
         "heading_color": "subdued",
         "heading_size": "h2",
@@ -235,7 +262,7 @@
               "type": "image",
               "name": "t:names.image",
               "settings": {
-                "image": "shopify://shop_images/Gemini_Generated_Image_8hgqg48hgqg48hgq.png",
+                "image": "shopify://shop_images/bono.png",
                 "link": "",
                 "image_ratio": "adapt",
                 "width": "custom",
@@ -569,35 +596,15 @@
           },
           "blocks": {}
         },
-        "group_brand_rascal": {
-          "type": "group",
+        "image_brand_rascal": {
+          "type": "image",
           "settings": {
-            "content_direction": "row",
-            "horizontal_alignment_flex_direction_column": "center",
-            "vertical_alignment_flex_direction_column": "center",
+            "image": "shopify://shop_images/rascals_logo-removebg-preview.png",
+            "image_ratio": "adapt",
             "width": "fit-content",
-            "height": "fit",
-            "inherit_color_scheme": false,
-            "color_scheme": "scheme-brand-chip",
-            "border_radius": 100,
-            "padding-block-start": 16,
-            "padding-block-end": 16,
-            "padding-inline-start": 24,
-            "padding-inline-end": 24
+            "height": "fit"
           },
-          "blocks": {
-            "image_brand_rascal": {
-              "type": "image",
-              "settings": {
-                "image": "shopify://shop_images/Rascals.dde54c3a.svg",
-                "image_ratio": "adapt",
-                "width": "fit-content",
-                "height": "fit"
-              },
-              "blocks": {}
-            }
-          },
-          "block_order": ["image_brand_rascal"]
+          "blocks": {}
         },
         "image_brand_palmers": {
           "type": "image",
@@ -658,18 +665,29 @@
             "height": "fit"
           },
           "blocks": {}
+        },
+        "image_brand_maxibaby": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/images-removebg-preview.png",
+            "image_ratio": "adapt",
+            "width": "fit-content",
+            "height": "fit"
+          },
+          "blocks": {}
         }
       },
       "block_order": [
         "image_brand_drbrowns",
         "image_brand_pigeon",
-        "group_brand_rascal",
+        "image_brand_rascal",
         "image_brand_palmers",
         "image_brand_genial",
         "image_brand_avent",
         "image_brand_littleme",
         "image_brand_momcozy",
-        "image_brand_kidilo"
+        "image_brand_kidilo",
+        "image_brand_maxibaby"
       ],
       "name": "Marcas",
       "settings": {
@@ -690,17 +708,17 @@
             "content_direction": "column",
             "horizontal_alignment_flex_direction_column": "center",
             "vertical_alignment_flex_direction_column": "center",
-            "gap": 12
+            "gap": 8
           },
           "blocks": {
             "icon_trust_shipping": {
               "type": "icon",
-              "settings": { "icon": "truck", "width": 40 }
+              "settings": { "icon": "truck", "width": 56 }
             },
             "text_trust_shipping": {
               "type": "text",
               "settings": {
-                "text": "<h4><strong>Envío gratis</strong></h4><p>En compras dentro de Colombia</p>",
+                "text": "<h3><strong>Envíos seguros</strong></h3><h5>A todos los rincones de Colombia</h5>",
                 "alignment": "center",
                 "type_preset": "rte"
               }
@@ -716,17 +734,17 @@
             "content_direction": "column",
             "horizontal_alignment_flex_direction_column": "center",
             "vertical_alignment_flex_direction_column": "center",
-            "gap": 12
+            "gap": 8
           },
           "blocks": {
             "icon_trust_addi": {
               "type": "icon",
-              "settings": { "icon": "price_tag", "width": 40 }
+              "settings": { "icon": "price_tag", "width": 56 }
             },
             "text_trust_addi": {
               "type": "text",
               "settings": {
-                "text": "<h4><strong>Cuotas sin interés</strong></h4><p>Paga con Addi, fácil y rápido</p>",
+                "text": "<h3><strong>Cuotas sin interés</strong></h3><h5>Paga con Addi, fácil y rápido</h5>",
                 "alignment": "center",
                 "type_preset": "rte"
               }
@@ -740,17 +758,17 @@
             "content_direction": "column",
             "horizontal_alignment_flex_direction_column": "center",
             "vertical_alignment_flex_direction_column": "center",
-            "gap": 12
+            "gap": 8
           },
           "blocks": {
             "icon_trust_stores": {
               "type": "icon",
-              "settings": { "icon": "map_pin", "width": 40 }
+              "settings": { "icon": "map_pin", "width": 56 }
             },
             "text_trust_stores": {
               "type": "text",
               "settings": {
-                "text": "<h4><strong>Tiendas físicas</strong></h4><p>Visítanos en Cali</p>",
+                "text": "<h3><strong>Tiendas físicas</strong></h3><h5>Visítanos en Cali</h5>",
                 "alignment": "center",
                 "type_preset": "rte"
               }
@@ -768,322 +786,167 @@
         "vertical_alignment": "center",
         "gap": 24,
         "section_width": "page-width",
-        "color_scheme": "scheme-3",
+        "color_scheme": "scheme-trust-turquoise",
         "padding-block-start": 32,
         "padding-block-end": 32
       }
     },
-    "section_gx68UQ": {
+    "testimonials_row": {
+      "type": "testimonials-carousel",
+      "blocks": {
+        "review_1": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "quote": "Nos encantó todo, muchísimas gracias. Productos hermosos y de calidad.",
+            "author": "Cliente Babysam"
+          }
+        },
+        "review_2": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "quote": "Quería compartirte mi felicidad por el trabajo que hicieron, todo quedó divino. Se nota que hacen un excelente trabajo.",
+            "author": "Andrea M."
+          }
+        },
+        "review_3": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "quote": "Soy cliente fiel de Babysam desde mi maternidad. Todo lo de mi bebé lo compro ahí, muy cómodo y siempre responden con amabilidad.",
+            "author": "Laura P."
+          }
+        },
+        "review_4": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "quote": "Mi bebé ya tiene año y medio, hemos viajado con la pañalera al mar, a citas, a todo lado, y no tiene ni un rasguño.",
+            "author": "Camila R."
+          }
+        },
+        "review_5": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "quote": "Tocó comprarle otro porque no suelta el que ya tiene de tan bueno. Gracias por el excelente servicio.",
+            "author": "Valentina G."
+          }
+        }
+      },
+      "block_order": ["review_1", "review_2", "review_3", "review_4", "review_5"],
+      "name": "Testimonios",
+      "settings": {
+        "title": "Lo que dicen nuestras mamás y papás",
+        "color_scheme": "scheme-1"
+      }
+    },
+    "baby_shower_full": {
       "type": "section",
       "blocks": {
-        "group_7jj7hM": {
-          "type": "group",
+        "video_baby_shower_full": {
+          "type": "video",
           "settings": {
-            "link": "",
-            "open_in_new_tab": false,
-            "content_direction": "column",
-            "vertical_on_mobile": true,
-            "horizontal_alignment": "flex-start",
-            "vertical_alignment": "center",
-            "align_baseline": false,
-            "horizontal_alignment_flex_direction_column": "center",
-            "vertical_alignment_flex_direction_column": "center",
-            "gap": 0,
-            "width": "fit-content",
-            "custom_width": 100,
-            "width_mobile": "fill",
+            "source": "uploaded",
+            "video": "shopify://files/videos/Download (3).mp4",
+            "video_url": "",
+            "video_autoplay": true,
+            "video_loop": true,
+            "alt": "",
+            "custom_width": 38,
             "custom_width_mobile": 100,
-            "height": "fit",
-            "custom_height": 100,
-            "inherit_color_scheme": true,
-            "color_scheme": "",
-            "background_media": "none",
-            "video_position": "cover",
-            "background_image_position": "cover",
-            "border": "none",
-            "border_width": 1,
+            "aspect_ratio": "auto",
+            "border": "solid",
+            "border_width": 4,
             "border_opacity": 100,
-            "border_radius": 0,
-            "placeholder": "",
-            "toggle_overlay": false,
-            "overlay_color": "#00000026",
-            "overlay_style": "solid",
-            "gradient_direction": "to top",
+            "border_radius": 32,
             "padding-block-start": 0,
             "padding-block-end": 0,
             "padding-inline-start": 0,
             "padding-inline-end": 0
           },
+          "blocks": {}
+        },
+        "group_baby_shower_card": {
+          "type": "group",
+          "settings": {
+            "content_direction": "column",
+            "vertical_on_mobile": true,
+            "horizontal_alignment_flex_direction_column": "center",
+            "vertical_alignment_flex_direction_column": "center",
+            "gap": 10,
+            "width": "fill",
+            "height": "fit",
+            "inherit_color_scheme": false,
+            "color_scheme": "",
+            "background_media": "image",
+            "background_image": "shopify://shop_images/Copia_de_ask.png",
+            "background_image_position": "cover",
+            "border": "none",
+            "border_radius": 32,
+            "padding-block-start": 48,
+            "padding-block-end": 48,
+            "padding-inline-start": 48,
+            "padding-inline-end": 48
+          },
           "blocks": {
-            "group_L4WWtL": {
-              "type": "group",
-              "name": "t:names.group",
+            "baby_shower_form_full": {
+              "type": "baby-shower-form",
+              "name": "Formulario de Baby Shower",
               "settings": {
-                "link": "",
-                "open_in_new_tab": false,
-                "content_direction": "column",
-                "vertical_on_mobile": true,
-                "horizontal_alignment": "flex-start",
-                "vertical_alignment": "center",
-                "align_baseline": false,
-                "horizontal_alignment_flex_direction_column": "center",
-                "vertical_alignment_flex_direction_column": "center",
-                "gap": 20,
+                "form_title": "Crea tu Lista de Baby Shower",
+                "form_description": "<p>Agenda un recorrido personalizado en nuestra tienda para preparar la lista de regalos perfecta para tu bebé.</p><p>Además, evitas regalos repetidos o cosas que no usarás.</p>",
+                "whatsapp_number": "",
                 "width": "fit-content",
                 "custom_width": 100,
-                "width_mobile": "fill",
+                "width_mobile": "fit-content",
                 "custom_width_mobile": 100,
-                "height": "fit",
-                "custom_height": 85,
                 "inherit_color_scheme": true,
                 "color_scheme": "",
-                "background_media": "image",
-                "video_position": "cover",
-                "background_image": "shopify://shop_images/Copia_de_ask.png",
-                "background_image_position": "cover",
-                "border": "none",
-                "border_width": 1,
-                "border_opacity": 100,
-                "border_radius": 32,
-                "placeholder": "",
-                "toggle_overlay": false,
-                "overlay_color": "rgba(0,0,0,0)",
-                "overlay_style": "solid",
-                "gradient_direction": "to top",
-                "padding-block-start": 48,
-                "padding-block-end": 48,
-                "padding-inline-start": 48,
-                "padding-inline-end": 48
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
               },
-              "blocks": {
-                "text_baby_shower_heading": {
-                  "type": "text",
-                  "settings": {
-                    "text": "<h3>Crea tu Lista de Baby Shower</h3><p>Agenda un recorrido personalizado en tienda para armar la lista de regalos perfecta.</p>",
-                    "alignment": "center",
-                    "max_width": "narrow"
-                  },
-                  "blocks": {}
-                },
-                "button_baby_shower_cta": {
-                  "type": "button",
-                  "settings": {
-                    "label": "Agendar cita",
-                    "link": "shopify://pages/club-de-mamas",
-                    "style_class": "button"
-                  },
-                  "blocks": {}
-                }
-              },
-              "block_order": [
-                "text_baby_shower_heading",
-                "button_baby_shower_cta"
-              ]
+              "blocks": {}
             }
           },
-          "block_order": [
-            "group_L4WWtL"
-          ]
+          "block_order": ["baby_shower_form_full"]
         }
       },
-      "block_order": [
-        "group_7jj7hM"
-      ],
-      "name": "t:names.image_with_text",
+      "block_order": ["video_baby_shower_full", "group_baby_shower_card"],
+      "name": "Baby Shower (completo)",
       "settings": {
         "content_direction": "row",
         "vertical_on_mobile": true,
         "horizontal_alignment": "center",
         "vertical_alignment": "center",
-        "align_baseline": false,
-        "horizontal_alignment_flex_direction_column": "center",
-        "vertical_alignment_flex_direction_column": "center",
         "gap": 10,
         "section_width": "page-width",
-        "section_height": "medium",
-        "section_height_custom": 50,
         "color_scheme": "scheme-172f1528-c19a-4677-a995-61b4838b7072",
         "background_media": "image",
-        "video_position": "cover",
         "background_image": "shopify://shop_images/fondo_2.png",
         "background_image_position": "cover",
-        "border": "none",
-        "border_width": 1,
-        "border_opacity": 100,
-        "border_radius": 0,
-        "toggle_overlay": false,
-        "overlay_color": "#00000026",
-        "overlay_style": "solid",
-        "gradient_direction": "to top",
-        "padding-block-start": 5,
-        "padding-block-end": 5
+        "padding-block-start": 40,
+        "padding-block-end": 40
       }
     },
-    "testimonials_row": {
-      "type": "section",
+    "instagram_feed": {
+      "type": "instagram-feed",
       "blocks": {
-        "text_testimonials_heading": {
-          "type": "text",
-          "settings": {
-            "text": "<h2>Lo que dicen nuestras mamás y papás</h2>",
-            "width": "100%",
-            "max_width": "normal",
-            "alignment": "center",
-            "type_preset": "h2"
-          },
-          "blocks": {}
-        },
-        "group_testimonials_row": {
-          "type": "group",
-          "settings": {
-            "content_direction": "row",
-            "vertical_on_mobile": true,
-            "horizontal_alignment": "space-between",
-            "vertical_alignment": "flex-start",
-            "gap": 32,
-            "width": "fill",
-            "padding-block-start": 24,
-            "padding-block-end": 0
-          },
-          "blocks": {
-            "group_testimonial_1": {
-              "type": "group",
-              "settings": {
-                "content_direction": "column",
-                "horizontal_alignment_flex_direction_column": "center",
-                "vertical_alignment_flex_direction_column": "center",
-                "gap": 8,
-                "width": "fill"
-              },
-              "blocks": {
-                "text_stars_1": {
-                  "type": "text",
-                  "settings": {
-                    "text": "<p>★★★★★</p>",
-                    "alignment": "center",
-                    "type_preset": "rte"
-                  },
-                  "blocks": {}
-                },
-                "text_quote_1": {
-                  "type": "text",
-                  "settings": {
-                    "text": "<p>«Excelente atención y productos de calidad. Mi bebé llegó feliz con su coche nuevo.»</p>",
-                    "alignment": "center",
-                    "type_preset": "rte",
-                    "max_width": "narrow"
-                  },
-                  "blocks": {}
-                },
-                "text_name_1": {
-                  "type": "text",
-                  "settings": {
-                    "text": "<p><strong>María F.</strong></p>",
-                    "alignment": "center",
-                    "type_preset": "rte"
-                  },
-                  "blocks": {}
-                }
-              },
-              "block_order": ["text_stars_1", "text_quote_1", "text_name_1"]
-            },
-            "group_testimonial_2": {
-              "type": "group",
-              "settings": {
-                "content_direction": "column",
-                "horizontal_alignment_flex_direction_column": "center",
-                "vertical_alignment_flex_direction_column": "center",
-                "gap": 8,
-                "width": "fill"
-              },
-              "blocks": {
-                "text_stars_2": {
-                  "type": "text",
-                  "settings": {
-                    "text": "<p>★★★★★</p>",
-                    "alignment": "center",
-                    "type_preset": "rte"
-                  },
-                  "blocks": {}
-                },
-                "text_quote_2": {
-                  "type": "text",
-                  "settings": {
-                    "text": "<p>«Compré con cuotas Addi y todo fue muy fácil. Llegó rápido y bien empacado.»</p>",
-                    "alignment": "center",
-                    "type_preset": "rte",
-                    "max_width": "narrow"
-                  },
-                  "blocks": {}
-                },
-                "text_name_2": {
-                  "type": "text",
-                  "settings": {
-                    "text": "<p><strong>Andrés R.</strong></p>",
-                    "alignment": "center",
-                    "type_preset": "rte"
-                  },
-                  "blocks": {}
-                }
-              },
-              "block_order": ["text_stars_2", "text_quote_2", "text_name_2"]
-            },
-            "group_testimonial_3": {
-              "type": "group",
-              "settings": {
-                "content_direction": "column",
-                "horizontal_alignment_flex_direction_column": "center",
-                "vertical_alignment_flex_direction_column": "center",
-                "gap": 8,
-                "width": "fill"
-              },
-              "blocks": {
-                "text_stars_3": {
-                  "type": "text",
-                  "settings": {
-                    "text": "<p>★★★★★</p>",
-                    "alignment": "center",
-                    "type_preset": "rte"
-                  },
-                  "blocks": {}
-                },
-                "text_quote_3": {
-                  "type": "text",
-                  "settings": {
-                    "text": "<p>«Nos ayudaron a armar la lista de baby shower, un servicio increíble y muy cercano.»</p>",
-                    "alignment": "center",
-                    "type_preset": "rte",
-                    "max_width": "narrow"
-                  },
-                  "blocks": {}
-                },
-                "text_name_3": {
-                  "type": "text",
-                  "settings": {
-                    "text": "<p><strong>Camila G.</strong></p>",
-                    "alignment": "center",
-                    "type_preset": "rte"
-                  },
-                  "blocks": {}
-                }
-              },
-              "block_order": ["text_stars_3", "text_quote_3", "text_name_3"]
-            }
-          },
-          "block_order": ["group_testimonial_1", "group_testimonial_2", "group_testimonial_3"]
-        }
+        "photo_1": { "type": "photo", "settings": { "image": "shopify://shop_images/IG_foto_1.jpg", "link": "https://www.instagram.com/babysamcolombia/" } },
+        "photo_2": { "type": "photo", "settings": { "image": "shopify://shop_images/IG_foto_2.jpg", "link": "https://www.instagram.com/babysamcolombia/" } },
+        "photo_3": { "type": "photo", "settings": { "image": "shopify://shop_images/IG_foto_3.jpg", "link": "https://www.instagram.com/babysamcolombia/" } },
+        "photo_4": { "type": "photo", "settings": { "image": "shopify://shop_images/IG_foto_7.jpg", "link": "https://www.instagram.com/babysamcolombia/" } },
+        "photo_5": { "type": "photo", "settings": { "image": "shopify://shop_images/IG_foto_5.jpg", "link": "https://www.instagram.com/babysamcolombia/" } },
+        "photo_6": { "type": "photo", "settings": { "image": "shopify://shop_images/IG_foto_6.jpg", "link": "https://www.instagram.com/babysamcolombia/" } }
       },
-      "block_order": ["text_testimonials_heading", "group_testimonials_row"],
-      "name": "Testimonios",
+      "block_order": ["photo_1", "photo_2", "photo_3", "photo_4", "photo_5", "photo_6"],
+      "name": "Instagram",
       "settings": {
-        "content_direction": "column",
-        "horizontal_alignment_flex_direction_column": "center",
-        "vertical_alignment_flex_direction_column": "center",
-        "gap": 8,
-        "section_width": "page-width",
-        "color_scheme": "scheme-1",
-        "padding-block-start": 48,
-        "padding-block-end": 48
+        "title": "Síguenos @babysamcolombia",
+        "color_scheme": "scheme-7"
       }
     }
   },
@@ -1094,7 +957,8 @@
     "carrusel_productos_w3cKLp",
     "divider_zApW4A",
     "section_qNjNr8",
-    "section_gx68UQ",
-    "testimonials_row"
+    "testimonials_row",
+    "baby_shower_full",
+    "instagram_feed"
   ]
 }

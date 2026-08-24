@@ -182,6 +182,15 @@ select {
     transform: none;
     box-shadow: none;
   }
+
+  /* Sombra al hover en tarjetas de producto (complementa card_hover_effect,
+     que solo controla transform). Las reglas de .header/.header-drawer de
+     arriba ya la cancelan ahí por tener mayor especificidad. */
+  .product-card:hover,
+  .collection-card:hover,
+  .resource-card:hover {
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15);
+  }
 }
 
 dialog {
@@ -881,6 +890,91 @@ h6,
   }
 }
 
+/*
+  Fuente de acento (Fredoka), independiente del sistema Poppins del
+  tema. Se usa en todos los títulos H1/H2 del sitio (Hero incluido).
+  Poppins se mantiene en subtítulos (h3-h6), botones, body text,
+  header/nav y footer — no se tocan esas reglas.
+*/
+:root {
+  --font-accent: 'Fredoka', sans-serif;
+}
+
+/*
+  !important es necesario: el tema tiene reglas más específicas como
+  .h1.h1/.h2.h2 (doble clase) que le ganarían a un simple selector de
+  tag por especificidad, sin importar el orden de carga del CSS.
+  font-weight 700 porque Fredoka, a diferencia de Pacifico, tiene
+  variantes de peso — sin esto cae al regular (400) y pierde presencia
+  como titular.
+*/
+h1,
+h2 {
+  font-family: var(--font-accent) !important;
+  font-weight: 700;
+}
+
+/*
+  Sistema de tamaños de texto estándar para las secciones del home
+  (Catálogo Babysam, Regala Felicidad, Baby Shower, Testimonios, etc.).
+  Selector con tag+clase para ganarle a estilos propios de un bloque
+  específico (ej. .form-title) sin depender del orden de carga del CSS.
+*/
+h2.home-section-title,
+.home-section-title {
+  font-size: var(--font-h2--size);
+  font-weight: var(--font-h2--weight);
+  line-height: 1.35;
+}
+
+p.home-section-body,
+.home-section-body {
+  font-size: var(--font-size--body-md);
+}
+
+/*
+  Fila de confianza (Envíos seguros / Cuotas sin interés / Tiendas
+  físicas): en mobile el título y la descripción de cada columna
+  quedaban a la izquierda mientras el ícono se veía centrado. Se
+  fuerza el centrado solo para esta sección.
+  Breakpoint ampliado de 749px a 990px: en un iPhone real el fix no
+  estaba entrando aunque en DevTools sí. El breakpoint que realmente
+  controla si las 3 columnas se apilan (vs. quedan en fila) sigue
+  siendo 749px (.mobile-column en base.css) — ese no se tocó, así que
+  esto no afecta el layout de desktop, que empieza en 750px igual que
+  antes.
+*/
+@media screen and (max-width: 990px) {
+  [id$='__trust_row'] .richtext-content {
+    text-align: center !important;
+  }
+
+  /*
+    Causa real: el ícono queda envuelto en su propio bloque
+    (".icon-block", ancho auto ~56px) mientras que el bloque de texto
+    (el "text" simplificado del tema) no tiene ese mismo wrapper — es
+    directamente su propio ".content-container" con max-width:980px.
+    Con align-items:center, cada uno se centra según SU PROPIO ancho
+    auto-calculado, que no tiene por qué coincidir entre los dos.
+    Fix: se hace que ambos ocupen el 100% del ancho de la columna, así
+    sus centros coinciden matemáticamente sin importar esa diferencia.
+  */
+  [id$='__trust_row'] .group-block-content {
+    align-items: stretch !important;
+  }
+
+  [id$='__trust_row'] .icon-block {
+    display: flex !important;
+    justify-content: center !important;
+    width: 100% !important;
+  }
+
+  [id$='__trust_row'] .content-container {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
 :first-child:is(.h1, .h2, .h3, .h4, .h5, .h6) {
   margin-block-start: 0;
 }
@@ -1280,6 +1374,24 @@ button.shopify-payment-button__button--unbranded {
   box-shadow: inset 0 0 0 var(--button-border-width) var(--button-border-color);
   padding-block: var(--button-padding-block);
   padding-inline: var(--button-padding-inline);
+}
+
+/* Feedback de "hundimiento" al hacer click, simulando un botón físico */
+@media (prefers-reduced-motion: no-preference) {
+  .button,
+  .button-secondary,
+  button.shopify-payment-button__button--unbranded {
+    transition: color var(--animation-speed) var(--animation-easing),
+      box-shadow var(--animation-speed) var(--animation-easing),
+      background-color var(--animation-speed) var(--animation-easing),
+      transform 100ms ease-out;
+  }
+
+  .button:active:not([aria-disabled='true'], :disabled),
+  .button-secondary:active:not([aria-disabled='true'], :disabled),
+  button.shopify-payment-button__button--unbranded:active:not([disabled]) {
+    transform: scale(0.97);
+  }
 }
 
 .button {
@@ -2559,6 +2671,7 @@ deferred-media[class] :is(.deferred-media__poster-button img, .deferred-media__p
   background-color: var(--color-primary-button-background);
   border-radius: var(--style-border-radius-lg);
 }
+
 
 .cart-bubble__text {
   font-size: var(--font-size--2xs);
@@ -4271,5 +4384,32 @@ text-component {
   .h6.h6 textarea,
   .h6.h6 select {
     font-size: max(1rem, 100%);
+  }
+}
+
+/* AOS (Animate On Scroll): red de seguridad a nivel CSS. AOS.init() ya se
+   desactiva por JS con prefers-reduced-motion (assets/aos-init.js), pero si
+   por lo que sea el JS no llega a correr antes del primer pintado, esta regla
+   evita que el contenido quede invisible (aos.css pone opacity:0 por defecto
+   en [data-aos] hasta que la clase .aos-animate se agrega vía scroll). */
+@media (prefers-reduced-motion: reduce) {
+  [data-aos] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* .motion-reduce: clase que el tema ya aplica en varios componentes (drawer
+   del menú mobile, carrito, selectores de idioma/país) pero que nunca tuvo
+   una regla CSS que la implementara — quedaba sin ningún efecto. La
+   completamos acá: bajo reduced-motion, mata animation/transition en el
+   elemento marcado y en todos sus descendientes (los ítems del menú con
+   cascada, submenús, etc.), sin cambiar el estado final al que llegan. */
+@media (prefers-reduced-motion: reduce) {
+  .motion-reduce,
+  .motion-reduce * {
+    animation: none !important;
+    transition: none !important;
   }
 }

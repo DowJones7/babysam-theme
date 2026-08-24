@@ -8,131 +8,93 @@
 
 <div class="collection-list-wrapper color-{{ section.settings.color_scheme }}">
   <div class="collection-list-header page-width">
-    <ul
-      class="collection-carousel"
-      id="Slider-{{ section.id }}"
-      role="list"
-      style="--card-pattern-url: url('{{ 'backupd_catalogo.png' | file_img_url: '400x400' }}');"
-    >
-      {%- for block in section.blocks -%}
-        {% liquid
-          assign card_image = blank
-          case block.settings.collection.handle
-            when 'accesorios'
-              assign card_image = section.settings.image_accesorios
-            when 'caminadores'
-              assign card_image = section.settings.image_caminadores
-            when 'cobijas'
-              assign card_image = section.settings.image_cobijas
-            when 'coches'
-              assign card_image = section.settings.image_coches
-            when 'comedores'
-              assign card_image = section.settings.image_comedores
-            when 'coleccion-mi-primer-dia'
-              assign card_image = section.settings.image_mi_primer_dia
-            when 'jugueteria'
-              assign card_image = section.settings.image_jugueteria
-            when 'lenceria'
-              assign card_image = section.settings.image_lenceria
-            when 'panaleras'
-              assign card_image = section.settings.image_panaleras
-            when 'panales-premium'
-              assign card_image = section.settings.image_panales_premium
-            when 'teteros'
-              assign card_image = section.settings.image_teteros
-            when 'teteros-avent'
-              assign card_image = section.settings.image_teteros_avent
-            when 'toallas'
-              assign card_image = section.settings.image_toallas
-          endcase
-        %}
-        <li
-          id="Slide-{{ section.id }}-{{ forloop.index }}"
-          class="collection-card-item"
-          {{ block.shopify_attributes }}
-          role="listitem"
-        >
-          {%- render 'card-collection',
-            card_collection: block.settings.collection,
-            card_image: card_image,
-            media_aspect_ratio: section.settings.image_ratio,
-            columns: section.settings.columns_desktop,
-            extend_height: section.settings.extend_height,
-            collection_title_align: section.settings.collection_title_align,
-            show_description: section.settings.show_description,
-            show_products_count: section.settings.show_products_count -%}
-        </li>
-      {%- endfor -%}
-    </ul>
+    <div class="collection-carousel-row" data-carousel-drag>
+      <button type="button" class="collection-carousel-arrow collection-carousel-arrow--prev" data-carousel-prev aria-label="{{ 'accessibility.slideshow_previous' | t }}">
+        <span class="svg-wrapper">{{- 'icon-caret.svg' | inline_asset_content -}}</span>
+      </button>
+
+      <ul
+        class="collection-carousel"
+        id="Slider-{{ section.id }}"
+        data-carousel-track
+        role="list"
+        style="--card-pattern-url: url('{{ 'backupd_catalogo.png' | file_img_url: '400x400' }}');"
+      >
+        {%- for block in section.blocks -%}
+          {% liquid
+            assign card_image = blank
+            case block.settings.collection.handle
+              when 'accesorios'
+                assign card_image = section.settings.image_accesorios
+              when 'cobijas'
+                assign card_image = section.settings.image_cobijas
+              when 'coches'
+                assign card_image = section.settings.image_coches
+              when 'comedores'
+                assign card_image = section.settings.image_comedores
+              when 'coleccion-mi-primer-dia'
+                assign card_image = section.settings.image_mi_primer_dia
+              when 'jugueteria'
+                assign card_image = section.settings.image_jugueteria
+              when 'lenceria'
+                assign card_image = section.settings.image_lenceria
+              when 'panaleras-1'
+                assign card_image = section.settings.image_panaleras
+              when 'teteros'
+                assign card_image = section.settings.image_teteros
+              when 'toallas'
+                assign card_image = section.settings.image_toallas
+              when 'cuidado-materno'
+                assign card_image = section.settings.image_cuidado_materno
+              when 'lactancia'
+                assign card_image = section.settings.image_lactancia
+              when 'aseo'
+                assign card_image = section.settings.image_aseo
+              when 'ajuares'
+                assign card_image = section.settings.image_ajuares
+              when 'baneras'
+                assign card_image = section.settings.image_baneras
+              when 'gimnasios'
+                assign card_image = section.settings.image_gimnasios
+              when 'silla-de-carro'
+                assign card_image = section.settings.image_silla_de_carro
+              when 'sillas-mecedoras'
+                assign card_image = section.settings.image_sillas_mecedoras
+            endcase
+          %}
+          {% liquid
+            assign aos_step = forloop.index0 | modulo: 6
+            assign aos_delay = aos_step | times: 50
+          %}
+          <li
+            id="Slide-{{ section.id }}-{{ forloop.index }}"
+            class="collection-card-item"
+            {{ block.shopify_attributes }}
+            role="listitem"
+            data-aos="fade-up"
+            data-aos-delay="{{ aos_delay }}"
+          >
+            {%- render 'card-collection',
+              card_collection: block.settings.collection,
+              card_image: card_image,
+              media_aspect_ratio: section.settings.image_ratio,
+              columns: section.settings.columns_desktop,
+              extend_height: section.settings.extend_height,
+              collection_title_align: section.settings.collection_title_align,
+              show_description: section.settings.show_description,
+              show_products_count: section.settings.show_products_count -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+
+      <button type="button" class="collection-carousel-arrow collection-carousel-arrow--next" data-carousel-next aria-label="{{ 'accessibility.slideshow_next' | t }}">
+        <span class="svg-wrapper">{{- 'icon-caret.svg' | inline_asset_content -}}</span>
+      </button>
+    </div>
   </div>
 </div>
 
-<script>
-  (function () {
-    var slider = document.getElementById('Slider-{{ section.id }}');
-    if (!slider) return;
-
-    var isDown = false;
-    var moved = false;
-    var startX = 0;
-    var startScrollLeft = 0;
-
-    function endDrag() {
-      if (!isDown) return;
-      isDown = false;
-      slider.classList.remove('is-dragging');
-      snapToNearest();
-    }
-
-    function snapToNearest() {
-      var items = slider.querySelectorAll('.collection-card-item');
-      if (!items.length) return;
-      var closest = null;
-      var closestDist = Infinity;
-      items.forEach(function (item) {
-        var dist = Math.abs(item.offsetLeft - slider.scrollLeft);
-        if (dist < closestDist) {
-          closestDist = dist;
-          closest = item;
-        }
-      });
-      if (closest) {
-        slider.scrollTo({ left: closest.offsetLeft, behavior: 'smooth' });
-      }
-    }
-
-    slider.addEventListener('mousedown', function (e) {
-      isDown = true;
-      moved = false;
-      slider.classList.add('is-dragging');
-      startX = e.pageX;
-      startScrollLeft = slider.scrollLeft;
-    });
-
-    slider.addEventListener('mousemove', function (e) {
-      if (!isDown) return;
-      e.preventDefault();
-      var walk = e.pageX - startX;
-      if (Math.abs(walk) > 5) moved = true;
-      slider.scrollLeft = startScrollLeft - walk;
-    });
-
-    slider.addEventListener('mouseup', endDrag);
-    slider.addEventListener('mouseleave', endDrag);
-
-    slider.addEventListener(
-      'click',
-      function (e) {
-        if (moved) {
-          e.preventDefault();
-          e.stopPropagation();
-        }
-        moved = false;
-      },
-      true
-    );
-  })();
-</script>
+<script src="{{ 'carousel-controller.js' | asset_url }}" defer="defer"></script>
 
 {% schema %}
 {
@@ -194,18 +156,23 @@
     { "type": "header", "content": "Fotos de las categorías" },
     { "type": "paragraph", "content": "Sube aquí la foto de cada categoría del catálogo. Si se deja vacía, la tarjeta muestra solo el fondo decorativo, igual que ahora." },
     { "type": "image_picker", "id": "image_accesorios", "label": "Foto de Accesorios" },
-    { "type": "image_picker", "id": "image_caminadores", "label": "Foto de Caminadores" },
     { "type": "image_picker", "id": "image_cobijas", "label": "Foto de Cobijas" },
     { "type": "image_picker", "id": "image_coches", "label": "Foto de Coches" },
     { "type": "image_picker", "id": "image_comedores", "label": "Foto de Comedores" },
-    { "type": "image_picker", "id": "image_mi_primer_dia", "label": "Foto de Mi Primer Día" },
-    { "type": "image_picker", "id": "image_jugueteria", "label": "Foto de Juguetería" },
+    { "type": "image_picker", "id": "image_mi_primer_dia", "label": "Foto de Corrales" },
+    { "type": "image_picker", "id": "image_jugueteria", "label": "Foto de Didacticos" },
     { "type": "image_picker", "id": "image_lenceria", "label": "Foto de Lencería" },
     { "type": "image_picker", "id": "image_panaleras", "label": "Foto de Pañaleras" },
-    { "type": "image_picker", "id": "image_panales_premium", "label": "Foto de Pañales Premium" },
     { "type": "image_picker", "id": "image_teteros", "label": "Foto de Teteros" },
-    { "type": "image_picker", "id": "image_teteros_avent", "label": "Foto de Teteros Avent" },
-    { "type": "image_picker", "id": "image_toallas", "label": "Foto de Toallas" }
+    { "type": "image_picker", "id": "image_toallas", "label": "Foto de Toallas" },
+    { "type": "image_picker", "id": "image_cuidado_materno", "label": "Foto de Cuidado Materno" },
+    { "type": "image_picker", "id": "image_lactancia", "label": "Foto de Lactancia" },
+    { "type": "image_picker", "id": "image_aseo", "label": "Foto de Aseo" },
+    { "type": "image_picker", "id": "image_ajuares", "label": "Foto de Ajuares" },
+    { "type": "image_picker", "id": "image_baneras", "label": "Foto de Bañeras" },
+    { "type": "image_picker", "id": "image_gimnasios", "label": "Foto de Gimnasios" },
+    { "type": "image_picker", "id": "image_silla_de_carro", "label": "Foto de Silla de carro" },
+    { "type": "image_picker", "id": "image_sillas_mecedoras", "label": "Foto de Sillas mecedoras" }
   ],
   "blocks": [
     { "type": "collection", "name": "Colección", "settings": [
@@ -224,9 +191,18 @@
 {% endschema %}
 
 {% stylesheet %}
-.collection-carousel {
+.collection-carousel-row {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
+  gap: 8px;
+}
+
+.collection-carousel {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(2, auto);
+  /* 2 columnas x 2 filas visibles en mobile */
+  grid-auto-columns: calc((100% - 16px) / 2);
   gap: 16px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
@@ -238,6 +214,22 @@
   margin: 0;
   cursor: grab;
   user-select: none;
+  flex: 1;
+  min-width: 0;
+}
+
+@media screen and (min-width: 750px) {
+  .collection-carousel {
+    /* 3 columnas x 2 filas visibles en tablet */
+    grid-auto-columns: calc((100% - 32px) / 3);
+  }
+}
+
+@media screen and (min-width: 990px) {
+  .collection-carousel {
+    /* 6 columnas x 2 filas visibles en desktop */
+    grid-auto-columns: calc((100% - 80px) / 6);
+  }
 }
 
 .collection-carousel::-webkit-scrollbar {
@@ -256,7 +248,6 @@
 }
 
 .collection-card-item {
-  flex: 0 0 auto;
   scroll-snap-align: start;
   border: 2px solid var(--color-foreground);
   border-radius: 15px;
@@ -264,18 +255,72 @@
   background-image: var(--card-pattern-url);
   background-repeat: repeat;
   background-size: 120px 120px;
-  width: 68%;
+  transition: box-shadow 250ms ease;
 }
 
-@media screen and (min-width: 750px) {
+.collection-card-item:hover {
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15);
+}
+
+@media (prefers-reduced-motion: no-preference) {
   .collection-card-item {
-    width: 40%;
+    transition: transform 250ms ease, box-shadow 250ms ease;
+  }
+
+  /* !important necesario: AOS también controla `transform` en este mismo
+     elemento (data-aos="fade-up") y su regla .aos-animate empata en
+     especificidad con este :hover — sin esto, el scale nunca se aplica. */
+  .collection-card-item:hover {
+    transform: scale(1.03) !important;
   }
 }
 
+.collection-carousel .card-collection__title {
+  font-size: 1rem;
+}
+
 @media screen and (min-width: 990px) {
-  .collection-card-item {
-    width: 33%;
+  .collection-carousel .card-collection__title {
+    font-size: 0.95rem;
+  }
+}
+
+.collection-carousel-arrow {
+  display: none;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid var(--color-foreground);
+  background: var(--color-background);
+  cursor: pointer;
+  padding: 0;
+}
+
+.collection-carousel-arrow[disabled] {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.collection-carousel-arrow .svg-wrapper {
+  display: flex;
+  width: 14px;
+  height: 14px;
+}
+
+.collection-carousel-arrow--prev .svg-wrapper {
+  transform: rotate(90deg);
+}
+
+.collection-carousel-arrow--next .svg-wrapper {
+  transform: rotate(-90deg);
+}
+
+@media screen and (min-width: 750px) {
+  .collection-carousel-arrow {
+    display: flex;
   }
 }
 

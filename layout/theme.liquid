@@ -24,6 +24,19 @@
 
     {%- render 'meta-tags' -%}
     {%- render 'fonts' -%}
+    {%- comment -%}
+      Fuente de acento (Fredoka) para títulos de sección destacados,
+      independiente del sistema de fuentes Poppins del tema (body/heading).
+    {%- endcomment -%}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&display=swap" rel="stylesheet">
+    {%- comment -%}
+      AOS (Animate On Scroll) auto-hospedado en assets/ — mismo patrón que el resto
+      de librerías manuales del tema. Init con duración corta (300ms) y respeta
+      prefers-reduced-motion vía la opción `disable` en assets/aos-init.js.
+    {%- endcomment -%}
+    <link rel="stylesheet" href="{{ 'aos.css' | asset_url }}">
     {%- render 'scripts' -%}
     {%- render 'theme-styles-variables' -%}
     {%- render 'color-schemes' -%}
@@ -60,6 +73,9 @@
     </main>
 
     {% sections 'footer-group' %}
+
+    <script src="{{ 'aos.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'aos-init.js' | asset_url }}" defer="defer"></script>
 
     {% render 'search-modal' %}
 

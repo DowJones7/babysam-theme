@@ -63,18 +63,28 @@
 {% capture media %}
   {%- if has_image_1 -%}
     {% assign media_count = media_count | plus: 1 %}
-    {{
-      section.settings.image_1
-      | image_url: width: 3840
-      | image_tag:
-        width: section.settings.image_1.width,
-        widths: widths,
-        height: section.settings.image_1.height,
-        alt: section.settings.image_1.alt,
-        class: 'hero__image',
-        sizes: sizes,
-        fetchpriority: fetch_priority
-    }}
+    {%- comment -%}
+      Video de fondo (babysam_hero_optimized.mp4, en assets/) sobre la
+      ilustración estática de siempre. Solo desktop/tablet: el <source> trae
+      un media query, así que en mobile el <video> no tiene ninguna fuente
+      válida y el navegador ni siquiera descarga los 6MB — solo muestra el
+      poster (la misma imagen estática de siempre).
+    {%- endcomment -%}
+    <video
+      class="hero__video hero__bg-video"
+      autoplay
+      muted
+      loop
+      playsinline
+      aria-hidden="true"
+      poster="{{ section.settings.image_1 | image_url: width: 1920 }}"
+    >
+      <source
+        src="{{ 'babysam_hero_optimized.mp4' | asset_url }}"
+        type="video/mp4"
+        media="(min-width: 750px)"
+      >
+    </video>
   {%- endif -%}
 
   {%- if has_video_1 -%}
@@ -321,12 +331,37 @@
     position: relative;
   }
 
+
   .hero__media-wrapper {
     position: absolute;
     inset: 0;
     display: grid;
     grid-column: 1 / -1;
     grid-template-columns: repeat(var(--hero-media-count, 1), 1fr);
+  }
+
+  /*
+    Banda de legibilidad para el texto del hero, concentrada en la franja
+    inferior (no un fade parejo en toda la altura, como el overlay nativo
+    del tema — ese solo interpola dos colores de punta a punta, así que el
+    punto exacto donde vive el texto nunca llegaba a la opacidad máxima).
+    Varias paradas de color en vez de un bloque sólido para que se sienta
+    parte del video, no un rectángulo pegado encima.
+  */
+  .hero__media-wrapper::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: var(--layer-flat);
+    pointer-events: none;
+    background: linear-gradient(
+      to top,
+      rgb(0 0 0 / 0.92) 0%,
+      rgb(0 0 0 / 0.82) 20%,
+      rgb(0 0 0 / 0.5) 42%,
+      rgb(0 0 0 / 0.15) 65%,
+      transparent 80%
+    );
   }
 
   .hero--auto .hero__image,
@@ -358,8 +393,110 @@
     z-index: var(--layer-base);
   }
 
+  /*
+    El video es 16:9 (1920x1080) pero el hero es más angosto que eso a esta
+    altura fija, así que el cover recorta verticalmente. object-position al
+    centro recortaba parejo arriba y abajo, cortando cabezas en varias tomas
+    del montaje. Se sube el punto de anclaje para sacrificar solo la parte
+    inferior del cuadro (piso/manta) y dejar aire arriba de las cabezas.
+  */
+  .hero__video {
+    object-position: 50% 25%;
+  }
+
   .hero__video-poster {
     position: absolute;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .hero__image {
+      animation: hero-ken-burns 18s ease-in-out infinite alternate;
+    }
+  }
+
+  @keyframes hero-ken-burns {
+    from {
+      transform: scale(1);
+    }
+    to {
+      transform: scale(1.05);
+    }
+  }
+
+  /*
+    Rediseño completo del Hero en mobile: composición apilada (imagen
+    arriba, texto abajo) como una sola pieza continua, no dos bloques
+    separados. Todo vive dentro de este media query; desktop no se toca.
+
+    Ampliado de 749px a 990px: mismo motivo que el bloque de más abajo
+    y que trust_row (en un iPhone real el breakpoint de 749px no
+    entraba aunque en DevTools sí), y así queda un solo corte apilado/
+    desktop en 990-991px en vez de dos tramos con lógica distinta.
+  */
+  @media screen and (max-width: 990px) {
+    /*
+      Bug real del primer intento: .hero__container ya traía
+      align-items: var(--vertical-alignment-mobile), que vale "center".
+      Al forzar flex-direction:column, ese align-items pasa a controlar
+      el eje CRUZADO, que en modo columna es el horizontal — por eso
+      tanto la imagen como el texto se encogían a su ancho de contenido
+      y quedaban centrados con espacio en blanco a los lados, en vez de
+      ocupar el ancho completo. "stretch" corrige esto.
+    */
+    .hero__container {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      min-height: auto;
+      padding-block-start: 0;
+      padding-block-end: 32px;
+    }
+
+    /*
+      La imagen deja de ser fondo absoluto superpuesto y pasa a ocupar
+      su propio espacio arriba, a todo el ancho.
+    */
+    .hero__media-wrapper {
+      position: relative;
+      inset: auto;
+      aspect-ratio: 4 / 3;
+    }
+
+    /*
+      La banda oscura (agregada para el contraste del texto sobre el video
+      en desktop) no debe verse acá: en mobile el texto vive en su propio
+      bloque debajo de la imagen, no encima — oscurecer la ilustración no
+      ayuda a nada y solo la opaca sin motivo.
+    */
+    .hero__media-wrapper::after {
+      display: none;
+    }
+
+    /*
+      La ilustración es muy ancha (2:1) y el bebé con la ballena quedan
+      en el tercio izquierdo del archivo; el resto es cielo vacío. Sin
+      este ajuste, el recorte 4:3 centrado deja el personaje a medias
+      fuera de cuadro y pierde la ballena.
+    */
+    .hero__image,
+    .hero__video {
+      object-position: 0% center;
+    }
+
+    /*
+      Mismo tono de fondo que el cielo de la propia ilustración, para
+      que la transición imagen→texto no se sienta como un cambio de
+      bloque. !important porque el color real llega vía la clase
+      .color-scheme-X del tema, con su propia regla de background.
+    */
+    .hero {
+      background-color: #fffaf7 !important;
+    }
+
+    .hero__content-wrapper {
+      position: relative;
+      padding-block: 12px 0;
+    }
   }
 
   .hero__link {
