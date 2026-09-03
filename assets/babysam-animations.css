@@ -1,0 +1,187 @@
+/* ============================================================================
+   Babysam — animaciones de rebote calibradas
+   ----------------------------------------------------------------------------
+   Reproduce las 3 variantes aprobadas en el mock (que se perdió) a partir de
+   los keyframes documentados en las capturas, y aplica la misma intensidad de
+   rebote ("Más rebote" del Hero) a las secciones que faltaban del plan.
+
+   Piezas:
+   - Hero: scale-in al cargar (.7 -> 1.06 -> 1, 620ms) + hover del botón
+     "Comprar ahora" (scale 1.05, rebote corto 160ms). El :active .97 lo pone
+     el tema (assets/base.css), NO se toca aquí.
+   - Fila de confianza: zoom-bounce por ícono (.45 -> 1.08 -> 1, 540ms) con
+     180ms de stagger, disparado al entrar en viewport una sola vez (JS).
+   - Catálogo: hover con zoom de overshoot (scale 1.12, 430ms) SOLO en la foto
+     de fondo; el overlay de título es hermano del <img> y no se transforma.
+     Desactivado mientras se arrastra el carrusel (.is-dragging).
+   - Marquee de marcas: hover de cada logo con la misma curva de rebote.
+   - Banner "Regala Felicidad": precio/CTA entra con bounce-in al hacer scroll,
+     una sola vez (JS).
+   - Testimonios / Instagram: entrada por scroll/drag con el mismo bounce-in,
+     una sola vez, con stagger corto (JS).
+
+   Todo respeta prefers-reduced-motion: el estado inicial oculto y las
+   animaciones viven dentro de @media (prefers-reduced-motion: no-preference),
+   y el JS (assets/babysam-animations.js) ni siquiera arranca bajo `reduce`.
+   Al final hay una red de seguridad explícita para `reduce`.
+   ========================================================================== */
+
+:root {
+  /* Curva de rebote estándar del sitio: back-out con overshoot marcado
+     ("Más rebote"). En una transición, el 2º parámetro > 1 hace que el valor
+     pase de largo el target y vuelva — ése es el "rebote corto". */
+  --bs-ease-bounce: cubic-bezier(0.34, 1.8, 0.64, 1);
+  /* Variante un poco más contenida para el overshoot del zoom del catálogo. */
+  --bs-ease-overshoot: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Keyframes compartidos ---------------------------------------------------- */
+
+/* Hero al cargar: .7 -> 1.06 -> 1 con opacidad, una sola vez. */
+@keyframes bs-hero-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Fila de confianza, por ícono: .45 -> 1.08 -> 1. */
+@keyframes bs-zoom-bounce {
+  0% {
+    opacity: 0;
+    transform: scale(0.45);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Bounce-in genérico para las secciones sin valores propios aprobados
+   (banner, testimonios, Instagram). Misma "forma" que el Hero: .7 -> 1.06 -> 1. */
+@keyframes bs-bounce-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.7) translateY(12px);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.06) translateY(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Fade + slide-up sutil, SIN rebote — tono más refinado para contenido de
+   texto (ej. Visión/Misión en "Quienes Somos"), distinto del resto del sitio
+   a propósito: 20px -> 0 con ease-out simple, nada de overshoot. */
+@keyframes bs-fade-slide {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* --- Estado inicial de los elementos que revela el JS por scroll --------- */
+  .bs-reveal {
+    opacity: 0;
+    will-change: transform, opacity;
+  }
+
+  .bs-reveal.bs-in {
+    opacity: 1;
+  }
+
+  .bs-reveal--zoombounce.bs-in {
+    animation: bs-zoom-bounce 540ms both;
+  }
+
+  .bs-reveal--bouncein.bs-in {
+    animation: bs-bounce-in 620ms both;
+  }
+
+  .bs-reveal--fadeslide.bs-in {
+    animation: bs-fade-slide 560ms ease-out both;
+  }
+
+  /* --- 1. Hero: scale-in al cargar -------------------------------------------
+     Se anima el contenedor de contenido completo (titular + subtítulo +
+     botón). El Ken Burns vive en .hero__image (hermano) y no se toca. */
+  [id$="__hero_main"] .hero__content-wrapper {
+    animation: bs-hero-in 620ms both;
+  }
+
+  /* --- 1. Hero: hover del botón "Comprar ahora" ----------------------------
+     Mantiene las transiciones de color/sombra del tema y solo cambia la de
+     `transform` a 160ms con la curva de rebote. El hundimiento a scale(.97)
+     en :active lo sigue poniendo assets/base.css. */
+  [id$="__hero_main"] .button {
+    transition:
+      color var(--animation-speed) var(--animation-easing),
+      box-shadow var(--animation-speed) var(--animation-easing),
+      background-color var(--animation-speed) var(--animation-easing),
+      transform 160ms var(--bs-ease-bounce);
+  }
+
+  [id$="__hero_main"] .button:hover {
+    transform: scale(1.05);
+  }
+
+  /* --- 4. Marquee de marcas: hover de cada logo --------------------------- */
+  [id$="__brands_marquee"] .image-block img {
+    transition: transform 240ms var(--bs-ease-bounce);
+  }
+
+  [id$="__brands_marquee"] .image-block:hover img {
+    transform: scale(1.12);
+  }
+}
+
+/* --- 3. Catálogo: hover de la foto de fondo --------------------------------
+   Vive en su propio bloque (no depende de [id$=...]) porque la sección ya
+   tiene su CSS scoped en sections/carrusel-productos.liquid; acá solo está
+   la parte de movimiento para poder anularla en bloque bajo `reduce`.
+   OJO: el zoom va en `.card-collection__media img`, nunca en la tarjeta ni en
+   `.card-collection__overlay` (hermano del <img>), que no se mueve. */
+@media (prefers-reduced-motion: no-preference) {
+  .collection-card-item .card-collection__media img {
+    transition: transform 430ms var(--bs-ease-overshoot);
+    will-change: transform;
+  }
+
+  .collection-carousel:not(.is-dragging)
+    .collection-card-item:hover
+    .card-collection__media
+    img {
+    transform: scale(1.12);
+  }
+}
+
+/* --- Red de seguridad para prefers-reduced-motion ------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .bs-reveal,
+  [id$="__hero_main"] .hero__content-wrapper {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+}

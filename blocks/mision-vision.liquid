@@ -1,0 +1,82 @@
+{%- doc -%}
+  Visión y Misión mostradas siempre visibles (sin acordeón), con animación de
+  entrada al hacer scroll (fade + slide-up sutil, JS en
+  assets/babysam-animations.js, variante 'fadeslide'). Reemplaza al bloque
+  "Acordeón" solo en esta página puntual — no se tocó blocks/accordion.liquid
+  ni blocks/_accordion-row.liquid porque son compartidos con otras páginas.
+
+  El heading reusa la misma cadena de variables de tipografía que el
+  acordeón (type_preset h6) y el cuerpo reusa las clases .richtext /
+  .richtext-content del bloque "text" del tema, para mantener exactamente el
+  mismo estilo visual (tipografía, tamaño, color) que tenía el acordeón.
+{%- enddoc -%}
+
+<div class="mision-vision" {{ block.shopify_attributes }}>
+  <div class="mision-vision__item bs-reveal bs-reveal--fadeslide">
+    <h3 class="mision-vision__heading">{{ block.settings.heading_1 }}</h3>
+    <div class="richtext richtext-content mision-vision__text">
+      {{ block.settings.text_1 }}
+    </div>
+  </div>
+  <div class="mision-vision__item bs-reveal bs-reveal--fadeslide">
+    <h3 class="mision-vision__heading">{{ block.settings.heading_2 }}</h3>
+    <div class="richtext richtext-content mision-vision__text">
+      {{ block.settings.text_2 }}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .mision-vision {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-lg, 24px);
+    width: 100%;
+  }
+
+  .mision-vision__heading {
+    font-family: var(--font-h6--family);
+    font-style: var(--font-h6--style);
+    font-weight: var(--font-h6--weight);
+    font-size: var(--font-h6--size);
+    line-height: var(--font-h6--line-height);
+    text-transform: var(--font-h6--case);
+    margin: 0 0 var(--margin-2xs, 8px);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Visión y Misión",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading_1",
+      "label": "Título 1",
+      "default": "Visión"
+    },
+    {
+      "type": "richtext",
+      "id": "text_1",
+      "label": "Texto 1"
+    },
+    {
+      "type": "text",
+      "id": "heading_2",
+      "label": "Título 2",
+      "default": "Misión"
+    },
+    {
+      "type": "richtext",
+      "id": "text_2",
+      "label": "Texto 2"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Visión y Misión"
+    }
+  ]
+}
+{% endschema %}

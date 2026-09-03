@@ -113,166 +113,22 @@
               },
               "blocks": {}
             },
-            "page_content_th3qN4": {
-              "type": "page-content",
-              "settings": {},
-              "blocks": {}
-            },
-            "accordion_KBGxAY": {
-              "type": "accordion",
-              "name": "t:names.accordion",
+            "mision_vision_bXq4Rp": {
+              "type": "mision-vision",
+              "name": "Visión y Misión",
               "settings": {
-                "icon": "caret",
-                "dividers": true,
-                "type_preset": "h6",
-                "inherit_color_scheme": true,
-                "color_scheme": "",
-                "border": "none",
-                "border_width": 1,
-                "border_opacity": 100,
-                "border_radius": 0,
-                "padding-block-start": 14,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
+                "heading_1": "Visión",
+                "text_1": "<p>Para 2030, ser reconocidos a nivel nacional como uno de los referentes más confiables del sector maternidad e infantil en Colombia, y consolidarnos como el aliado estratégico más fuerte para el desarrollo y posicionamiento de nuevas marcas en esta industria. Buscamos expandir nuestro alcance más allá de las fronteras del país, llevando nuestros productos y alianzas comerciales a mercados internacionales, para que cada vez más familias —sin importar dónde estén— puedan confiar en la calidad y el respaldo que representa nuestra marca.</p>",
+                "heading_2": "Misión",
+                "text_2": "<p>En Babysam Colombia acompañamos a las familias en cada etapa de la maternidad y la crianza, ofreciendo productos de calidad, atención cercana y soluciones confiables para el cuidado de sus hijos. Entendemos que detrás de cada compra hay una familia que busca lo mejor para su bebé, y por eso trabajamos con disciplina, entrega y compromiso en cada detalle: desde la selección de nuestros productos hasta el acompañamiento después de la venta. Construimos relaciones de confianza que se traducen en fidelización, porque sabemos que ganarnos a una familia no es una venta, es un vínculo que se cuida en el tiempo.</p>"
               },
-              "blocks": {
-                "accordion_row_NigAtH": {
-                  "type": "_accordion-row",
-                  "settings": {
-                    "heading": "Visión",
-                    "open_by_default": true,
-                    "icon": "none",
-                    "width": 20
-                  },
-                  "blocks": {
-                    "text_6cUgxx": {
-                      "type": "text",
-                      "settings": {
-                        "image_link": "",
-                        "image_alignment": "center",
-                        "text": "<p>Our goal is for every customer to be totally satisfied with their purchase. If this isn't the case, let us know and we'll do our best to work with you to make it right.</p>",
-                        "width": "100%",
-                        "max_width": "normal",
-                        "alignment": "left",
-                        "type_preset": "rte",
-                        "font": "var(--font-body--family)",
-                        "font_size": "1rem",
-                        "line_height": "normal",
-                        "letter_spacing": "normal",
-                        "case": "none",
-                        "wrap": "pretty",
-                        "color": "var(--color-foreground)",
-                        "background": false,
-                        "background_color": "#00000026",
-                        "corner_radius": 0,
-                        "padding-block-start": 0,
-                        "padding-block-end": 0,
-                        "padding-inline-start": 0,
-                        "padding-inline-end": 0
-                      },
-                      "blocks": {}
-                    }
-                  },
-                  "block_order": [
-                    "text_6cUgxx"
-                  ]
-                },
-                "accordion_row_Caj8Hp": {
-                  "type": "_accordion-row",
-                  "settings": {
-                    "heading": "Misión",
-                    "open_by_default": false,
-                    "icon": "none",
-                    "width": 20
-                  },
-                  "blocks": {
-                    "text_t9b7UP": {
-                      "type": "text",
-                      "settings": {
-                        "image_link": "",
-                        "image_alignment": "center",
-                        "text": "<p>We will work quickly to ship your order as soon as possible. Once your order has shipped, you will receive an email with further information. Delivery times vary depending on your location.</p>",
-                        "width": "100%",
-                        "max_width": "normal",
-                        "alignment": "left",
-                        "type_preset": "rte",
-                        "font": "var(--font-body--family)",
-                        "font_size": "1rem",
-                        "line_height": "normal",
-                        "letter_spacing": "normal",
-                        "case": "none",
-                        "wrap": "pretty",
-                        "color": "var(--color-foreground)",
-                        "background": false,
-                        "background_color": "#00000026",
-                        "corner_radius": 0,
-                        "padding-block-start": 0,
-                        "padding-block-end": 0,
-                        "padding-inline-start": 0,
-                        "padding-inline-end": 0
-                      },
-                      "blocks": {}
-                    }
-                  },
-                  "block_order": [
-                    "text_t9b7UP"
-                  ]
-                },
-                "accordion_row_kqYeTx": {
-                  "type": "_accordion-row",
-                  "settings": {
-                    "heading": "Objetivos",
-                    "open_by_default": false,
-                    "icon": "none",
-                    "width": 20
-                  },
-                  "blocks": {
-                    "text_Rh4BWc": {
-                      "type": "text",
-                      "settings": {
-                        "image_link": "",
-                        "image_alignment": "center",
-                        "text": "<p>Our products are manufactured both locally and globally. We carefully select our manufacturing partners to ensure our products are high quality and a fair value.</p>",
-                        "width": "100%",
-                        "max_width": "normal",
-                        "alignment": "left",
-                        "type_preset": "rte",
-                        "font": "var(--font-body--family)",
-                        "font_size": "1rem",
-                        "line_height": "normal",
-                        "letter_spacing": "normal",
-                        "case": "none",
-                        "wrap": "pretty",
-                        "color": "var(--color-foreground)",
-                        "background": false,
-                        "background_color": "#00000026",
-                        "corner_radius": 0,
-                        "padding-block-start": 0,
-                        "padding-block-end": 0,
-                        "padding-inline-start": 0,
-                        "padding-inline-end": 0
-                      },
-                      "blocks": {}
-                    }
-                  },
-                  "block_order": [
-                    "text_Rh4BWc"
-                  ]
-                }
-              },
-              "block_order": [
-                "accordion_row_NigAtH",
-                "accordion_row_Caj8Hp",
-                "accordion_row_kqYeTx"
-              ]
+              "blocks": {}
             }
           },
           "block_order": [
             "text_fceAjk",
             "image_tDUrfC",
-            "page_content_th3qN4",
-            "accordion_KBGxAY"
+            "mision_vision_bXq4Rp"
           ]
         },
         "group_TLMNeL": {
