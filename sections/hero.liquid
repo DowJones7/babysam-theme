@@ -64,11 +64,33 @@
   {%- if has_image_1 -%}
     {% assign media_count = media_count | plus: 1 %}
     {%- comment -%}
-      Video de fondo (babysam_hero_optimized.mp4, en assets/) sobre la
-      ilustración estática de siempre. Solo desktop/tablet: el <source> trae
-      un media query, así que en mobile el <video> no tiene ninguna fuente
-      válida y el navegador ni siquiera descarga los 6MB — solo muestra el
-      poster (la misma imagen estática de siempre).
+      Video de fondo (babysam_hero_optimized.mp4, en assets/) full-bleed en
+      TODOS los anchos.
+
+      Autoplay inline en iOS Safari — requisitos, todos acá:
+      1. UN solo <source>, SIN atributo `media`: así no hay ningún rango de
+         ancho sin fuente válida (el bug original era `media:min-width:750px`,
+         que dejaba mobile sin fuente).
+      2. `type="video/mp4"` en el <source>: el CDN de assets de Shopify sirve
+         este .mp4 con `Content-Type: application/mp4` (no `video/mp4`), y sin
+         el hint de `type` iOS Safari puede no reconocerlo como video inline
+         autoplayable y mostrar su reproductor nativo.
+      3. `muted playsinline autoplay loop`: iOS exige muted + playsinline para
+         reproducir inline sin controles.
+      4. El atributo `muted` no siempre setea la PROPIEDAD `.muted` a tiempo en
+         WebKit, y `autoplay` solo no es confiable en Safari — el <script> de
+         abajo fuerza `.muted = true` + `.play()` (mismo patrón "force autoplay
+         for safari" que usa assets/media.js del tema).
+
+      poster = ilustración estática: se ve mientras carga el video y como
+      fallback si el navegador realmente no puede reproducirlo (p. ej. iOS en
+      modo bajo consumo bloquea TODO autoplay — ahí sí aparece el botón play,
+      no hay forma de evitarlo por código).
+
+      Nota de datos móviles: hoy se sirve el mismo .mp4 (~6MB) a todos. Perfil
+      H.264 High L5.0 (alto para 1080p); si el botón play persiste en iOS tras
+      esto, el siguiente paso es reencodear a Main/High L4.0 + faststart, que
+      además es el encode liviano de mobile (ver recomendación aparte).
     {%- endcomment -%}
     <video
       class="hero__video hero__bg-video"
@@ -76,15 +98,29 @@
       muted
       loop
       playsinline
+      disableremoteplayback
       aria-hidden="true"
       poster="{{ section.settings.image_1 | image_url: width: 1920 }}"
     >
-      <source
-        src="{{ 'babysam_hero_optimized.mp4' | asset_url }}"
-        type="video/mp4"
-        media="(min-width: 750px)"
-      >
+      <source src="{{ 'babysam_hero_optimized.mp4' | asset_url }}" type="video/mp4">
     </video>
+    <script>
+      (function () {
+        var v = document.querySelector('.hero__bg-video');
+        if (!v) return;
+        v.muted = true;
+        var play = function () {
+          var p = v.play();
+          if (p && typeof p.catch === 'function') p.catch(function () {});
+        };
+        play();
+        v.addEventListener('canplay', play, { once: true });
+        v.addEventListener('loadeddata', play, { once: true });
+        document.addEventListener('visibilitychange', function () {
+          if (!document.hidden) play();
+        });
+      })();
+    </script>
   {%- endif -%}
 
   {%- if has_video_1 -%}
@@ -424,78 +460,37 @@
   }
 
   /*
-    Rediseño completo del Hero en mobile: composición apilada (imagen
-    arriba, texto abajo) como una sola pieza continua, no dos bloques
-    separados. Todo vive dentro de este media query; desktop no se toca.
-
-    Ampliado de 749px a 990px: mismo motivo que el bloque de más abajo
-    y que trust_row (en un iPhone real el breakpoint de 749px no
-    entraba aunque en DevTools sí), y así queda un solo corte apilado/
-    desktop en 990-991px en vez de dos tramos con lógica distinta.
+    Hero full-bleed en TODOS los anchos (mobile incluido): el <video> de fondo
+    absoluto + el degradado .hero__media-wrapper::after + el texto overlay, con
+    el layout responsive nativo del tema. Antes había un bloque
+    @media (max-width: 990px) que apilaba imagen/texto y ocultaba el video y el
+    degradado — se quitó por decisión de producto (video full-bleed en mobile).
   */
-  @media screen and (max-width: 990px) {
-    /*
-      Bug real del primer intento: .hero__container ya traía
-      align-items: var(--vertical-alignment-mobile), que vale "center".
-      Al forzar flex-direction:column, ese align-items pasa a controlar
-      el eje CRUZADO, que en modo columna es el horizontal — por eso
-      tanto la imagen como el texto se encogían a su ancho de contenido
-      y quedaban centrados con espacio en blanco a los lados, en vez de
-      ocupar el ancho completo. "stretch" corrige esto.
-    */
-    .hero__container {
-      display: flex;
-      flex-direction: column;
-      align-items: stretch;
-      min-height: auto;
-      padding-block-start: 0;
-      padding-block-end: 32px;
+
+  /*
+    Texto del hero en mobile. Mismo bug (y mismo fix) que trust_row en
+    base.css: el bloque "text" simplificado del tema es su propio
+    .content-container con `max-width: 700px` INLINE + flex `align-items:
+    center` adentro, así que cada nivel se dimensiona al max-content de su
+    texto y el <h1> (a tamaño de desktop, porque blocks/text.liquid ignora
+    font_size) se desborda a la derecha.
+    - width: 100% !important en la cadena de contenedores para ganarle al
+      max-width inline.
+    - font-size del <h1> con clamp: se baja solo acá, no toca otros h1 ni
+      desktop.
+  */
+  @media screen and (max-width: 749px) {
+    .hero .content-container,
+    .hero .image-and-text-container,
+    .hero .richtext-content {
+      width: 100% !important;
+      max-width: 100% !important;
     }
 
-    /*
-      La imagen deja de ser fondo absoluto superpuesto y pasa a ocupar
-      su propio espacio arriba, a todo el ancho.
-    */
-    .hero__media-wrapper {
-      position: relative;
-      inset: auto;
-      aspect-ratio: 4 / 3;
-    }
-
-    /*
-      La banda oscura (agregada para el contraste del texto sobre el video
-      en desktop) no debe verse acá: en mobile el texto vive en su propio
-      bloque debajo de la imagen, no encima — oscurecer la ilustración no
-      ayuda a nada y solo la opaca sin motivo.
-    */
-    .hero__media-wrapper::after {
-      display: none;
-    }
-
-    /*
-      La ilustración es muy ancha (2:1) y el bebé con la ballena quedan
-      en el tercio izquierdo del archivo; el resto es cielo vacío. Sin
-      este ajuste, el recorte 4:3 centrado deja el personaje a medias
-      fuera de cuadro y pierde la ballena.
-    */
-    .hero__image,
-    .hero__video {
-      object-position: 0% center;
-    }
-
-    /*
-      Mismo tono de fondo que el cielo de la propia ilustración, para
-      que la transición imagen→texto no se sienta como un cambio de
-      bloque. !important porque el color real llega vía la clase
-      .color-scheme-X del tema, con su propia regla de background.
-    */
-    .hero {
-      background-color: #fffaf7 !important;
-    }
-
-    .hero__content-wrapper {
-      position: relative;
-      padding-block: 12px 0;
+    .hero .richtext-content h1 {
+      font-size: clamp(1.7rem, 7vw, 2.4rem);
+      text-wrap: balance;
+      overflow-wrap: break-word;
     }
   }
 

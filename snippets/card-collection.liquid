@@ -16,23 +16,38 @@
 %}
 
 {% if collection != blank %}
-  <a href="{{ collection.url }}" class="card-collection" style="display:block; text-align:center;">
-    <div class="card-collection__media" style="overflow:hidden; border-radius:15px; margin-bottom:14px; aspect-ratio: {{ card_ratio }};">
+  <a
+    href="{{ collection.url }}"
+    class="card-collection{% if card_image != blank %} card-collection--overlay{% endif %}"
+    style="display:block; text-align:center;">
+    <div
+      class="card-collection__media"
+      style="position:relative; overflow:hidden; border-radius:15px; aspect-ratio: {{ card_ratio }}; margin-bottom: {% if card_image != blank %}0{% else %}14px{% endif %};">
       {% if card_image != blank %}
         <img
           src="{{ card_image | image_url: width: 600 }}"
           alt="{{ card_image.alt | default: collection.title | escape }}"
           style="width:100%; height:100%; object-fit:cover; display:block;">
+        {% comment %} Overlay de título sobre la foto — calibración del mock preview-overlay.html {% endcomment %}
+        <div class="card-collection__overlay">
+          <h3 class="card-collection__title">{{ collection.title }}</h3>
+          {% if show_products_count %}
+            <p class="card-collection__count">{{ collection.products_count }} productos</p>
+          {% endif %}
+        </div>
       {% endif %}
     </div>
 
-    <h3 class="card-collection__title">{{ collection.title }}</h3>
+    {% comment %} Sin foto: se conserva el título debajo, sobre el mosaico de fondo {% endcomment %}
+    {% unless card_image != blank %}
+      <h3 class="card-collection__title">{{ collection.title }}</h3>
 
-    {% if show_products_count %}
-      <p style="font-size:0.9em; color:#8B4513;">
-        {{ collection.products_count }} productos
-      </p>
-    {% endif %}
+      {% if show_products_count %}
+        <p style="font-size:0.9em; color:#8B4513;">
+          {{ collection.products_count }} productos
+        </p>
+      {% endif %}
+    {% endunless %}
 
     {% if show_description and collection.description != blank %}
       <p style="font-size:0.9em;">{{ collection.description }}</p>

@@ -29,11 +29,23 @@
             "alignment": "center",
             "padding-block-end": 0
           }
+        },
+        "button_hero_cta": {
+          "type": "button",
+          "settings": {
+            "label": "Comprar ahora",
+            "link": "shopify://collections/all",
+            "open_in_new_tab": false,
+            "style_class": "button",
+            "width": "fit-content",
+            "width_mobile": "fit-content"
+          }
         }
       },
       "block_order": [
         "text_hero_heading",
-        "text_hero_subheading"
+        "text_hero_subheading",
+        "button_hero_cta"
       ],
       "name": "t:names.hero",
       "settings": {
@@ -198,7 +210,25 @@
         "show_description": false,
         "show_products_count": true,
         "extend_height": false,
-        "collection_title_align": "center"
+        "collection_title_align": "center",
+        "image_accesorios": "shopify://shop_images/portada_accesorios.png",
+        "image_cobijas": "shopify://shop_images/portada_cobijas.png",
+        "image_coches": "shopify://shop_images/portada_coches.png",
+        "image_comedores": "shopify://shop_images/portada_comedor.png",
+        "image_mi_primer_dia": "shopify://shop_images/portada_corral.png",
+        "image_jugueteria": "shopify://shop_images/portada_didacticos.png",
+        "image_lenceria": "shopify://shop_images/portada_lenceria.png",
+        "image_panaleras": "shopify://shop_images/portada_panalera.png",
+        "image_teteros": "shopify://shop_images/portada_teteros.png",
+        "image_toallas": "shopify://shop_images/portada_toallas.png",
+        "image_cuidado_materno": "shopify://shop_images/portada_cuidado_materno.png",
+        "image_lactancia": "shopify://shop_images/portada_lactancia.png",
+        "image_aseo": "shopify://shop_images/portada_aseo.png",
+        "image_ajuares": "shopify://shop_images/portada_ajuar.png",
+        "image_baneras": "shopify://shop_images/portada_banera.png",
+        "image_gimnasios": "shopify://shop_images/portada_gimnasio.png",
+        "image_silla_de_carro": "shopify://shop_images/portada_silla_de_carro.png",
+        "image_sillas_mecedoras": "shopify://shop_images/portada_silla_electrica.png"
       }
     },
     "divider_zApW4A": {

@@ -37,6 +37,12 @@
       prefers-reduced-motion vía la opción `disable` en assets/aos-init.js.
     {%- endcomment -%}
     <link rel="stylesheet" href="{{ 'aos.css' | asset_url }}">
+    {%- comment -%}
+      Animaciones de rebote calibradas (Hero, fila de confianza, catálogo,
+      marquee, banner, testimonios/Instagram). Hovers y scale-in de carga son
+      CSS puro; los disparadores por scroll viven en babysam-animations.js.
+    {%- endcomment -%}
+    <link rel="stylesheet" href="{{ 'babysam-animations.css' | asset_url }}">
     {%- render 'scripts' -%}
     {%- render 'theme-styles-variables' -%}
     {%- render 'color-schemes' -%}
@@ -76,6 +82,7 @@
 
     <script src="{{ 'aos.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'aos-init.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'babysam-animations.js' | asset_url }}" defer="defer"></script>
 
     {% render 'search-modal' %}
 

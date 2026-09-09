@@ -227,8 +227,10 @@
 
 @media screen and (min-width: 990px) {
   .collection-carousel {
-    /* 6 columnas x 2 filas visibles en desktop */
-    grid-auto-columns: calc((100% - 80px) / 6);
+    /* OPCION A (recomendada): 3 columnas x 2 filas visibles en desktop,
+       tarjetas ~380px = igual que la página /collections. Las 18 categorías
+       ocupan 9 columnas de tarjeta -> ~3 "pantallas" de drag/navegación. */
+    grid-auto-columns: calc((100% - 32px) / 3);
   }
 }
 
@@ -262,27 +264,17 @@
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .collection-card-item {
-    transition: transform 250ms ease, box-shadow 250ms ease;
-  }
-
-  /* !important necesario: AOS también controla `transform` en este mismo
-     elemento (data-aos="fade-up") y su regla .aos-animate empata en
-     especificidad con este :hover — sin esto, el scale nunca se aplica. */
-  .collection-card-item:hover {
-    transform: scale(1.03) !important;
-  }
-}
+/* El hover de la tarjeta ahora hace zoom SOLO en la foto de fondo
+   (.card-collection__media img), no en toda la tarjeta: scale(1.12) con
+   overshoot de 430ms, desactivado durante el drag del carrusel. Esa regla
+   vive en assets/babysam-animations.css (junto al resto de la calibración de
+   rebote del home) para poder anularla en bloque bajo prefers-reduced-motion.
+   Acá se conserva solo el realce de sombra en :hover (ver .collection-card-item
+   arriba, con su `transition: box-shadow`). El overlay de título es hermano
+   del <img> y no se transforma. */
 
 .collection-carousel .card-collection__title {
   font-size: 1rem;
-}
-
-@media screen and (min-width: 990px) {
-  .collection-carousel .card-collection__title {
-    font-size: 0.95rem;
-  }
 }
 
 .collection-carousel-arrow {
@@ -329,5 +321,44 @@
   font-weight: 600;
   margin: 0 0 4px;
   line-height: 1.2;
+}
+
+/* Overlay de título sobre la foto — calibración trasladada del mock
+   scratchpad/preview-overlay.html (fotos de prueba: Toallas / Coches /
+   Silla de carro / Lencería). Degradado to-top .80 -> .55 (30%) -> 0
+   cubriendo ~el 42% inferior de la tarjeta + text-shadow, para que el
+   texto blanco sea legible sobre fotos claras (p. ej. lencería pastel). */
+.card-collection__overlay {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  padding: 34px 10px 10px;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.8) 0%,
+    rgba(0, 0, 0, 0.55) 30%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  text-align: center;
+}
+
+/* especificidad 0,3,0: le gana a `.collection-carousel .card-collection__title`
+   (0,2,0) y a su variante en @media(min-width:990px), sin !important */
+.collection-carousel .card-collection__overlay .card-collection__title {
+  margin: 0;
+  /* Tarjetas grandes (ver grid-auto-columns): título a 1.15rem, igual que la
+     página /collections. Antes 1rem porque las tarjetas eran de ~180px. */
+  font-size: 1.15rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.card-collection__overlay .card-collection__count {
+  margin: 3px 0 0;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 {% endstylesheet %}
