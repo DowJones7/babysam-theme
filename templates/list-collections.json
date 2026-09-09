@@ -9,143 +9,34 @@
  */
 {
   "sections": {
-    "collection_list_KreTXe": {
-      "type": "main-collection-list",
-      "blocks": {
-        "group_T9Emrg": {
-          "type": "group",
-          "name": "t:names.header",
-          "settings": {
-            "link": "",
-            "open_in_new_tab": false,
-            "content_direction": "column",
-            "vertical_on_mobile": true,
-            "horizontal_alignment": "flex-start",
-            "vertical_alignment": "center",
-            "align_baseline": false,
-            "horizontal_alignment_flex_direction_column": "center",
-            "vertical_alignment_flex_direction_column": "center",
-            "gap": 12,
-            "width": "fill",
-            "custom_width": 100,
-            "width_mobile": "fill",
-            "custom_width_mobile": 100,
-            "height": "fit",
-            "custom_height": 100,
-            "inherit_color_scheme": true,
-            "color_scheme": "",
-            "background_media": "none",
-            "video_position": "cover",
-            "background_image_position": "cover",
-            "border": "none",
-            "border_width": 1,
-            "border_opacity": 100,
-            "border_radius": 0,
-            "placeholder": "",
-            "toggle_overlay": false,
-            "overlay_color": "#00000026",
-            "overlay_style": "solid",
-            "gradient_direction": "to top",
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {
-            "text_wgAEay": {
-              "type": "text",
-              "name": "t:names.text",
-              "settings": {
-                "image_link": "",
-                "image_alignment": "center",
-                "text": "<h1>Catalogo</h1><h1></h1>",
-                "width": "100%",
-                "max_width": "normal",
-                "alignment": "center",
-                "type_preset": "h3",
-                "font": "var(--font-primary--family)",
-                "font_size": "",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "color": "",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            }
-          },
-          "block_order": [
-            "text_wgAEay"
-          ]
-        },
-        "static-collection-card": {
-          "type": "_collection-card",
-          "name": "t:names.collection_card",
-          "static": true,
-          "settings": {
-            "placement": "below_image",
-            "horizontal_alignment": "center",
-            "vertical_alignment": "flex-start",
-            "collection_card_gap": 8,
-            "inherit_color_scheme": true,
-            "color_scheme": "",
-            "border": "solid",
-            "border_width": 3,
-            "border_opacity": 100,
-            "border_radius": 50
-          },
-          "blocks": {
-            "collection-card-image": {
-              "type": "_collection-card-image",
-              "static": true,
-              "settings": {
-                "image_ratio": "adapt",
-                "toggle_overlay": false,
-                "overlay_color": "#00000026",
-                "overlay_style": "solid",
-                "gradient_direction": "to top",
-                "border": "none",
-                "border_width": 1,
-                "border_opacity": 100,
-                "border_radius": 0
-              },
-              "blocks": {}
-            }
-          },
-          "block_order": []
-        }
-      },
-      "block_order": [
-        "group_T9Emrg"
-      ],
-      "name": "Collection list",
+    "catalogo_babysam": {
+      "type": "collection-list-babysam",
       "settings": {
-        "layout_type": "grid",
-        "carousel_on_mobile": false,
-        "columns": 4,
-        "mobile_columns": "2",
-        "columns_gap": 12,
-        "bento_gap": 16,
-        "rows_gap": 18,
-        "max_collections": 4,
-        "icons_style": "arrow",
-        "icons_shape": "none",
-        "section_width": "page-width",
-        "gap": 12,
-        "color_scheme": "scheme-1",
-        "padding-block-start": 48,
-        "padding-block-end": 48
+        "title": "Catálogo",
+        "color_scheme": "scheme-7",
+        "show_products_count": true,
+        "image_accesorios": "shopify://shop_images/portada_accesorios.png",
+        "image_cobijas": "shopify://shop_images/portada_cobijas.png",
+        "image_coches": "shopify://shop_images/portada_coches.png",
+        "image_comedores": "shopify://shop_images/portada_comedor.png",
+        "image_mi_primer_dia": "shopify://shop_images/portada_corral.png",
+        "image_jugueteria": "shopify://shop_images/portada_didacticos.png",
+        "image_lenceria": "shopify://shop_images/portada_lenceria.png",
+        "image_panaleras": "shopify://shop_images/portada_panalera.png",
+        "image_teteros": "shopify://shop_images/portada_teteros.png",
+        "image_toallas": "shopify://shop_images/portada_toallas.png",
+        "image_cuidado_materno": "shopify://shop_images/portada_cuidado_materno.png",
+        "image_lactancia": "shopify://shop_images/portada_lactancia.png",
+        "image_aseo": "shopify://shop_images/portada_aseo.png",
+        "image_ajuares": "shopify://shop_images/portada_ajuar.png",
+        "image_baneras": "shopify://shop_images/portada_banera.png",
+        "image_gimnasios": "shopify://shop_images/portada_gimnasio.png",
+        "image_silla_de_carro": "shopify://shop_images/portada_silla_de_carro.png",
+        "image_sillas_mecedoras": "shopify://shop_images/portada_silla_electrica.png"
       }
     }
   },
   "order": [
-    "collection_list_KreTXe"
+    "catalogo_babysam"
   ]
 }

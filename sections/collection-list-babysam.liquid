@@ -1,0 +1,262 @@
+{% comment %}
+  Sección: collection-list-babysam
+  -------------------------------------------------------------------------
+  Página /collections (templates/list-collections.json). Muestra EXACTAMENTE
+  las 18 categorías del catálogo del home — ni las 2 duplicadas legacy
+  (jugueteria-1, panaleras) ni las 3 fuera de alcance (bonos-de-regalo,
+  caminadores, panales-premium) que sí listaría el objeto global `collections`.
+
+  Reutiliza el MISMO card visual del home (snippet card-collection.liquid:
+  imagen full-bleed object-fit:cover + degradado en el tercio inferior +
+  título y contador overlaid). NO toca sections/carrusel-productos.liquid.
+
+  La foto de cada tarjeta NO viene de collection.image (que hoy está mal en
+  la tienda) sino de un campo image_* propio de esta sección, con el mismo
+  mapeo handle->campo y las mismas portadas que el carrusel del home. Si se
+  agrega una categoría nueva: agregar su handle a `category_handles`, su
+  campo al schema y su rama al `case`.
+{% endcomment %}
+
+{% liquid
+  assign category_handles = 'accesorios,cobijas,coches,comedores,coleccion-mi-primer-dia,jugueteria,lenceria,panaleras-1,teteros,toallas,cuidado-materno,lactancia,aseo,ajuares,baneras,gimnasios,silla-de-carro,sillas-mecedoras' | split: ','
+%}
+
+<div class="section-background color-{{ section.settings.color_scheme }}"></div>
+<div class="babysam-collections color-{{ section.settings.color_scheme }}">
+  {% if section.settings.title != blank %}
+    <div class="babysam-collections__header">
+      <h1 class="home-section-title">{{ section.settings.title }}</h1>
+    </div>
+  {% endif %}
+
+  <ul
+    class="babysam-collection-grid"
+    role="list"
+    style="--card-pattern-url: url('{{ 'backupd_catalogo.png' | file_img_url: '400x400' }}');"
+  >
+    {%- for handle in category_handles -%}
+      {%- assign card_collection = collections[handle] -%}
+      {%- if card_collection == blank -%}
+        {%- continue -%}
+      {%- endif -%}
+
+      {% liquid
+        assign card_image = blank
+        case handle
+          when 'accesorios'
+            assign card_image = section.settings.image_accesorios
+          when 'cobijas'
+            assign card_image = section.settings.image_cobijas
+          when 'coches'
+            assign card_image = section.settings.image_coches
+          when 'comedores'
+            assign card_image = section.settings.image_comedores
+          when 'coleccion-mi-primer-dia'
+            assign card_image = section.settings.image_mi_primer_dia
+          when 'jugueteria'
+            assign card_image = section.settings.image_jugueteria
+          when 'lenceria'
+            assign card_image = section.settings.image_lenceria
+          when 'panaleras-1'
+            assign card_image = section.settings.image_panaleras
+          when 'teteros'
+            assign card_image = section.settings.image_teteros
+          when 'toallas'
+            assign card_image = section.settings.image_toallas
+          when 'cuidado-materno'
+            assign card_image = section.settings.image_cuidado_materno
+          when 'lactancia'
+            assign card_image = section.settings.image_lactancia
+          when 'aseo'
+            assign card_image = section.settings.image_aseo
+          when 'ajuares'
+            assign card_image = section.settings.image_ajuares
+          when 'baneras'
+            assign card_image = section.settings.image_baneras
+          when 'gimnasios'
+            assign card_image = section.settings.image_gimnasios
+          when 'silla-de-carro'
+            assign card_image = section.settings.image_silla_de_carro
+          when 'sillas-mecedoras'
+            assign card_image = section.settings.image_sillas_mecedoras
+        endcase
+      %}
+
+      {%- comment -%}
+        El contador solo se muestra si la sección lo pide Y la colección tiene
+        productos: en /collections hay ~9 categorías todavía vacías y "0
+        productos" repetido se ve a medio terminar. (El carrusel del home sí
+        muestra "0 productos" — no se toca; si se quiere igualar, se decide
+        aparte.)
+      {%- endcomment -%}
+      {%- assign show_count = false -%}
+      {%- if section.settings.show_products_count and card_collection.products_count > 0 -%}
+        {%- assign show_count = true -%}
+      {%- endif -%}
+
+      <li class="babysam-collection-grid__item" role="listitem">
+        {%- render 'card-collection',
+          card_collection: card_collection,
+          card_image: card_image,
+          media_aspect_ratio: 'square',
+          show_description: false,
+          show_products_count: show_count -%}
+      </li>
+    {%- endfor -%}
+  </ul>
+</div>
+
+{% schema %}
+{
+  "name": "Catálogo /collections",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "text", "id": "title", "default": "Catálogo", "label": "Título" },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Esquema de color",
+      "default": "scheme-7",
+      "options": [
+        { "value": "scheme-1", "label": "Esquema 1" },
+        { "value": "scheme-2", "label": "Esquema 2" },
+        { "value": "scheme-3", "label": "Esquema 3" },
+        { "value": "scheme-4", "label": "Esquema 4" },
+        { "value": "scheme-5", "label": "Esquema 5" },
+        { "value": "scheme-6", "label": "Esquema 6" },
+        { "value": "scheme-7", "label": "Esquema 7" },
+        { "value": "scheme-8", "label": "Esquema 8" },
+        { "value": "scheme-9", "label": "Esquema 9" },
+        { "value": "scheme-10", "label": "Esquema 10" }
+      ]
+    },
+    { "type": "checkbox", "id": "show_products_count", "default": true, "label": "Mostrar número de productos" },
+    { "type": "header", "content": "Fotos de las categorías" },
+    { "type": "paragraph", "content": "Mismas portadas que el carrusel del home. Si se deja vacía, la tarjeta muestra solo el mosaico decorativo de fondo." },
+    { "type": "image_picker", "id": "image_accesorios", "label": "Foto de Accesorios" },
+    { "type": "image_picker", "id": "image_cobijas", "label": "Foto de Cobijas" },
+    { "type": "image_picker", "id": "image_coches", "label": "Foto de Coches" },
+    { "type": "image_picker", "id": "image_comedores", "label": "Foto de Comedores" },
+    { "type": "image_picker", "id": "image_mi_primer_dia", "label": "Foto de Corrales" },
+    { "type": "image_picker", "id": "image_jugueteria", "label": "Foto de Didacticos" },
+    { "type": "image_picker", "id": "image_lenceria", "label": "Foto de Lencería" },
+    { "type": "image_picker", "id": "image_panaleras", "label": "Foto de Pañaleras" },
+    { "type": "image_picker", "id": "image_teteros", "label": "Foto de Teteros" },
+    { "type": "image_picker", "id": "image_toallas", "label": "Foto de Toallas" },
+    { "type": "image_picker", "id": "image_cuidado_materno", "label": "Foto de Cuidado Materno" },
+    { "type": "image_picker", "id": "image_lactancia", "label": "Foto de Lactancia" },
+    { "type": "image_picker", "id": "image_aseo", "label": "Foto de Aseo" },
+    { "type": "image_picker", "id": "image_ajuares", "label": "Foto de Ajuares" },
+    { "type": "image_picker", "id": "image_baneras", "label": "Foto de Bañeras" },
+    { "type": "image_picker", "id": "image_gimnasios", "label": "Foto de Gimnasios" },
+    { "type": "image_picker", "id": "image_silla_de_carro", "label": "Foto de Silla de carro" },
+    { "type": "image_picker", "id": "image_sillas_mecedoras", "label": "Foto de Sillas mecedoras" }
+  ],
+  "presets": [
+    { "name": "Catálogo /collections" }
+  ]
+}
+{% endschema %}
+
+{% stylesheet %}
+.babysam-collections__header {
+  text-align: center;
+  padding-block: 40px 28px;
+}
+
+.babysam-collections__header .home-section-title {
+  margin: 0;
+}
+
+/* --- Grid: 2 columnas en mobile/tablet, 3 en desktop, tarjetas grandes --- */
+.babysam-collection-grid {
+  display: grid;
+  /* minmax(0, 1fr): sin el 0, cada celda no baja de su min-content (la foto
+     tiene ~600px de ancho intrínseco) y el grid se desborda a la derecha. */
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  list-style: none;
+  margin: 0;
+  padding: 6px 4px 56px;
+}
+
+@media screen and (min-width: 750px) {
+  .babysam-collection-grid {
+    gap: 22px;
+  }
+}
+
+@media screen and (min-width: 990px) {
+  .babysam-collection-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 28px;
+  }
+}
+
+/* --- Tarjeta: borde turquesa + radio + mosaico de fondo, igual que el home --- */
+.babysam-collection-grid__item {
+  min-width: 0;
+  border: 2px solid var(--color-foreground);
+  border-radius: 15px;
+  overflow: hidden;
+  background-image: var(--card-pattern-url);
+  background-repeat: repeat;
+  background-size: 120px 120px;
+  transition: box-shadow 250ms ease;
+}
+
+.babysam-collection-grid__item:hover {
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* --- Overlay de título + contador sobre la foto -------------------------
+   Calibración trasladada verbatim de sections/carrusel-productos.liquid:
+   degradado to-top .80 -> .55 (30%) -> 0 cubriendo ~el 42% inferior de la
+   tarjeta + text-shadow, para que el texto blanco sea legible sobre fotos
+   claras (p. ej. lencería pastel). El overlay es hermano del <img>, no se
+   transforma en el hover. */
+.babysam-collection-grid .card-collection__overlay {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  padding: 34px 10px 10px;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.8) 0%,
+    rgba(0, 0, 0, 0.55) 30%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  text-align: center;
+}
+
+.babysam-collection-grid .card-collection__overlay .card-collection__title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.babysam-collection-grid .card-collection__overlay .card-collection__count {
+  margin: 3px 0 0;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* --- Hover: zoom solo de la foto de fondo, mismo criterio que el home ---
+   (scale 1.12 con overshoot). --bs-ease-overshoot lo define
+   assets/babysam-animations.css, cargado globalmente. */
+@media (prefers-reduced-motion: no-preference) {
+  .babysam-collection-grid__item .card-collection__media img {
+    transition: transform 430ms var(--bs-ease-overshoot, cubic-bezier(0.34, 1.56, 0.64, 1));
+    will-change: transform;
+  }
+
+  .babysam-collection-grid__item:hover .card-collection__media img {
+    transform: scale(1.12);
+  }
+}
+{% endstylesheet %}
