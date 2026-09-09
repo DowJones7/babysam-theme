@@ -1,5 +1,6 @@
 import { Component } from '@theme/component';
 import { ThemeEvents, VariantUpdateEvent, ZoomMediaSelectedEvent } from '@theme/events';
+import { startViewTransition } from '@theme/utilities';
 
 /**
  * A custom element that renders a media gallery.
@@ -45,7 +46,18 @@ export class MediaGallery extends Component {
 
     if (!newMediaGallery) return;
 
-    this.replaceWith(newMediaGallery);
+    // Crossfade suave entre la foto actual y la de la variante nueva (con fallback
+    // instantáneo si el navegador no soporta View Transitions o hay reduced-motion).
+    const transitionName = 'product-media-gallery-crossfade';
+    this.style.setProperty('view-transition-name', transitionName);
+
+    startViewTransition(() => {
+      this.style.removeProperty('view-transition-name');
+      newMediaGallery.style.setProperty('view-transition-name', transitionName);
+      this.replaceWith(newMediaGallery);
+    }).then(() => {
+      newMediaGallery.style.removeProperty('view-transition-name');
+    });
   };
 
   /**

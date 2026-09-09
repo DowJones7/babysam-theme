@@ -3752,6 +3752,12 @@ slideshow-component[autoplay] slideshow-controls {
     height: auto;
     aspect-ratio: var(--aspect-ratio);
 
+    @media (prefers-reduced-motion: no-preference) {
+      transition: outline-color var(--animation-speed) var(--animation-easing),
+        border-color var(--animation-speed) var(--animation-easing),
+        transform var(--animation-speed) var(--animation-easing);
+    }
+
     img {
       height: 100%;
       object-fit: cover;
@@ -3762,6 +3768,10 @@ slideshow-component[autoplay] slideshow-controls {
       outline: var(--focus-outline-width) solid currentcolor;
       outline-offset: calc(var(--focus-outline-offset) / 2);
       border: var(--style-border-width) solid rgb(var(--color-border-rgb) / var(--media-border-opacity));
+
+      @media (prefers-reduced-motion: no-preference) {
+        transform: scale(1.04);
+      }
     }
   }
 }

@@ -115,4 +115,37 @@
       opacity: 0;
     }
   }
+
+  /* Toque divertido concentrado en el check: bounce leve, una sola vez por clic */
+  .add-to-cart-icon--added {
+    opacity: 0;
+  }
+
+  .atc-added .add-to-cart-icon--added {
+    opacity: 1;
+    transition: opacity var(--animation-speed) var(--animation-easing);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .atc-added .add-to-cart-icon--added {
+      animation: atc-check-bounce var(--animation-speed-slow) cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+  }
+
+  @keyframes atc-check-bounce {
+    0% {
+      transform: scale(0.4);
+      opacity: 0;
+    }
+
+    60% {
+      transform: scale(1.15);
+      opacity: 1;
+    }
+
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
 {% endstylesheet %}

@@ -205,4 +205,24 @@
   ::view-transition-new(gallery-item) {
     animation-duration: 0ms;
   }
+
+  /* Zoom suave al hacer hover sobre la foto principal (solo carrusel, no en el diálogo de zoom) */
+  slideshow-container .product-media-container--zoomable {
+    overflow: hidden;
+  }
+
+  @media (any-pointer: fine) and (prefers-reduced-motion: no-preference) {
+    slideshow-container .product-media-container--zoomable .product-media__image {
+      transition: transform var(--animation-speed-slow) var(--animation-easing);
+    }
+
+    slideshow-container .product-media-container--zoomable:hover .product-media__image {
+      transform: scale(1.06);
+    }
+  }
+
+  ::view-transition-old(product-media-gallery-crossfade),
+  ::view-transition-new(product-media-gallery-crossfade) {
+    animation-duration: var(--animation-speed-slow);
+  }
 {% endstylesheet %}

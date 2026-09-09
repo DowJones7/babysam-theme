@@ -375,6 +375,18 @@
     --focus-outline: var(--focus-outline-width) solid var(--color-foreground);
     outline: var(--focus-outline);
     outline-offset: var(--focus-outline-offset);
+
+    @media (prefers-reduced-motion: no-preference) {
+      transform: scale(1.06);
+    }
+  }
+
+  .variant-option__button-label--has-swatch {
+    @media (prefers-reduced-motion: no-preference) {
+      transition: outline-color var(--animation-speed) var(--animation-easing),
+        outline-offset var(--animation-speed) var(--animation-easing),
+        transform var(--animation-speed) var(--animation-easing);
+    }
   }
 
   /* This triggers iOS < 16.4. The outline bug is not recognized as a lack of @supports */
