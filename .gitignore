@@ -2,3 +2,6 @@
 .claude/.env
 **/.venv/
 __pycache__/
+
+# Videos recuperados de la tienda vieja (van a Shopify Files, no al repo)
+videos-recuperados/
