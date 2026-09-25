@@ -51,9 +51,11 @@
     content_for 'block', type: '_header-menu', id: 'header-menu'
   endcapture
 
-  capture mobile_menu
-    content_for 'block', type: '_header-menu', id: 'header-menu', variant: 'mobile'
-  endcapture
+  # `mobile_menu` se quitó junto con la hamburguesa nativa: era su único consumidor. Se elimina
+  # el capture y no solo su uso porque `content_for 'block'` renderiza el drawer completo
+  # (snippets/header-drawer.liquid, más de 1100 líneas) en cada carga, y capturarlo para
+  # descartarlo era trabajo puro al pedo. El bloque `_header-menu` sigue registrado igual: lo
+  # siguen invocando `menu` y `navigation_bar` con el mismo id.
 
   capture navigation_bar
     content_for 'block', type: '_header-menu', id: 'header-menu', variant: 'navigation_bar', transparent: transparent
@@ -216,16 +218,10 @@
 
       case row
         when 'top'
-          # La hamburguesa nativa (el `header-drawer` del tema, que en mobile abre el menú
-          # de navegación) se oculta cuando el drawer de catálogo está activo: tener dos
-          # hamburguesas una al lado de la otra confunde. Va condicionado y no borrado a
-          # secas para no dejar el header mobile sin ninguna navegación si algún día se
-          # vacía `catalog_drawer_menu`; en ese caso la nativa vuelve sola.
-          if section.settings.catalog_drawer_menu != blank
-            assign first = ''
-          else
-            assign first = mobile_menu
-          endif
+          # La hamburguesa nativa del tema (el `header-drawer` que se renderiza con
+          # `_header-menu` en su variante mobile) no se muestra nunca: la reemplaza el drawer
+          # de catálogo. El slot `first` queda vacío a propósito.
+          assign first = ''
 
           if bottom_row_blocks.size > 0 and section.settings.divider_size == 'page-width'
             assign class = class | append: ' divider--page-width'
