@@ -91,6 +91,18 @@
       endif
     endif
   endif
+
+  # Drawer lateral de catálogo. Va primero en el `order` para quedar pegado al borde izquierdo,
+  # antes del logo. Se antepone acá, después de todas las reasignaciones de `order` de arriba,
+  # para no tener que repetirlo en cada rama. Sin menú elegido no se renderiza nada: no tiene
+  # sentido un botón que abre un panel vacío.
+  if section.settings.catalog_drawer_menu != blank
+    capture catalog_drawer
+      render 'catalog-drawer', section: section
+    endcapture
+    assign order = 'catalog_drawer,' | append: order
+  endif
+
   capture search
     render 'search', style: search_style, class: search_class
   endcapture
@@ -235,6 +247,7 @@
         order: order,
         settings: section.settings,
         first: first,
+        catalog_drawer: catalog_drawer,
         logo: logo,
         menu: menu,
         actions: actions,
@@ -654,6 +667,34 @@
   "tag": "header",
   "class": "header-section",
   "settings": [
+    {
+      "type": "header",
+      "content": "Drawer de catálogo"
+    },
+    {
+      "type": "link_list",
+      "id": "catalog_drawer_menu",
+      "label": "Menú del drawer de catálogo",
+      "info": "Los enlaces del drawer salen de este menú. Sin menú elegido el botón no aparece. Shopify solo admite 'main-menu' o 'footer' como valor por defecto de este tipo de setting, así que queda vacío a propósito: elegí acá el menú de colecciones."
+    },
+    {
+      "type": "text",
+      "id": "catalog_drawer_heading",
+      "label": "Título del drawer",
+      "default": "Catálogo"
+    },
+    {
+      "type": "checkbox",
+      "id": "catalog_drawer_show_search",
+      "label": "Mostrar el buscador dentro del drawer",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "catalog_drawer_search_placeholder",
+      "label": "Texto de ejemplo del buscador",
+      "default": "¿Qué estás buscando?"
+    },
     {
       "type": "header",
       "content": "t:content.logo"

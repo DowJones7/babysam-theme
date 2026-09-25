@@ -1,0 +1,348 @@
+{%- doc -%}
+  Drawer lateral de catálogo: se abre desde un ícono del header, trae un buscador arriba y la
+  lista de enlaces de un menú de Shopify debajo.
+
+  Se apoya en `dialog-component` (assets/dialog.js), el mismo componente que usan el carrito y la
+  cuenta. De ahí salen gratis: cierre con Escape, cierre al hacer clic fuera del panel, el
+  backdrop y el bloqueo del scroll del body. Lo único propio es `assets/catalog-drawer.js`, que
+  sincroniza `aria-expanded` y devuelve el foco al botón al cerrar.
+
+  Los enlaces NO están quemados en el Liquid: salen del menú que se elija en
+  `catalog_drawer_menu` (Personalizar tema → Encabezado), así que se editan desde el admin.
+
+  @param {object} section - La sección del header, de donde salen las settings.
+
+  @example
+  {% render 'catalog-drawer', section: section %}
+{%- enddoc -%}
+
+{% liquid
+  assign drawer_menu = section.settings.catalog_drawer_menu
+  assign heading = section.settings.catalog_drawer_heading | default: 'Catálogo'
+  assign show_search = section.settings.catalog_drawer_show_search
+  assign placeholder = section.settings.catalog_drawer_search_placeholder | default: '¿Qué estás buscando?'
+%}
+
+<script src="{{ 'dialog.js' | asset_url }}" type="module"></script>
+<script src="{{ 'catalog-drawer.js' | asset_url }}" type="module" fetchpriority="low"></script>
+
+<dialog-component
+  id="catalog-drawer"
+  class="catalog-drawer"
+>
+  <button
+    type="button"
+    class="catalog-drawer__trigger"
+    on:click="/showDialog"
+    aria-expanded="false"
+    aria-controls="catalog-drawer-panel"
+    aria-label="Abrir el menú de {{ heading | escape }}"
+  >
+    <span class="svg-wrapper">{{- 'icon-menu.svg' | inline_asset_content -}}</span>
+  </button>
+
+  <dialog
+    ref="dialog"
+    id="catalog-drawer-panel"
+    class="catalog-drawer__dialog dialog-drawer"
+    role="dialog"
+    aria-label="{{ heading | escape }}"
+    scroll-lock
+  >
+    <div class="catalog-drawer__inner">
+      <div class="catalog-drawer__head">
+        <h2 class="catalog-drawer__heading">{{ heading }}</h2>
+        {%- comment -%}
+          autofocus en el botón de cerrar y no en el input: showModal() enfoca el primer elemento
+          enfocable del panel, y si ese fuera el buscador el teclado del celular se abre solo.
+        {%- endcomment -%}
+        <button
+          type="button"
+          class="catalog-drawer__close"
+          on:click="#catalog-drawer/closeDialog"
+          aria-label="Cerrar el menú"
+          autofocus
+        >
+          <span class="svg-wrapper">{{- 'icon-close.svg' | inline_asset_content -}}</span>
+        </button>
+      </div>
+
+      {%- if show_search -%}
+        <form
+          class="catalog-drawer__search"
+          action="{{ routes.search_url }}"
+          method="get"
+          role="search"
+        >
+          <input
+            type="search"
+            name="q"
+            class="catalog-drawer__search-input"
+            placeholder="{{ placeholder | escape }}"
+            aria-label="{{ placeholder | escape }}"
+            autocomplete="off"
+          >
+          <button type="submit" class="catalog-drawer__search-submit" aria-label="Buscar">
+            <span class="svg-wrapper">{{- 'icon-search.svg' | inline_asset_content -}}</span>
+          </button>
+        </form>
+      {%- endif -%}
+
+      {%- if drawer_menu.links.size > 0 -%}
+        <nav class="catalog-drawer__nav" aria-label="{{ heading | escape }}">
+          <ul class="catalog-drawer__list" role="list">
+            {%- for link in drawer_menu.links -%}
+              {%- comment -%}
+                data-has-children queda escrito aunque hoy siempre sea "false": es el gancho para
+                cuando el menú tenga subniveles. Ver el bloque comentado de abajo.
+              {%- endcomment -%}
+              <li
+                class="catalog-drawer__item"
+                data-has-children="{% if link.links.size > 0 %}true{% else %}false{% endif %}"
+              >
+                <a
+                  class="catalog-drawer__link"
+                  href="{{ link.url }}"
+                  {% if link.current %}
+                    aria-current="page"
+                  {% endif %}
+                >
+                  <span class="catalog-drawer__link-text">{{ link.title }}</span>
+
+                  {%- comment -%}
+                    PREPARADO PARA MÁS ADELANTE — hoy no se pide contador ni flechas.
+                    Para activarlos alcanza con descomentar; el CSS de
+                    .catalog-drawer__count y .catalog-drawer__chevron ya está escrito abajo.
+
+                    {%- if link.type == 'collection_link' and link.object.products_count > 0 -%}
+                      <span class="catalog-drawer__count">{{ link.object.products_count }}</span>
+                    {%- endif -%}
+
+                    {%- if link.links.size > 0 -%}
+                      <span class="catalog-drawer__chevron svg-wrapper" aria-hidden="true">
+                        {{- 'icon-caret.svg' | inline_asset_content -}}
+                      </span>
+                    {%- endif -%}
+                  {%- endcomment -%}
+                </a>
+              </li>
+            {%- endfor -%}
+          </ul>
+        </nav>
+      {%- else -%}
+        <p class="catalog-drawer__empty">
+          Elegí un menú en Personalizar tema → Encabezado → «Menú del drawer de catálogo».
+        </p>
+      {%- endif -%}
+    </div>
+  </dialog>
+</dialog-component>
+
+{% stylesheet %}
+  .catalog-drawer {
+    --catalog-drawer-width: min(30vw, 380px);
+    --catalog-drawer-width-mobile: 85vw;
+    --catalog-drawer-padding: var(--padding-lg, 1.25rem);
+    --animation-speed: 0.26s;
+  }
+
+  .catalog-drawer__trigger,
+  .catalog-drawer__close,
+  .catalog-drawer__search-submit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: currentcolor;
+    cursor: pointer;
+  }
+
+  .catalog-drawer__trigger {
+    width: 44px;
+    height: 44px;
+    margin-inline-start: calc(var(--padding-xs, 0.5rem) * -1);
+  }
+
+  .catalog-drawer__trigger .svg-wrapper {
+    width: 24px;
+    height: 24px;
+  }
+
+  /* El panel va anclado al borde izquierdo. Ojo con el nombre de los keyframes del tema:
+     `slideInRight` va de translateX(-100%) a 0, o sea que es el que entra DESDE la izquierda
+     (el nombre describe hacia dónde se desplaza, no de qué lado nace). */
+  .catalog-drawer__dialog {
+    --dialog-drawer-opening-animation: slideInRight;
+    --dialog-drawer-closing-animation: slideOutRight;
+
+    position: fixed;
+    inset-block: 0;
+    inset-inline-start: 0;
+    width: var(--catalog-drawer-width);
+    max-width: 100vw;
+    height: 100%;
+    max-height: 100dvh;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+    border-inline-end: var(--style-border-drawer, 1px solid var(--color-border));
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    box-shadow: var(--shadow-drawer, 0 0 24px rgb(0 0 0 / 12%));
+  }
+
+  .catalog-drawer__dialog::backdrop {
+    background: rgb(var(--backdrop-color-rgb) / 45%);
+  }
+
+  .catalog-drawer__inner {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .catalog-drawer__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--padding-sm, 0.75rem);
+    padding: var(--catalog-drawer-padding);
+    border-block-end: 1px solid var(--color-border);
+  }
+
+  .catalog-drawer__heading {
+    margin: 0;
+    font-family: var(--font-accent);
+    font-size: var(--font-size--lg, 1.125rem);
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .catalog-drawer__close {
+    width: 40px;
+    height: 40px;
+    flex: none;
+  }
+
+  .catalog-drawer__close .svg-wrapper {
+    width: 20px;
+    height: 20px;
+  }
+
+  .catalog-drawer__search {
+    display: flex;
+    align-items: center;
+    gap: var(--padding-xs, 0.5rem);
+    margin: var(--catalog-drawer-padding);
+    padding-inline: var(--padding-sm, 0.75rem);
+    border: 1px solid var(--color-input-border, var(--color-border));
+    border-radius: var(--style-border-radius-inputs, 8px);
+    background-color: var(--color-input-background, var(--color-background));
+  }
+
+  .catalog-drawer__search:focus-within {
+    border-color: var(--color-foreground);
+  }
+
+  .catalog-drawer__search-input {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding-block: 0.7rem;
+    border: 0;
+    background: none;
+    color: var(--color-input-text, var(--color-foreground));
+    font-family: var(--font-body--family);
+    font-size: var(--font-size--sm, 0.95rem);
+  }
+
+  .catalog-drawer__search-input:focus {
+    outline: none;
+  }
+
+  .catalog-drawer__search-submit {
+    flex: none;
+    width: 28px;
+    height: 28px;
+  }
+
+  .catalog-drawer__search-submit .svg-wrapper {
+    width: 18px;
+    height: 18px;
+  }
+
+  .catalog-drawer__nav {
+    padding-block-end: var(--catalog-drawer-padding);
+  }
+
+  .catalog-drawer__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .catalog-drawer__link {
+    display: flex;
+    align-items: center;
+    gap: var(--padding-sm, 0.75rem);
+    padding: 0.85rem var(--catalog-drawer-padding);
+    color: inherit;
+    font-family: var(--font-body--family);
+    font-size: var(--font-size--md, 1rem);
+    text-decoration: none;
+  }
+
+  .catalog-drawer__link:hover,
+  .catalog-drawer__link:focus-visible {
+    background-color: var(--color-hover, rgb(var(--color-foreground-rgb) / 6%));
+  }
+
+  .catalog-drawer__link[aria-current='page'] {
+    font-weight: 600;
+  }
+
+  .catalog-drawer__link-text {
+    flex: 1 1 auto;
+  }
+
+  /* Preparado para los subniveles y el contador; hoy el markup que los usa está comentado. */
+  .catalog-drawer__count {
+    flex: none;
+    color: rgb(var(--color-foreground-rgb) / 55%);
+    font-size: var(--font-size--xs, 0.85rem);
+  }
+
+  .catalog-drawer__chevron {
+    flex: none;
+    width: 16px;
+    height: 16px;
+    rotate: -90deg;
+  }
+
+  .catalog-drawer__empty {
+    margin: 0;
+    padding: var(--catalog-drawer-padding);
+    color: rgb(var(--color-foreground-rgb) / 65%);
+    font-size: var(--font-size--sm, 0.95rem);
+  }
+
+  @media screen and (max-width: 749px) {
+    .catalog-drawer__dialog {
+      width: var(--catalog-drawer-width-mobile);
+    }
+  }
+
+  /* El panel aparece sin animación. `closeDialog()` espera a `onAnimationEnd`, que con
+     `animation: none` no encuentra animaciones y resuelve al instante, así que el cierre
+     sigue funcionando. */
+  @media (prefers-reduced-motion: reduce) {
+    .catalog-drawer__dialog[open],
+    .catalog-drawer__dialog.dialog-closing {
+      animation: none;
+    }
+  }
+{% endstylesheet %}
