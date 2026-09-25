@@ -216,7 +216,16 @@
 
       case row
         when 'top'
-          assign first = mobile_menu
+          # La hamburguesa nativa (el `header-drawer` del tema, que en mobile abre el menú
+          # de navegación) se oculta cuando el drawer de catálogo está activo: tener dos
+          # hamburguesas una al lado de la otra confunde. Va condicionado y no borrado a
+          # secas para no dejar el header mobile sin ninguna navegación si algún día se
+          # vacía `catalog_drawer_menu`; en ese caso la nativa vuelve sola.
+          if section.settings.catalog_drawer_menu != blank
+            assign first = ''
+          else
+            assign first = mobile_menu
+          endif
 
           if bottom_row_blocks.size > 0 and section.settings.divider_size == 'page-width'
             assign class = class | append: ' divider--page-width'
