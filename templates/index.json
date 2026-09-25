@@ -173,7 +173,7 @@
         "layout_type": "grid",
         "image_ratio": "square",
         "show_description": false,
-        "show_products_count": true,
+        "show_products_count": false,
         "extend_height": false,
         "collection_title_align": "center",
         "image_accesorios": "shopify://shop_images/portada_accesorios.png",
