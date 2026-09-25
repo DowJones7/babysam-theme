@@ -73,34 +73,16 @@
             "collection": "accesorios"
           }
         },
-        "collection_CBzpik": {
-          "type": "collection",
-          "settings": {
-            "collection": "cobijas"
-          }
-        },
         "collection_fNg4mh": {
           "type": "collection",
           "settings": {
             "collection": "coches"
           }
         },
-        "collection_iP8a4x": {
-          "type": "collection",
-          "settings": {
-            "collection": "comedores"
-          }
-        },
         "collection_8JYgNR": {
           "type": "collection",
           "settings": {
             "collection": "coleccion-mi-primer-dia"
-          }
-        },
-        "collection_JLFptB": {
-          "type": "collection",
-          "settings": {
-            "collection": "jugueteria"
           }
         },
         "collection_7xQYij": {
@@ -121,12 +103,6 @@
             "collection": "teteros"
           }
         },
-        "collection_8wdaDV": {
-          "type": "collection",
-          "settings": {
-            "collection": "toallas"
-          }
-        },
         "collection_1OFFtD": {
           "type": "collection",
           "settings": {
@@ -143,12 +119,6 @@
           "type": "collection",
           "settings": {
             "collection": "aseo"
-          }
-        },
-        "collection_VQUuBE": {
-          "type": "collection",
-          "settings": {
-            "collection": "ajuares"
           }
         },
         "collection_9dvEDH": {
@@ -178,19 +148,14 @@
       },
       "block_order": [
         "collection_6zcfY4",
-        "collection_CBzpik",
         "collection_fNg4mh",
-        "collection_iP8a4x",
         "collection_8JYgNR",
-        "collection_JLFptB",
         "collection_7xQYij",
         "collection_cP9MiB",
         "collection_AHAWd7",
-        "collection_8wdaDV",
         "collection_1OFFtD",
         "collection_yHU0nj",
         "collection_Voq3Vy",
-        "collection_VQUuBE",
         "collection_9dvEDH",
         "collection_EKXfsQ",
         "collection_yqCKNi",
