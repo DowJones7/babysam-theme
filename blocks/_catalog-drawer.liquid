@@ -5,7 +5,7 @@
   enlaces de un menú de Shopify debajo.
 
   Vive como BLOQUE y no como settings de la sección a propósito: el theme editor de este tema
-  no muestra el panel de settings de la sección `header`, así que los 4 settings puestos ahí
+  no muestra el panel de settings de la sección `header`, así que los settings puestos ahí
   eran invisibles. Como bloque estático —el mismo patrón de `_header-logo` y `_header-menu`—
   sus settings sí aparecen al seleccionar el bloque en el editor.
 
@@ -45,10 +45,22 @@
       <span class="svg-wrapper">{{- 'icon-menu.svg' | inline_asset_content -}}</span>
     </button>
 
+    {%- comment -%}
+      Las tres clases del final son las mismas que usa el drawer del carrito y cada una aporta
+      algo distinto:
+        dialog-modal  -> el backdrop animado (.dialog-modal[open]::backdrop). Sin esto el
+                         overlay aparece de golpe y la apertura se siente sin animación.
+        dialog-drawer -> el slide lateral. En base.css `.dialog-drawer[open]` está DESPUÉS de
+                         `.dialog-modal[open]`, así que su animation gana. Es el mismo orden
+                         del que depende el carrito.
+        color-...     -> el esquema de color del drawer. Sin esto el panel hereda el esquema
+                         del header, cuyo `foreground_heading` es rgba(0,0,0,0) y dejaba el
+                         título literalmente transparente.
+    {%- endcomment -%}
     <dialog
       ref="dialog"
       id="catalog-drawer-panel"
-      class="catalog-drawer__dialog dialog-drawer"
+      class="catalog-drawer__dialog dialog-modal dialog-drawer color-{{ settings.drawer_color_scheme }}"
       role="dialog"
       aria-label="{{ heading | escape }}"
       scroll-lock
@@ -97,11 +109,13 @@
           <ul class="catalog-drawer__list" role="list">
             {%- for link in drawer_menu.links -%}
               {%- comment -%}
+                --i alimenta el retraso de la cascada de entrada, sin JS.
                 data-has-children queda escrito aunque hoy siempre sea "false": es el gancho
-                para cuando el menú tenga subniveles. Ver el bloque comentado de abajo.
+                para cuando el menú tenga subniveles.
               {%- endcomment -%}
               <li
                 class="catalog-drawer__item"
+                style="--i: {{ forloop.index }};"
                 data-has-children="{% if link.links.size > 0 %}true{% else %}false{% endif %}"
               >
                 <a
@@ -114,20 +128,17 @@
                   <span class="catalog-drawer__link-text">{{ link.title }}</span>
 
                   {%- comment -%}
-                    PREPARADO PARA MÁS ADELANTE — hoy no se pide contador ni flechas.
-                    Para activarlos alcanza con descomentar; el CSS de
-                    .catalog-drawer__count y .catalog-drawer__chevron ya está escrito abajo.
+                    PREPARADO PARA MÁS ADELANTE — el contador de productos. Para activarlo
+                    alcanza con descomentar; el CSS de .catalog-drawer__count ya está escrito.
 
                     {%- if link.type == 'collection_link' and link.object.products_count > 0 -%}
                       <span class="catalog-drawer__count">{{ link.object.products_count }}</span>
                     {%- endif -%}
-
-                    {%- if link.links.size > 0 -%}
-                      <span class="catalog-drawer__chevron svg-wrapper" aria-hidden="true">
-                        {{- 'icon-caret.svg' | inline_asset_content -}}
-                      </span>
-                    {%- endif -%}
                   {%- endcomment -%}
+
+                  <span class="catalog-drawer__chevron svg-wrapper" aria-hidden="true">
+                    {{- 'icon-caret.svg' | inline_asset_content -}}
+                  </span>
                 </a>
               </li>
             {%- endfor -%}
@@ -140,10 +151,20 @@
 
 {% stylesheet %}
   .catalog-drawer {
-    --catalog-drawer-width: min(30vw, 380px);
+    --catalog-drawer-width: min(30vw, 400px);
     --catalog-drawer-width-mobile: 85vw;
     --catalog-drawer-padding: var(--padding-lg, 1.25rem);
-    --animation-speed: 0.26s;
+
+    /* Acento del drawer. NO usa --color-primary a propósito: en el esquema del header y en
+       scheme-2 (el que usa el drawer) `primary` vale rgba(0,0,0,0), o sea transparente, y el
+       anillo de foco y la barra del ítem activo quedarían invisibles. --color-foreground es
+       un color real en los 14 esquemas del tema. Para cambiar el acento, tocar solo esto. */
+    --catalog-drawer-accent: var(--color-foreground);
+    --catalog-drawer-accent-rgb: var(--color-foreground-rgb);
+
+    --catalog-drawer-easing: cubic-bezier(0.22, 1, 0.36, 1);
+    --animation-speed: 350ms;
+    --animation-easing: var(--catalog-drawer-easing);
   }
 
   .catalog-drawer__trigger,
@@ -172,15 +193,20 @@
 
   /* El panel va anclado al borde izquierdo. Ojo con el nombre de los keyframes del tema:
      `slideInRight` va de translateX(-100%) a 0, o sea que es el que entra DESDE la izquierda
-     (el nombre describe hacia dónde se desplaza, no de qué lado nace). */
+     (el nombre describe hacia dónde se desplaza, no de qué lado nace).
+     Las variables de animación se repiten acá y no solo en .catalog-drawer porque el
+     ::backdrop no hereda del ancestro en todos los navegadores, pero sí del elemento que lo
+     origina, que es este <dialog>. */
   .catalog-drawer__dialog {
     --dialog-drawer-opening-animation: slideInRight;
     --dialog-drawer-closing-animation: slideOutRight;
+    --animation-speed: 350ms;
+    --animation-easing: var(--catalog-drawer-easing, cubic-bezier(0.22, 1, 0.36, 1));
 
     position: fixed;
     inset-block: 0;
     inset-inline-start: 0;
-    width: var(--catalog-drawer-width);
+    width: var(--catalog-drawer-width, min(30vw, 400px));
     max-width: 100vw;
     height: 100%;
     max-height: 100dvh;
@@ -188,10 +214,10 @@
     padding: 0;
     overflow: hidden;
     border: 0;
-    border-inline-end: var(--style-border-drawer, 1px solid var(--color-border));
+    border-inline-end: 1px solid var(--color-border);
     background-color: var(--color-background);
     color: var(--color-foreground);
-    box-shadow: var(--shadow-drawer, 0 0 24px rgb(0 0 0 / 12%));
+    box-shadow: var(--shadow-drawer, 0 0 32px rgb(0 0 0 / 14%));
   }
 
   .catalog-drawer__dialog::backdrop {
@@ -204,19 +230,42 @@
     height: 100%;
     overflow-y: auto;
     overscroll-behavior: contain;
+
+    /* Scrollbar delgada y discreta, en vez de la nativa. */
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--color-foreground-rgb) / 22%) transparent;
   }
+
+  .catalog-drawer__inner::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .catalog-drawer__inner::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .catalog-drawer__inner::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background: rgb(var(--color-foreground-rgb) / 22%);
+  }
+
+  /* ---------------------------------------------------------------- cabecera */
 
   .catalog-drawer__head {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: var(--padding-sm, 0.75rem);
-    padding: var(--catalog-drawer-padding);
+    padding: var(--catalog-drawer-padding, 1.25rem);
     border-block-end: 1px solid var(--color-border);
   }
 
+  /* `color` explícito y no heredado: base.css fuerza sobre todo h2
+     `color: var(--color, var(--font-h2--color))`, y en varios esquemas del tema
+     --color-foreground-heading vale rgba(0,0,0,0). Sin esta línea el título es transparente. */
   .catalog-drawer__heading {
     margin: 0;
+    color: var(--color-foreground);
     font-family: var(--font-accent);
     font-size: var(--font-size--lg, 1.125rem);
     font-weight: 700;
@@ -224,29 +273,48 @@
   }
 
   .catalog-drawer__close {
-    width: 40px;
-    height: 40px;
     flex: none;
+    width: 38px;
+    height: 38px;
+    border-radius: 999px;
+    transition:
+      background-color 180ms var(--catalog-drawer-easing),
+      transform 180ms var(--catalog-drawer-easing);
+  }
+
+  .catalog-drawer__close:hover,
+  .catalog-drawer__close:focus-visible {
+    background-color: rgb(var(--color-foreground-rgb) / 12%);
+  }
+
+  .catalog-drawer__close:active {
+    transform: scale(0.92);
   }
 
   .catalog-drawer__close .svg-wrapper {
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
   }
+
+  /* ---------------------------------------------------------------- buscador */
 
   .catalog-drawer__search {
     display: flex;
     align-items: center;
     gap: var(--padding-xs, 0.5rem);
-    margin: var(--catalog-drawer-padding);
-    padding-inline: var(--padding-sm, 0.75rem);
-    border: 1px solid var(--color-input-border, var(--color-border));
-    border-radius: var(--style-border-radius-inputs, 8px);
+    margin: var(--catalog-drawer-padding, 1.25rem);
+    padding-inline: 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--style-border-radius-pills, 999px);
     background-color: var(--color-input-background, var(--color-background));
+    transition:
+      border-color 180ms var(--catalog-drawer-easing),
+      box-shadow 180ms var(--catalog-drawer-easing);
   }
 
   .catalog-drawer__search:focus-within {
-    border-color: var(--color-foreground);
+    border-color: var(--catalog-drawer-accent);
+    box-shadow: 0 0 0 3px rgb(var(--catalog-drawer-accent-rgb) / 18%);
   }
 
   .catalog-drawer__search-input {
@@ -264,10 +332,21 @@
     outline: none;
   }
 
+  /* La X nativa del type=search rompe la píldora en WebKit. */
+  .catalog-drawer__search-input::-webkit-search-cancel-button {
+    appearance: none;
+  }
+
   .catalog-drawer__search-submit {
     flex: none;
     width: 28px;
     height: 28px;
+    opacity: 0.7;
+    transition: opacity 180ms var(--catalog-drawer-easing);
+  }
+
+  .catalog-drawer__search-submit:hover {
+    opacity: 1;
   }
 
   .catalog-drawer__search-submit .svg-wrapper {
@@ -275,8 +354,10 @@
     height: 18px;
   }
 
+  /* ---------------------------------------------------------------- lista */
+
   .catalog-drawer__nav {
-    padding-block-end: var(--catalog-drawer-padding);
+    padding-block-end: var(--catalog-drawer-padding, 1.25rem);
   }
 
   .catalog-drawer__list {
@@ -285,57 +366,116 @@
     list-style: none;
   }
 
+  .catalog-drawer__item + .catalog-drawer__item {
+    border-block-start: 1px solid rgb(var(--color-border-rgb) / 55%);
+  }
+
   .catalog-drawer__link {
     display: flex;
     align-items: center;
     gap: var(--padding-sm, 0.75rem);
-    padding: 0.85rem var(--catalog-drawer-padding);
+    padding: 0.9rem var(--catalog-drawer-padding, 1.25rem);
     color: inherit;
     font-family: var(--font-body--family);
     font-size: var(--font-size--md, 1rem);
     text-decoration: none;
+    transition: background-color 180ms var(--catalog-drawer-easing);
   }
 
   .catalog-drawer__link:hover,
   .catalog-drawer__link:focus-visible {
-    background-color: var(--color-hover, rgb(var(--color-foreground-rgb) / 6%));
+    background-color: rgb(var(--color-foreground-rgb) / 6%);
   }
 
+  /* Barra lateral del ítem activo. Va como box-shadow interior para no correr el texto. */
   .catalog-drawer__link[aria-current='page'] {
+    box-shadow: inset 3px 0 0 var(--catalog-drawer-accent);
     font-weight: 600;
   }
 
   .catalog-drawer__link-text {
     flex: 1 1 auto;
+    transition: transform 180ms var(--catalog-drawer-easing);
   }
 
-  /* Preparado para los subniveles y el contador; hoy el markup que los usa está comentado. */
+  .catalog-drawer__chevron {
+    flex: none;
+    width: 14px;
+    height: 14px;
+    opacity: 0.45;
+    rotate: -90deg;
+    transition:
+      transform 180ms var(--catalog-drawer-easing),
+      opacity 180ms var(--catalog-drawer-easing);
+  }
+
+  .catalog-drawer__link:hover .catalog-drawer__link-text,
+  .catalog-drawer__link:focus-visible .catalog-drawer__link-text {
+    transform: translateX(4px);
+  }
+
+  .catalog-drawer__link:hover .catalog-drawer__chevron,
+  .catalog-drawer__link:focus-visible .catalog-drawer__chevron {
+    opacity: 0.9;
+    transform: translateX(4px);
+  }
+
+  /* Preparado para el contador; el markup que lo usa está comentado. */
   .catalog-drawer__count {
     flex: none;
     color: rgb(var(--color-foreground-rgb) / 55%);
     font-size: var(--font-size--xs, 0.85rem);
   }
 
-  .catalog-drawer__chevron {
-    flex: none;
-    width: 16px;
-    height: 16px;
-    rotate: -90deg;
+  /* ---------------------------------------------------------------- cascada */
+
+  @keyframes catalogDrawerItemIn {
+    from {
+      opacity: 0;
+      transform: translateX(-8px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  /* `closeDialog()` espera onAnimationEnd sobre el <dialog> con subtree:false, así que esta
+     cascada no demora ni bloquea el cierre. */
+  .catalog-drawer__dialog[open] .catalog-drawer__item {
+    animation: catalogDrawerItemIn 280ms var(--catalog-drawer-easing) both;
+    animation-delay: calc(var(--i, 0) * 30ms);
+  }
+
+  .catalog-drawer__dialog.dialog-closing .catalog-drawer__item {
+    animation: none;
   }
 
   @media screen and (max-width: 749px) {
     .catalog-drawer__dialog {
-      width: var(--catalog-drawer-width-mobile);
+      width: var(--catalog-drawer-width-mobile, 85vw);
     }
   }
 
-  /* El panel aparece sin animación. `closeDialog()` espera a `onAnimationEnd`, que con
-     `animation: none` no encuentra animaciones y resuelve al instante, así que el cierre
-     sigue funcionando. */
+  /* Sin movimiento: ni slide, ni fade del backdrop, ni cascada, ni micro-transiciones.
+     `closeDialog()` espera a onAnimationEnd, que con `animation: none` no encuentra
+     animaciones y resuelve al instante, así que el cierre sigue funcionando. */
   @media (prefers-reduced-motion: reduce) {
     .catalog-drawer__dialog[open],
-    .catalog-drawer__dialog.dialog-closing {
+    .catalog-drawer__dialog.dialog-closing,
+    .catalog-drawer__dialog[open]::backdrop,
+    .catalog-drawer__dialog[open] .catalog-drawer__item {
       animation: none;
+    }
+
+    .catalog-drawer__close,
+    .catalog-drawer__search,
+    .catalog-drawer__search-submit,
+    .catalog-drawer__link,
+    .catalog-drawer__link-text,
+    .catalog-drawer__chevron {
+      transition: none;
     }
   }
 {% endstylesheet %}
