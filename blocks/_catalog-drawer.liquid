@@ -1,100 +1,104 @@
 {%- doc -%}
-  Drawer lateral de catálogo: se abre desde un ícono del header, trae un buscador arriba y la
-  lista de enlaces de un menú de Shopify debajo.
+  Bloque estático del header: drawer lateral de catálogo.
 
-  Se apoya en `dialog-component` (assets/dialog.js), el mismo componente que usan el carrito y la
-  cuenta. De ahí salen gratis: cierre con Escape, cierre al hacer clic fuera del panel, el
-  backdrop y el bloqueo del scroll del body. Lo único propio es `assets/catalog-drawer.js`, que
-  sincroniza `aria-expanded` y devuelve el foco al botón al cerrar.
+  Se abre desde un ícono a la izquierda del header y trae un buscador arriba y la lista de
+  enlaces de un menú de Shopify debajo.
 
-  Los enlaces NO están quemados en el Liquid: salen del menú que se elija en
-  `catalog_drawer_menu` (Personalizar tema → Encabezado), así que se editan desde el admin.
+  Vive como BLOQUE y no como settings de la sección a propósito: el theme editor de este tema
+  no muestra el panel de settings de la sección `header`, así que los 4 settings puestos ahí
+  eran invisibles. Como bloque estático —el mismo patrón de `_header-logo` y `_header-menu`—
+  sus settings sí aparecen al seleccionar el bloque en el editor.
 
-  @param {object} section - La sección del header, de donde salen las settings.
+  Se apoya en `dialog-component` (assets/dialog.js), el mismo componente del carrito y la
+  cuenta. De ahí salen ya resueltos el cierre con Escape, el cierre al clic fuera, el backdrop
+  y el bloqueo del scroll del body. Lo propio es `assets/catalog-drawer.js`, que sincroniza
+  `aria-expanded` y devuelve el foco al botón.
 
-  @example
-  {% render 'catalog-drawer', section: section %}
+  Si no hay menú elegido no renderiza absolutamente nada (ni los <script>), y la sección se
+  apoya en eso para no agregar el slot al `order`.
 {%- enddoc -%}
 
 {% liquid
-  assign drawer_menu = section.settings.catalog_drawer_menu
-  assign heading = section.settings.catalog_drawer_heading | default: 'Catálogo'
-  assign show_search = section.settings.catalog_drawer_show_search
-  assign placeholder = section.settings.catalog_drawer_search_placeholder | default: '¿Qué estás buscando?'
+  assign drawer_menu = block.settings.catalog_drawer_menu
+  assign heading = block.settings.catalog_drawer_heading | default: 'Catálogo'
+  assign show_search = block.settings.catalog_drawer_show_search
+  assign placeholder = block.settings.catalog_drawer_search_placeholder | default: '¿Qué estás buscando?'
 %}
 
-<script src="{{ 'dialog.js' | asset_url }}" type="module"></script>
-<script src="{{ 'catalog-drawer.js' | asset_url }}" type="module" fetchpriority="low"></script>
+{%- if drawer_menu != blank and drawer_menu.links.size > 0 -%}
+  <script src="{{ 'dialog.js' | asset_url }}" type="module"></script>
+  <script src="{{ 'catalog-drawer.js' | asset_url }}" type="module" fetchpriority="low"></script>
 
-<dialog-component
-  id="catalog-drawer"
-  class="catalog-drawer"
->
-  <button
-    type="button"
-    class="catalog-drawer__trigger"
-    on:click="/showDialog"
-    aria-expanded="false"
-    aria-controls="catalog-drawer-panel"
-    aria-label="Abrir el menú de {{ heading | escape }}"
+  <dialog-component
+    id="catalog-drawer"
+    class="catalog-drawer"
+    {{ block.shopify_attributes }}
   >
-    <span class="svg-wrapper">{{- 'icon-menu.svg' | inline_asset_content -}}</span>
-  </button>
+    <button
+      type="button"
+      class="catalog-drawer__trigger"
+      on:click="/showDialog"
+      aria-expanded="false"
+      aria-controls="catalog-drawer-panel"
+      aria-label="Abrir el menú de {{ heading | escape }}"
+    >
+      <span class="svg-wrapper">{{- 'icon-menu.svg' | inline_asset_content -}}</span>
+    </button>
 
-  <dialog
-    ref="dialog"
-    id="catalog-drawer-panel"
-    class="catalog-drawer__dialog dialog-drawer"
-    role="dialog"
-    aria-label="{{ heading | escape }}"
-    scroll-lock
-  >
-    <div class="catalog-drawer__inner">
-      <div class="catalog-drawer__head">
-        <h2 class="catalog-drawer__heading">{{ heading }}</h2>
-        {%- comment -%}
-          autofocus en el botón de cerrar y no en el input: showModal() enfoca el primer elemento
-          enfocable del panel, y si ese fuera el buscador el teclado del celular se abre solo.
-        {%- endcomment -%}
-        <button
-          type="button"
-          class="catalog-drawer__close"
-          on:click="#catalog-drawer/closeDialog"
-          aria-label="Cerrar el menú"
-          autofocus
-        >
-          <span class="svg-wrapper">{{- 'icon-close.svg' | inline_asset_content -}}</span>
-        </button>
-      </div>
-
-      {%- if show_search -%}
-        <form
-          class="catalog-drawer__search"
-          action="{{ routes.search_url }}"
-          method="get"
-          role="search"
-        >
-          <input
-            type="search"
-            name="q"
-            class="catalog-drawer__search-input"
-            placeholder="{{ placeholder | escape }}"
-            aria-label="{{ placeholder | escape }}"
-            autocomplete="off"
+    <dialog
+      ref="dialog"
+      id="catalog-drawer-panel"
+      class="catalog-drawer__dialog dialog-drawer"
+      role="dialog"
+      aria-label="{{ heading | escape }}"
+      scroll-lock
+    >
+      <div class="catalog-drawer__inner">
+        <div class="catalog-drawer__head">
+          <h2 class="catalog-drawer__heading">{{ heading }}</h2>
+          {%- comment -%}
+            autofocus en el botón de cerrar y no en el input: showModal() enfoca el primer
+            elemento enfocable del panel, y si ese fuera el buscador el teclado del celular
+            se abre solo.
+          {%- endcomment -%}
+          <button
+            type="button"
+            class="catalog-drawer__close"
+            on:click="#catalog-drawer/closeDialog"
+            aria-label="Cerrar el menú"
+            autofocus
           >
-          <button type="submit" class="catalog-drawer__search-submit" aria-label="Buscar">
-            <span class="svg-wrapper">{{- 'icon-search.svg' | inline_asset_content -}}</span>
+            <span class="svg-wrapper">{{- 'icon-close.svg' | inline_asset_content -}}</span>
           </button>
-        </form>
-      {%- endif -%}
+        </div>
 
-      {%- if drawer_menu.links.size > 0 -%}
+        {%- if show_search -%}
+          <form
+            class="catalog-drawer__search"
+            action="{{ routes.search_url }}"
+            method="get"
+            role="search"
+          >
+            <input
+              type="search"
+              name="q"
+              class="catalog-drawer__search-input"
+              placeholder="{{ placeholder | escape }}"
+              aria-label="{{ placeholder | escape }}"
+              autocomplete="off"
+            >
+            <button type="submit" class="catalog-drawer__search-submit" aria-label="Buscar">
+              <span class="svg-wrapper">{{- 'icon-search.svg' | inline_asset_content -}}</span>
+            </button>
+          </form>
+        {%- endif -%}
+
         <nav class="catalog-drawer__nav" aria-label="{{ heading | escape }}">
           <ul class="catalog-drawer__list" role="list">
             {%- for link in drawer_menu.links -%}
               {%- comment -%}
-                data-has-children queda escrito aunque hoy siempre sea "false": es el gancho para
-                cuando el menú tenga subniveles. Ver el bloque comentado de abajo.
+                data-has-children queda escrito aunque hoy siempre sea "false": es el gancho
+                para cuando el menú tenga subniveles. Ver el bloque comentado de abajo.
               {%- endcomment -%}
               <li
                 class="catalog-drawer__item"
@@ -129,14 +133,10 @@
             {%- endfor -%}
           </ul>
         </nav>
-      {%- else -%}
-        <p class="catalog-drawer__empty">
-          Elegí un menú en Personalizar tema → Encabezado → «Menú del drawer de catálogo».
-        </p>
-      {%- endif -%}
-    </div>
-  </dialog>
-</dialog-component>
+      </div>
+    </dialog>
+  </dialog-component>
+{%- endif -%}
 
 {% stylesheet %}
   .catalog-drawer {
@@ -323,13 +323,6 @@
     rotate: -90deg;
   }
 
-  .catalog-drawer__empty {
-    margin: 0;
-    padding: var(--catalog-drawer-padding);
-    color: rgb(var(--color-foreground-rgb) / 65%);
-    font-size: var(--font-size--sm, 0.95rem);
-  }
-
   @media screen and (max-width: 749px) {
     .catalog-drawer__dialog {
       width: var(--catalog-drawer-width-mobile);
@@ -346,3 +339,37 @@
     }
   }
 {% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Drawer de catálogo",
+  "tag": null,
+  "class": "header-catalog-drawer",
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "catalog_drawer_menu",
+      "label": "Menú del drawer de catálogo",
+      "info": "Los enlaces del drawer salen de este menú. Sin menú elegido el botón no aparece."
+    },
+    {
+      "type": "text",
+      "id": "catalog_drawer_heading",
+      "label": "Título del drawer",
+      "default": "Catálogo"
+    },
+    {
+      "type": "checkbox",
+      "id": "catalog_drawer_show_search",
+      "label": "Mostrar el buscador dentro del drawer",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "catalog_drawer_search_placeholder",
+      "label": "Texto de ejemplo del buscador",
+      "default": "¿Qué estás buscando?"
+    }
+  ]
+}
+{% endschema %}

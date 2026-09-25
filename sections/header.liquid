@@ -96,12 +96,20 @@
 
   # Drawer lateral de catálogo. Va primero en el `order` para quedar pegado al borde izquierdo,
   # antes del logo. Se antepone acá, después de todas las reasignaciones de `order` de arriba,
-  # para no tener que repetirlo en cada rama. Sin menú elegido no se renderiza nada: no tiene
-  # sentido un botón que abre un panel vacío.
-  if section.settings.catalog_drawer_menu != blank
-    capture catalog_drawer
-      render 'catalog-drawer', section: section
-    endcapture
+  # para no tener que repetirlo en cada rama.
+  #
+  # Es un BLOQUE estático (blocks/_catalog-drawer.liquid) y no settings de esta sección: el
+  # theme editor de este tema no muestra el panel de settings de la sección `header`, así que
+  # puestos acá quedaban invisibles. Como bloque, sus settings salen al seleccionarlo en el
+  # editor, igual que los de `_header-logo` y `_header-menu`.
+  #
+  # El bloque no renderiza NADA cuando no hay menú elegido, así que el slot se agrega al
+  # `order` solo si el capture trajo algo: si no, quedaría una columna vacía en el header.
+  capture catalog_drawer
+    content_for 'block', type: '_catalog-drawer', id: 'catalog-drawer'
+  endcapture
+  assign catalog_drawer = catalog_drawer | strip
+  if catalog_drawer != blank
     assign order = 'catalog_drawer,' | append: order
   endif
 
@@ -672,34 +680,6 @@
   "tag": "header",
   "class": "header-section",
   "settings": [
-    {
-      "type": "header",
-      "content": "Drawer de catálogo"
-    },
-    {
-      "type": "link_list",
-      "id": "catalog_drawer_menu",
-      "label": "Menú del drawer de catálogo",
-      "info": "Los enlaces del drawer salen de este menú. Sin menú elegido el botón no aparece. Shopify solo admite 'main-menu' o 'footer' como valor por defecto de este tipo de setting, así que queda vacío a propósito: elegí acá el menú de colecciones."
-    },
-    {
-      "type": "text",
-      "id": "catalog_drawer_heading",
-      "label": "Título del drawer",
-      "default": "Catálogo"
-    },
-    {
-      "type": "checkbox",
-      "id": "catalog_drawer_show_search",
-      "label": "Mostrar el buscador dentro del drawer",
-      "default": true
-    },
-    {
-      "type": "text",
-      "id": "catalog_drawer_search_placeholder",
-      "label": "Texto de ejemplo del buscador",
-      "default": "¿Qué estás buscando?"
-    },
     {
       "type": "header",
       "content": "t:content.logo"

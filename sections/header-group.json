@@ -14,6 +14,12 @@
     "header_section": {
       "type": "header",
       "blocks": {
+        "catalog-drawer": {
+          "type": "_catalog-drawer",
+          "static": true,
+          "settings": {},
+          "blocks": {}
+        },
         "header-logo": {
           "type": "_header-logo",
           "static": true,
