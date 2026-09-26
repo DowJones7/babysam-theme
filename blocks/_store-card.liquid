@@ -15,6 +15,10 @@
   assign descripcion = block.settings.store_description
   assign imagen = block.settings.store_image
 
+  # Horas para el JSON-LD. Van aparte del richtext de arriba, que es solo para mostrar.
+  assign abre = block.settings.store_opens
+  assign cierra = block.settings.store_closes
+
   # Normalización del número: se quita todo lo que no sea dígito y se antepone 57 si falta.
   assign wa1 = block.settings.store_whatsapp_1 | remove: ' ' | remove: '-' | remove: '(' | remove: ')' | remove: '+' | remove: '.'
   if wa1 != blank
@@ -126,12 +130,12 @@
 
 {%- comment -%}
   JSON-LD. Solo se emite si hay nombre, y dentro solo van los campos con valor.
-  `openingHours` va como texto y NO como openingHoursSpecification a propósito: el horario es
-  un richtext que la clienta escribe libre ("Lunes a sábado: 9:00 a.m. – 6:30 p.m. / Domingos
-  y festivos: cerrado"), y derivar de ahí un objeto con dayOfWeek/opens/closes exigiría
-  parsearlo. Un parser se rompe en silencio apenas cambien la redacción y publicaría horarios
-  falsos en Google, que es peor que no publicarlos. `openingHours` en texto es válido en
-  schema.org y es honesto con el dato que hay.
+
+  El horario sale de dos settings dedicados (hora de apertura y de cierre) y NO del richtext:
+  ese texto lo escribe la clienta libre y parsearlo para sacar opens/closes se rompería en
+  silencio apenas cambiara la redacción, publicando horarios falsos en Google. El richtext
+  queda solo para mostrar en la tarjeta. Si falta cualquiera de las dos horas no se emite el
+  bloque de horario: mejor sin dato que con uno a medias.
 {%- endcomment -%}
 {%- if nombre != blank -%}
   <script type="application/ld+json">
@@ -154,8 +158,20 @@
       {%- if imagen != blank -%}
         ,"image": {{ imagen | image_url: width: 1200 | prepend: 'https:' | json }}
       {%- endif -%}
-      {%- if horarios != blank -%}
-        ,"openingHours": {{ horarios | strip_html | strip | json }}
+      {%- if abre != blank and cierra != blank -%}
+        ,"openingHoursSpecification": {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": [
+            "https://schema.org/Monday",
+            "https://schema.org/Tuesday",
+            "https://schema.org/Wednesday",
+            "https://schema.org/Thursday",
+            "https://schema.org/Friday",
+            "https://schema.org/Saturday"
+          ],
+          "opens": {{ abre | strip_html | strip | json }},
+          "closes": {{ cierra | strip_html | strip | json }}
+        }
       {%- endif -%}
       {%- if descripcion != blank -%}
         ,"description": {{ descripcion | strip_html | strip | json }}
@@ -189,7 +205,21 @@
     {
       "type": "richtext",
       "id": "store_hours",
-      "label": "Horarios"
+      "label": "Horarios (lo que ve la clienta)"
+    },
+    {
+      "type": "text",
+      "id": "store_opens",
+      "label": "Hora de apertura (lunes a sábado)",
+      "info": "Formato 24 h, por ejemplo 09:00. Se usa solo para que Google entienda el horario, no se muestra.",
+      "default": "09:00"
+    },
+    {
+      "type": "text",
+      "id": "store_closes",
+      "label": "Hora de cierre (lunes a sábado)",
+      "info": "Formato 24 h, por ejemplo 18:30. Si falta esta o la de apertura, no se envía horario a Google.",
+      "default": "18:30"
     },
     {
       "type": "richtext",

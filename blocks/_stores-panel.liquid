@@ -13,6 +13,9 @@
 {% liquid
   assign titulo = block.settings.panel_title | default: 'Nuestras tiendas'
   assign intro = block.settings.panel_intro
+  assign esquema = block.settings.color_scheme
+  assign tinta = block.settings.stores_ink
+  assign acento = block.settings.stores_accent
 %}
 
 <script src="{{ 'dialog.js' | asset_url }}" type="module"></script>
@@ -26,13 +29,18 @@
   {%- comment -%}
     Las tres clases finales son las del carrito y el drawer de catálogo: `dialog-modal` trae
     el backdrop animado, `dialog-drawer` el mecanismo de animación por variables, y
-    `color-…` el esquema propio (sin eso hereda el del header, cuyo foreground_heading es
-    rgba(0,0,0,0) y dejaría los títulos transparentes).
+    `color-…` el esquema, ahora elegible desde el editor.
+
+    Los dos colores de texto viajan como variables inline y NO escritos en el CSS: un bloque
+    `{% stylesheet %}` no procesa Liquid, así que es la única forma de que un setting llegue
+    al CSS. Los defaults del schema están medidos contra WCAG AA (tinta 9.65:1 sobre blanco,
+    acento 4.51:1 como texto y con blanco encima).
   {%- endcomment -%}
   <dialog
     ref="dialog"
     id="stores-panel-dialog"
-    class="stores-panel__dialog dialog-modal dialog-drawer color-{{ settings.drawer_color_scheme }}"
+    class="stores-panel__dialog dialog-modal dialog-drawer color-{{ esquema }}"
+    style="--stores-ink: {{ tinta }}; --stores-ink-rgb: {{ tinta.rgb }}; --stores-accent: {{ acento }}; --stores-accent-rgb: {{ acento.rgb }};"
     role="dialog"
     aria-label="{{ titulo | escape }}"
     scroll-lock
@@ -65,9 +73,14 @@
 
 {% stylesheet %}
   .stores-panel {
-    --stores-accent: var(--color-foreground);
-    --stores-accent-rgb: var(--color-foreground-rgb);
     --stores-easing: cubic-bezier(0.22, 1, 0.36, 1);
+
+    /* Superficie de las tarjetas. Blanco puro sobre el crema del panel da 1.04 de contraste,
+       así que la tarjeta NO se separa con borde —ningún tono tostado del tema llega a 3:1
+       contra blanco— sino con sombra. */
+    --stores-card-bg: #fff;
+    --stores-card-shadow: 0 1px 2px rgb(var(--stores-ink-rgb, 90 63 40) / 8%),
+      0 6px 18px rgb(var(--stores-ink-rgb, 90 63 40) / 10%);
   }
 
   /* Keyframes propios: los del tema no sirven acá. `slideInTop` entra desde ABAJO
@@ -114,8 +127,8 @@
     border: 0;
     border-block-end: 1px solid var(--color-border);
     background-color: var(--color-background);
-    color: var(--color-foreground);
-    box-shadow: 0 18px 40px rgb(var(--color-shadow-rgb, 0 0 0) / 16%);
+    color: var(--stores-ink);
+    box-shadow: 0 18px 40px rgb(var(--stores-ink-rgb, 90 63 40) / 18%);
   }
 
   .stores-panel__dialog::backdrop {
@@ -128,7 +141,7 @@
     overflow-y: auto;
     overscroll-behavior: contain;
     scrollbar-width: thin;
-    scrollbar-color: rgb(var(--color-foreground-rgb) / 22%) transparent;
+    scrollbar-color: rgb(var(--stores-ink-rgb) / 30%) transparent;
   }
 
   .stores-panel__inner::-webkit-scrollbar {
@@ -141,7 +154,7 @@
 
   .stores-panel__inner::-webkit-scrollbar-thumb {
     border-radius: 999px;
-    background: rgb(var(--color-foreground-rgb) / 22%);
+    background: rgb(var(--stores-ink-rgb) / 30%);
   }
 
   .stores-panel__head {
@@ -156,7 +169,7 @@
      y en varios esquemas del tema esa variable vale rgba(0,0,0,0). */
   .stores-panel__title {
     margin: 0;
-    color: var(--color-foreground);
+    color: var(--stores-ink);
     font-family: var(--font-accent);
     font-size: var(--font-size--xl, 1.4rem);
     font-weight: 700;
@@ -165,7 +178,7 @@
 
   .stores-panel__intro {
     margin-block-start: 0.35rem;
-    color: rgb(var(--color-foreground-rgb) / 75%);
+    color: rgb(var(--stores-ink-rgb) / 78%);
     font-size: var(--font-size--sm, 0.95rem);
   }
 
@@ -189,7 +202,7 @@
 
   .stores-panel__close:hover,
   .stores-panel__close:focus-visible {
-    background-color: rgb(var(--color-foreground-rgb) / 12%);
+    background-color: rgb(var(--stores-ink-rgb) / 10%);
   }
 
   .stores-panel__close:active {
@@ -222,7 +235,7 @@
 
   .stores-zone__title {
     margin: 0;
-    color: var(--color-foreground);
+    color: var(--stores-accent);
     font-family: var(--font-accent);
     font-size: var(--font-size--lg, 1.15rem);
     font-weight: 700;
@@ -231,14 +244,15 @@
 
   .stores-zone__subtitle {
     margin: 0.15rem 0 0;
-    color: rgb(var(--color-foreground-rgb) / 70%);
+    color: rgb(var(--stores-ink-rgb) / 75%);
     font-size: var(--font-size--sm, 0.95rem);
   }
 
   .stores-zone__map {
     margin-block-end: var(--gap-md, 1rem);
     overflow: hidden;
-    border: 1px solid var(--color-border);
+    border: 0;
+    box-shadow: var(--stores-card-shadow);
     border-radius: var(--style-border-radius-lg, 14px);
     aspect-ratio: 16 / 10;
   }
@@ -254,9 +268,9 @@
   .stores-zone__map-error {
     margin-block-end: var(--gap-md, 1rem);
     padding: 0.7rem 0.9rem;
-    border: 1px dashed var(--color-border);
+    border: 1px dashed rgb(var(--stores-ink-rgb) / 35%);
     border-radius: var(--style-border-radius-md, 10px);
-    color: rgb(var(--color-foreground-rgb) / 70%);
+    color: rgb(var(--stores-ink-rgb) / 80%);
     font-size: var(--font-size--xs, 0.85rem);
   }
 
@@ -270,9 +284,10 @@
   .store-card {
     display: grid;
     overflow: hidden;
-    border: 1px solid var(--color-border);
+    border: 0;
     border-radius: var(--style-border-radius-lg, 14px);
-    background-color: rgb(var(--color-foreground-rgb) / 3%);
+    background-color: var(--stores-card-bg);
+    box-shadow: var(--stores-card-shadow);
   }
 
   .store-card__media img {
@@ -289,7 +304,7 @@
 
   .store-card__name {
     margin: 0;
-    color: var(--color-foreground);
+    color: var(--stores-ink);
     font-family: var(--font-accent);
     font-size: var(--font-size--md, 1rem);
     font-weight: 700;
@@ -308,7 +323,7 @@
     align-items: flex-start;
     gap: 0.4rem;
     margin: 0.6rem 0 0;
-    color: rgb(var(--color-foreground-rgb) / 80%);
+    color: rgb(var(--stores-ink-rgb) / 88%);
     font-size: var(--font-size--sm, 0.92rem);
     line-height: 1.4;
   }
@@ -336,11 +351,11 @@
   }
 
   .store-card__hours {
-    color: rgb(var(--color-foreground-rgb) / 80%);
+    color: rgb(var(--stores-ink-rgb) / 88%);
   }
 
   .store-card__description {
-    color: rgb(var(--color-foreground-rgb) / 70%);
+    color: rgb(var(--stores-ink-rgb) / 82%);
   }
 
   .store-card__hours p,
@@ -355,28 +370,33 @@
     margin-block-start: var(--gap-sm, 0.8rem);
   }
 
+  /* Relleno con el acento y texto blanco: 4.51:1 con el default. */
   .store-card__wa {
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-    padding: 0.5rem 0.9rem;
-    border: 1px solid var(--color-border);
+    padding: 0.55rem 0.95rem;
+    border: 0;
     border-radius: var(--style-border-radius-pills, 999px);
-    color: inherit;
+    background-color: var(--stores-accent);
+    color: #fff;
     font-size: var(--font-size--xs, 0.85rem);
     font-weight: 600;
     text-decoration: none;
     transition:
-      background-color 180ms var(--stores-easing),
-      border-color 180ms var(--stores-easing),
+      filter 180ms var(--stores-easing),
       transform 180ms var(--stores-easing);
   }
 
   .store-card__wa:hover,
   .store-card__wa:focus-visible {
-    border-color: var(--stores-accent);
-    background-color: rgb(var(--stores-accent-rgb) / 10%);
+    filter: brightness(0.9);
     transform: translateY(-1px);
+  }
+
+  .store-card__wa:focus-visible {
+    outline: 2px solid var(--stores-ink);
+    outline-offset: 2px;
   }
 
   .store-card__wa-icon {
@@ -443,6 +463,31 @@
       "type": "richtext",
       "id": "panel_intro",
       "label": "Texto de introducción (opcional)"
+    },
+    {
+      "type": "header",
+      "content": "Colores"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Esquema de color del panel",
+      "info": "Define el fondo del panel. Los colores de texto se eligen abajo.",
+      "default": "scheme-3"
+    },
+    {
+      "type": "color",
+      "id": "stores_ink",
+      "label": "Color del texto",
+      "info": "El valor por defecto da 9.65:1 sobre blanco, muy por encima del mínimo AA de 4.5:1.",
+      "default": "#5a3f28"
+    },
+    {
+      "type": "color",
+      "id": "stores_accent",
+      "label": "Color de acento",
+      "info": "Nombre de zona, ubicación interna y botones de WhatsApp. El valor por defecto es el rosa de marca oscurecido lo mínimo para llegar a 4.5:1, como texto y con blanco encima.",
+      "default": "#e12956"
     }
   ],
   "blocks": [
