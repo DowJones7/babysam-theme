@@ -16,6 +16,20 @@
   assign esquema = block.settings.color_scheme
   assign tinta = block.settings.stores_ink
   assign acento = block.settings.stores_accent
+  assign fondo = block.settings.panel_bg
+  assign radio_btn = block.settings.stores_button_radius
+
+  # Opacidad 0-50 en el setting -> 0-0.5 en CSS.
+  assign opacidad = block.settings.panel_pattern_opacity | divided_by: 100.0
+
+  # El patrón: la imagen elegida o, si no hay, el mismo mosaico que usan las tarjetas del
+  # catálogo. Vive en Shopify Files, no en assets/, por eso file_img_url. Los settings
+  # image_picker no admiten `default` en el schema, así que el fallback va acá.
+  if block.settings.panel_pattern != blank
+    assign patron_url = block.settings.panel_pattern | image_url: width: 400
+  else
+    assign patron_url = 'backupd_catalogo.png' | file_img_url: '400x400'
+  endif
 %}
 
 <script src="{{ 'dialog.js' | asset_url }}" type="module"></script>
@@ -40,7 +54,16 @@
     ref="dialog"
     id="stores-panel-dialog"
     class="stores-panel__dialog dialog-modal dialog-drawer color-{{ esquema }}"
-    style="--stores-ink: {{ tinta }}; --stores-ink-rgb: {{ tinta.rgb }}; --stores-accent: {{ acento }}; --stores-accent-rgb: {{ acento.rgb }};"
+    style="
+      --stores-ink: {{ tinta }};
+      --stores-ink-rgb: {{ tinta.rgb }};
+      --stores-accent: {{ acento }};
+      --stores-accent-rgb: {{ acento.rgb }};
+      --stores-bg: {{ fondo }};
+      --stores-pattern: url('{{ patron_url }}');
+      --stores-pattern-opacity: {{ opacidad }};
+      --stores-button-radius: {{ radio_btn }}px;
+    "
     role="dialog"
     aria-label="{{ titulo | escape }}"
     scroll-lock
@@ -126,9 +149,25 @@
     overflow: hidden;
     border: 0;
     border-block-end: 1px solid var(--color-border);
-    background-color: var(--color-background);
+    background-color: var(--stores-bg);
     color: var(--stores-ink);
     box-shadow: 0 18px 40px rgb(var(--stores-ink-rgb, 90 63 40) / 18%);
+  }
+
+  /* El patrón va en una capa aparte para que la opacidad afecte SOLO al dibujo y nunca al
+     texto. Queda fijo mientras el contenido scrollea: es una marca de agua, no un fondo que
+     se arrastre. Medido: el píxel más oscuro del mosaico es #f79e89 (luminancia 0.46) y no
+     hay ni uno por debajo de 0.25, así que incluso al 50% la tinta mantiene 5.99:1. */
+  .stores-panel__dialog::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background-image: var(--stores-pattern);
+    background-repeat: repeat;
+    background-size: 120px 120px;
+    opacity: var(--stores-pattern-opacity);
+    pointer-events: none;
   }
 
   .stores-panel__dialog::backdrop {
@@ -136,6 +175,8 @@
   }
 
   .stores-panel__inner {
+    position: relative;
+    z-index: 1;
     max-height: calc(100dvh - var(--header-height, 0px));
     padding: var(--padding-lg, 1.25rem) var(--padding-xl, 2rem) var(--padding-xl, 2rem);
     overflow-y: auto;
@@ -176,9 +217,11 @@
     line-height: 1.15;
   }
 
+  /* Sin alfa: estos textos van directo sobre el rosa y con transparencia caían a 4.42,
+     por debajo del mínimo de 4.5. A tinta plena dan 7.59. */
   .stores-panel__intro {
     margin-block-start: 0.35rem;
-    color: rgb(var(--stores-ink-rgb) / 78%);
+    color: var(--stores-ink);
     font-size: var(--font-size--sm, 0.95rem);
   }
 
@@ -233,9 +276,12 @@
     margin-block-end: var(--gap-sm, 0.75rem);
   }
 
+  /* Tinta y no acento: el acento sobre el rosa da 3.55 —pasa el umbral de texto grande pero
+     es rosa sobre rosa y se lee mal—. En tinta da 7.59. El acento se reserva para la
+     ubicación interna, que va dentro de la tarjeta blanca. */
   .stores-zone__title {
     margin: 0;
-    color: var(--stores-accent);
+    color: var(--stores-ink);
     font-family: var(--font-accent);
     font-size: var(--font-size--lg, 1.15rem);
     font-weight: 700;
@@ -244,7 +290,7 @@
 
   .stores-zone__subtitle {
     margin: 0.15rem 0 0;
-    color: rgb(var(--stores-ink-rgb) / 75%);
+    color: var(--stores-ink);
     font-size: var(--font-size--sm, 0.95rem);
   }
 
@@ -264,7 +310,17 @@
     border: 0;
   }
 
-  /* Solo se ve dentro del theme editor. */
+  /* Solo se ven dentro del theme editor. */
+  .store-card__hours-error {
+    margin: 0.6rem 0 0;
+    padding: 0.5rem 0.7rem;
+    border: 1px dashed rgb(var(--stores-ink-rgb) / 35%);
+    border-radius: var(--style-border-radius-md, 10px);
+    color: rgb(var(--stores-ink-rgb) / 85%);
+    font-size: var(--font-size--xs, 0.82rem);
+    line-height: 1.35;
+  }
+
   .stores-zone__map-error {
     margin-block-end: var(--gap-md, 1rem);
     padding: 0.7rem 0.9rem;
@@ -377,7 +433,7 @@
     gap: 0.4rem;
     padding: 0.55rem 0.95rem;
     border: 0;
-    border-radius: var(--style-border-radius-pills, 999px);
+    border-radius: var(--stores-button-radius, 999px);
     background-color: var(--stores-accent);
     color: #fff;
     font-size: var(--font-size--xs, 0.85rem);
@@ -427,6 +483,11 @@
       max-height: 100dvh;
       height: 100dvh;
       padding: var(--padding-md, 1rem);
+
+      /* En móvil el panel arranca en 0, así que sin esto el título queda debajo de la barra
+         de estado en pantallas con notch. */
+      padding-block-start: max(var(--padding-md, 1rem), env(safe-area-inset-top));
+      padding-block-end: max(var(--padding-md, 1rem), env(safe-area-inset-bottom));
     }
 
     .stores-zone__map {
@@ -486,8 +547,50 @@
       "type": "color",
       "id": "stores_accent",
       "label": "Color de acento",
-      "info": "Nombre de zona, ubicación interna y botones de WhatsApp. El valor por defecto es el rosa de marca oscurecido lo mínimo para llegar a 4.5:1, como texto y con blanco encima.",
+      "info": "Ubicación interna de cada tienda y botones de WhatsApp. El valor por defecto es el rosa de marca oscurecido lo mínimo para llegar a 4.5:1, como texto y con blanco encima.",
       "default": "#e12956"
+    },
+    {
+      "type": "header",
+      "content": "Fondo del panel"
+    },
+    {
+      "type": "color",
+      "id": "panel_bg",
+      "label": "Color de fondo",
+      "info": "Rosa de marca aclarado. Con el valor por defecto el texto queda en 7.59:1, muy por encima del mínimo de 4.5:1.",
+      "default": "#fadde4"
+    },
+    {
+      "type": "image_picker",
+      "id": "panel_pattern",
+      "label": "Patrón de fondo",
+      "info": "Si lo dejás vacío usa el mismo mosaico de teteros y corazones de las tarjetas del catálogo."
+    },
+    {
+      "type": "range",
+      "id": "panel_pattern_opacity",
+      "label": "Opacidad del patrón",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "%",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Botones"
+    },
+    {
+      "type": "range",
+      "id": "stores_button_radius",
+      "label": "Redondeo de los botones de WhatsApp",
+      "info": "100 es cápsula, 0 es esquina recta. No se usa la variable de botones del tema porque en este tema vale 0 y los dejaría cuadrados.",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 100
     }
   ],
   "blocks": [

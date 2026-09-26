@@ -16,8 +16,32 @@
   assign imagen = block.settings.store_image
 
   # Horas para el JSON-LD. Van aparte del richtext de arriba, que es solo para mostrar.
-  assign abre = block.settings.store_opens
-  assign cierra = block.settings.store_closes
+  assign abre = block.settings.store_opens | strip
+  assign cierra = block.settings.store_closes | strip
+
+  # Se valida el formato HH:MM antes de mandar nada a Google: 5 caracteres y ':' en la
+  # tercera posición. Un "9 am" o un "09.00" pasarían como texto pero Google los descarta,
+  # y peor, sin validar publicaríamos un horario roto sin enterarnos.
+  assign hora_ok = false
+  if abre != blank and cierra != blank
+    assign abre_largo = abre | size
+    assign cierra_largo = cierra | size
+    assign abre_sep = abre | slice: 2, 1
+    assign cierra_sep = cierra | slice: 2, 1
+    if abre_largo == 5 and cierra_largo == 5 and abre_sep == ':' and cierra_sep == ':'
+      assign hora_ok = true
+    endif
+  endif
+
+  # Aviso solo en el editor: hay algo cargado pero no valida. Se precalcula acá y no en el
+  # markup porque Liquid evalúa and/or de derecha a izquierda, sin precedencia, y una
+  # condición encadenada se lee mal y es fácil de romper.
+  assign aviso_hora = false
+  if request.design_mode and hora_ok == false
+    if abre != blank or cierra != blank
+      assign aviso_hora = true
+    endif
+  endif
 
   # Normalización del número: se quita todo lo que no sea dígito y se antepone 57 si falta.
   assign wa1 = block.settings.store_whatsapp_1 | remove: ' ' | remove: '-' | remove: '(' | remove: ')' | remove: '+' | remove: '.'
@@ -89,6 +113,17 @@
       <div class="store-card__description">{{ descripcion }}</div>
     {%- endif -%}
 
+    {%- comment -%}
+      Solo dentro del theme editor: si cargaron horas con un formato que Google no entiende,
+      sin esto el horario simplemente no se enviaría y no habría forma de darse cuenta.
+    {%- endcomment -%}
+    {%- if aviso_hora -%}
+      <p class="store-card__hours-error">
+        Las horas deben ir como HH:MM en 24 h, por ejemplo 09:00 y 18:30. Con el formato
+        actual no se envía el horario a Google.
+      </p>
+    {%- endif -%}
+
     {%- if wa1 != blank or wa2 != blank -%}
       <div class="store-card__actions">
         {%- if wa1 != blank -%}
@@ -158,7 +193,7 @@
       {%- if imagen != blank -%}
         ,"image": {{ imagen | image_url: width: 1200 | prepend: 'https:' | json }}
       {%- endif -%}
-      {%- if abre != blank and cierra != blank -%}
+      {%- if hora_ok -%}
         ,"openingHoursSpecification": {
           "@type": "OpeningHoursSpecification",
           "dayOfWeek": [
