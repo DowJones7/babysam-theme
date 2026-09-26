@@ -1,0 +1,110 @@
+{%- doc -%}
+  Una zona del panel de tiendas: título, subtítulo, un mapa de Google y las tarjetas de las
+  tiendas de esa zona (bloques hijos `_store-card`, agregables desde el theme editor).
+
+  El campo del mapa recibe el HTML completo del <iframe> que da Google en
+  "Compartir → Insertar un mapa". De ahí se extrae el src y se valida el prefijo antes de
+  renderizar nada.
+{%- enddoc -%}
+
+{% liquid
+  assign titulo = block.settings.zone_title
+  assign subtitulo = block.settings.zone_subtitle
+  assign codigo = block.settings.zone_map_embed
+
+  # Se toma el PRIMER src del código pegado, no el último.
+  assign mapa_src = ''
+  assign partes = codigo | split: 'src="'
+  if partes.size > 1
+    assign mapa_src = partes[1] | split: '"' | first
+  endif
+
+  # El prefijo tiene 33 caracteres exactos. Se comparan los 33 primeros y no un `contains`,
+  # que dejaría pasar algo como https://otrodominio.com/https://www.google.com/maps/embed.
+  # 33 y no 36 ('...embed?pb') a propósito: con 36 quedaría afuera la Embed API, cuyas URLs
+  # son https://www.google.com/maps/embed/v1/place?...
+  assign mapa_ok = false
+  if mapa_src != blank
+    assign inicio = mapa_src | slice: 0, 33
+    if inicio == 'https://www.google.com/maps/embed'
+      assign mapa_ok = true
+    endif
+  endif
+%}
+
+<section class="stores-zone" {{ block.shopify_attributes }}>
+  <header class="stores-zone__head">
+    {%- if titulo != blank -%}
+      <h3 class="stores-zone__title">{{ titulo }}</h3>
+    {%- endif -%}
+    {%- if subtitulo != blank -%}
+      <p class="stores-zone__subtitle">{{ subtitulo }}</p>
+    {%- endif -%}
+  </header>
+
+  {%- comment -%}
+    El iframe sale SIN src: solo `data-src`. assets/stores-panel.js lo asigna la primera vez
+    que se abre el panel. El header se renderiza en todas las páginas del sitio y no queremos
+    dos iframes de Google pesando en cada visita, incluso en las que nadie abre el panel.
+  {%- endcomment -%}
+  {%- if mapa_ok -%}
+    <div class="stores-zone__map">
+      <iframe
+        data-src="{{ mapa_src }}"
+        title="Mapa de {{ titulo | default: 'la zona' | escape }}{% if subtitulo != blank %} — {{ subtitulo | escape }}{% endif %}"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        allowfullscreen
+      ></iframe>
+    </div>
+  {%- elsif request.design_mode and codigo != blank -%}
+    {%- comment -%}
+      Aviso solo dentro del theme editor: si la clienta pegó algo que no valida, sin esto el
+      mapa simplemente no aparecería y no habría forma de saber por qué. En la tienda pública
+      `request.design_mode` es false y esto nunca se renderiza.
+    {%- endcomment -%}
+    <p class="stores-zone__map-error">
+      El código del mapa no es válido: pegá el HTML de Compartir → Insertar un mapa.
+    </p>
+  {%- endif -%}
+
+  <div class="stores-zone__cards">
+    {% content_for 'blocks' %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Zona",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "zone_title",
+      "label": "Título de la zona",
+      "default": "Centro"
+    },
+    {
+      "type": "text",
+      "id": "zone_subtitle",
+      "label": "Subtítulo"
+    },
+    {
+      "type": "textarea",
+      "id": "zone_map_embed",
+      "label": "Código del mapa",
+      "info": "En Google Maps: Compartir → Insertar un mapa → Copiar HTML. Pegá el <iframe> completo acá."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "_store-card"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Zona"
+    }
+  ]
+}
+{% endschema %}

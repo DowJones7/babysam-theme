@@ -66,6 +66,87 @@
             "catalog_drawer_search_placeholder": "¿Qué estás buscando?"
           },
           "blocks": {}
+        },
+        "stores-panel": {
+          "type": "_stores-panel",
+          "static": true,
+          "settings": {
+            "panel_title": "Nuestras tiendas"
+          },
+          "blocks": {
+            "zone_centro": {
+              "type": "_stores-zone",
+              "settings": {
+                "zone_title": "Centro",
+                "zone_subtitle": "C.C. Pasaje Zamoraco",
+                "zone_map_embed": ""
+              },
+              "blocks": {
+                "store_ropa": {
+                  "type": "_store-card",
+                  "settings": {
+                    "store_name": "Babysam Ropa",
+                    "store_unit": "Local 112 A",
+                    "store_address": "Calle 14 # 8-54, Local 112 A, C.C. Pasaje Zamoraco, Centro, Cali",
+                    "store_hours": "<p>Lunes a s\u00e1bado: 9:00 a.m. \u2013 6:30 p.m.<br>Domingos y festivos: cerrado</p>",
+                    "store_description": "<p>Cuando tu beb\u00e9 crece, nosotros crecemos con \u00e9l: ropa desde los 12 meses hasta los 6 a\u00f1os.</p>",
+                    "store_whatsapp_1": "3216243002",
+                    "store_whatsapp_1_label": "WhatsApp"
+                  },
+                  "blocks": {}
+                },
+                "store_principal": {
+                  "type": "_store-card",
+                  "settings": {
+                    "store_name": "Babysam Tienda Principal",
+                    "store_unit": "Locales 202 y 203, Mezanine",
+                    "store_address": "Calle 14 # 8-54, Locales 202 y 203 (Mezanine), C.C. Pasaje Zamoraco, Centro, Cali",
+                    "store_hours": "<p>Lunes a s\u00e1bado: 9:00 a.m. \u2013 6:30 p.m.<br>Domingos y festivos: cerrado</p>",
+                    "store_description": "<p>Todo para tu beb\u00e9 en un solo lugar: lencer\u00eda, ropa de 0 a 24 meses, lactancia, coches, corrales, pa\u00f1aleras, ba\u00f1eras, accesorios y juegos para reci\u00e9n nacidos. En diciembre, tambi\u00e9n somos jugueter\u00eda.</p>",
+                    "store_whatsapp_1": "3166569000",
+                    "store_whatsapp_1_label": "L\u00ednea 1",
+                    "store_whatsapp_2": "3224520915",
+                    "store_whatsapp_2_label": "L\u00ednea 2"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "store_ropa",
+                "store_principal"
+              ]
+            },
+            "zone_sur": {
+              "type": "_stores-zone",
+              "settings": {
+                "zone_title": "Sur",
+                "zone_subtitle": "Barrio Capri",
+                "zone_map_embed": ""
+              },
+              "blocks": {
+                "store_sur": {
+                  "type": "_store-card",
+                  "settings": {
+                    "store_name": "Babysam Sur",
+                    "store_unit": "Capri",
+                    "store_address": "Carrera 70 # 10A-66, Barrio Capri, Cali",
+                    "store_hours": "<p>Lunes a s\u00e1bado: 10:00 a.m. \u2013 6:30 p.m.<br>Domingos y festivos: cerrado</p>",
+                    "store_description": "<p>Nuestra sede m\u00e1s nueva: las \u00faltimas colecciones y todo lo que tu beb\u00e9 necesita, en el sur de la ciudad.</p>",
+                    "store_whatsapp_1": "3102367180",
+                    "store_whatsapp_1_label": "WhatsApp"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "store_sur"
+              ]
+            }
+          },
+          "block_order": [
+            "zone_centro",
+            "zone_sur"
+          ]
         }
       },
       "settings": {

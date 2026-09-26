@@ -144,6 +144,30 @@
             {%- endfor -%}
           </ul>
         </nav>
+
+        {%- comment -%}
+          Acceso fijo a "Nuestras tiendas", separado de las colecciones. El href es #tiendas y
+          lo captura assets/stores-panel.js, que cierra este drawer antes de abrir el panel.
+          No hace falta JS acá.
+        {%- endcomment -%}
+        {%- if block.settings.catalog_drawer_show_stores -%}
+          <div class="catalog-drawer__extra">
+            <a class="catalog-drawer__link catalog-drawer__link--stores" href="#tiendas">
+              <span class="catalog-drawer__pin" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                  <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0Z" />
+                  <circle cx="12" cy="10" r="3" />
+                </svg>
+              </span>
+              <span class="catalog-drawer__link-text">
+                {{- block.settings.catalog_drawer_stores_label | default: 'Nuestras tiendas' -}}
+              </span>
+              <span class="catalog-drawer__chevron svg-wrapper" aria-hidden="true">
+                {{- 'icon-caret.svg' | inline_asset_content -}}
+              </span>
+            </a>
+          </div>
+        {%- endif -%}
       </div>
     </dialog>
   </dialog-component>
@@ -420,6 +444,31 @@
     transform: translateX(4px);
   }
 
+  /* Acceso a tiendas: separado de la lista con un borde grueso arriba. */
+  .catalog-drawer__extra {
+    margin-block-start: var(--catalog-drawer-padding, 1.25rem);
+    border-block-start: 1px solid var(--color-border);
+    padding-block-start: 0.35rem;
+  }
+
+  .catalog-drawer__link--stores {
+    font-weight: 600;
+  }
+
+  .catalog-drawer__pin {
+    display: block;
+    flex: none;
+    width: 17px;
+    height: 17px;
+    opacity: 0.75;
+  }
+
+  .catalog-drawer__pin svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
   /* Preparado para el contador; el markup que lo usa está comentado. */
   .catalog-drawer__count {
     flex: none;
@@ -509,6 +558,23 @@
       "id": "catalog_drawer_search_placeholder",
       "label": "Texto de ejemplo del buscador",
       "default": "¿Qué estás buscando?"
+    },
+    {
+      "type": "header",
+      "content": "Acceso a las tiendas"
+    },
+    {
+      "type": "checkbox",
+      "id": "catalog_drawer_show_stores",
+      "label": "Mostrar el acceso a «Nuestras tiendas»",
+      "info": "Abre el panel de tiendas del header. Cierra este drawer antes de abrirlo.",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "catalog_drawer_stores_label",
+      "label": "Texto del acceso",
+      "default": "Nuestras tiendas"
     }
   ]
 }

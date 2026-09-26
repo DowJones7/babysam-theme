@@ -291,6 +291,16 @@
       {{ navigation_bar }}
     </div>
   {% endif %}
+
+  {%- comment -%}
+    Panel "Nuestras tiendas". Va suelto y no por el sistema de slots de `header-row.liquid`
+    porque es un <dialog> a pantalla completa y su disparador no vive en la barra: lo abre
+    cualquier enlace a #tiendas (el ítem del menú, el acceso del drawer, o /#tiendas directo).
+    Un bloque estático solo existe donde alguien lo invoca, y este es el único gancho del
+    header; por eso se toca este archivo, pero alcanza con esta línea y no hace falta tocar
+    `snippets/header-row.liquid`.
+  {%- endcomment -%}
+  {% content_for 'block', type: '_stores-panel', id: 'stores-panel' %}
 </header-component>
 
 <script

@@ -1,0 +1,238 @@
+{%- doc -%}
+  Tarjeta de una tienda física, hija de `_stores-zone`.
+
+  Además de la tarjeta visible emite un JSON-LD tipo Store para que Google entienda la
+  dirección, el teléfono y el horario. Todos los valores que vienen de texto libre o richtext
+  pasan por `| strip_html | json`, que quita el HTML y escapa comillas y saltos de línea: sin
+  eso una comilla en la descripción rompería el JSON entero.
+{%- enddoc -%}
+
+{% liquid
+  assign nombre = block.settings.store_name
+  assign interna = block.settings.store_unit
+  assign direccion = block.settings.store_address
+  assign horarios = block.settings.store_hours
+  assign descripcion = block.settings.store_description
+  assign imagen = block.settings.store_image
+
+  # Normalización del número: se quita todo lo que no sea dígito y se antepone 57 si falta.
+  assign wa1 = block.settings.store_whatsapp_1 | remove: ' ' | remove: '-' | remove: '(' | remove: ')' | remove: '+' | remove: '.'
+  if wa1 != blank
+    assign wa1_pref = wa1 | slice: 0, 2
+    unless wa1_pref == '57'
+      assign wa1 = '57' | append: wa1
+    endunless
+  endif
+
+  assign wa2 = block.settings.store_whatsapp_2 | remove: ' ' | remove: '-' | remove: '(' | remove: ')' | remove: '+' | remove: '.'
+  if wa2 != blank
+    assign wa2_pref = wa2 | slice: 0, 2
+    unless wa2_pref == '57'
+      assign wa2 = '57' | append: wa2
+    endunless
+  endif
+
+  assign wa1_label = block.settings.store_whatsapp_1_label | default: 'WhatsApp'
+  assign wa2_label = block.settings.store_whatsapp_2_label | default: 'WhatsApp'
+
+  assign mensaje = 'Hola, vengo de la página web y quiero información de ' | append: nombre
+  assign mensaje_url = mensaje | url_encode
+%}
+
+<article class="store-card" {{ block.shopify_attributes }}>
+  {%- if imagen != blank -%}
+    <div class="store-card__media">
+      <img
+        src="{{ imagen | image_url: width: 600 }}"
+        alt="{{ imagen.alt | default: nombre | escape }}"
+        width="{{ imagen.width }}"
+        height="{{ imagen.height }}"
+        loading="lazy"
+      >
+    </div>
+  {%- endif -%}
+
+  <div class="store-card__body">
+    {%- if nombre != blank -%}
+      <h4 class="store-card__name">{{ nombre }}</h4>
+    {%- endif -%}
+
+    {%- if interna != blank -%}
+      <p class="store-card__unit">{{ interna }}</p>
+    {%- endif -%}
+
+    {%- if direccion != blank -%}
+      <p class="store-card__address">
+        {%- comment -%}
+          SVG inline y no un asset: el tema no trae icon-map-pin.svg ni icon-chat.svg, y esta
+          tarea no habilita crear archivos nuevos en assets/.
+        {%- endcomment -%}
+        <span class="store-card__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0Z" />
+            <circle cx="12" cy="10" r="3" />
+          </svg>
+        </span>
+        <span>{{ direccion }}</span>
+      </p>
+    {%- endif -%}
+
+    {%- if horarios != blank -%}
+      <div class="store-card__hours">{{ horarios }}</div>
+    {%- endif -%}
+
+    {%- if descripcion != blank -%}
+      <div class="store-card__description">{{ descripcion }}</div>
+    {%- endif -%}
+
+    {%- if wa1 != blank or wa2 != blank -%}
+      <div class="store-card__actions">
+        {%- if wa1 != blank -%}
+          <a
+            class="store-card__wa"
+            href="https://wa.me/{{ wa1 }}?text={{ mensaje_url }}"
+            target="_blank"
+            rel="noopener"
+          >
+            <span class="store-card__wa-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor" focusable="false">
+                <path d="M12 2a10 10 0 0 0-8.6 15.09L2 22l5.05-1.32A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.18-1.14l-.3-.18-3 .78.8-2.92-.2-.31A8.2 8.2 0 1 1 12 20.2Z" />
+                <path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.76-1.66-2.06-.17-.3-.02-.46.13-.61.14-.14.3-.35.45-.53.15-.18.2-.3.3-.5.1-.2.05-.38-.02-.53-.08-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.38-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.22 3.08c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.7.63.71.23 1.36.2 1.87.12.57-.08 1.76-.72 2-1.41.25-.7.25-1.29.18-1.41-.07-.13-.27-.2-.57-.35Z" />
+              </svg>
+            </span>
+            <span>{{ wa1_label }}</span>
+          </a>
+        {%- endif -%}
+        {%- if wa2 != blank -%}
+          <a
+            class="store-card__wa"
+            href="https://wa.me/{{ wa2 }}?text={{ mensaje_url }}"
+            target="_blank"
+            rel="noopener"
+          >
+            <span class="store-card__wa-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor" focusable="false">
+                <path d="M12 2a10 10 0 0 0-8.6 15.09L2 22l5.05-1.32A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.18-1.14l-.3-.18-3 .78.8-2.92-.2-.31A8.2 8.2 0 1 1 12 20.2Z" />
+                <path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.76-1.66-2.06-.17-.3-.02-.46.13-.61.14-.14.3-.35.45-.53.15-.18.2-.3.3-.5.1-.2.05-.38-.02-.53-.08-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.38-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.22 3.08c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.7.63.71.23 1.36.2 1.87.12.57-.08 1.76-.72 2-1.41.25-.7.25-1.29.18-1.41-.07-.13-.27-.2-.57-.35Z" />
+              </svg>
+            </span>
+            <span>{{ wa2_label }}</span>
+          </a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+</article>
+
+{%- comment -%}
+  JSON-LD. Solo se emite si hay nombre, y dentro solo van los campos con valor.
+  `openingHours` va como texto y NO como openingHoursSpecification a propósito: el horario es
+  un richtext que la clienta escribe libre ("Lunes a sábado: 9:00 a.m. – 6:30 p.m. / Domingos
+  y festivos: cerrado"), y derivar de ahí un objeto con dayOfWeek/opens/closes exigiría
+  parsearlo. Un parser se rompe en silencio apenas cambien la redacción y publicaría horarios
+  falsos en Google, que es peor que no publicarlos. `openingHours` en texto es válido en
+  schema.org y es honesto con el dato que hay.
+{%- endcomment -%}
+{%- if nombre != blank -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Store",
+      "name": {{ nombre | strip_html | json }}
+      {%- if direccion != blank -%}
+        ,"address": {
+          "@type": "PostalAddress",
+          "streetAddress": {{ direccion | strip_html | json }},
+          "addressLocality": "Cali",
+          "addressRegion": "Valle del Cauca",
+          "addressCountry": "CO"
+        }
+      {%- endif -%}
+      {%- if wa1 != blank -%}
+        ,"telephone": {{ wa1 | prepend: '+' | json }}
+      {%- endif -%}
+      {%- if imagen != blank -%}
+        ,"image": {{ imagen | image_url: width: 1200 | prepend: 'https:' | json }}
+      {%- endif -%}
+      {%- if horarios != blank -%}
+        ,"openingHours": {{ horarios | strip_html | strip | json }}
+      {%- endif -%}
+      {%- if descripcion != blank -%}
+        ,"description": {{ descripcion | strip_html | strip | json }}
+      {%- endif -%}
+    }
+  </script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Tienda",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "store_name",
+      "label": "Nombre de la tienda",
+      "default": "Babysam"
+    },
+    {
+      "type": "text",
+      "id": "store_unit",
+      "label": "Ubicación interna",
+      "info": "Por ejemplo: Local 112 A"
+    },
+    {
+      "type": "text",
+      "id": "store_address",
+      "label": "Dirección"
+    },
+    {
+      "type": "richtext",
+      "id": "store_hours",
+      "label": "Horarios"
+    },
+    {
+      "type": "richtext",
+      "id": "store_description",
+      "label": "Descripción"
+    },
+    {
+      "type": "image_picker",
+      "id": "store_image",
+      "label": "Foto de la fachada"
+    },
+    {
+      "type": "header",
+      "content": "WhatsApp"
+    },
+    {
+      "type": "text",
+      "id": "store_whatsapp_1",
+      "label": "WhatsApp 1",
+      "info": "Solo el número, sin +57. Se normaliza solo."
+    },
+    {
+      "type": "text",
+      "id": "store_whatsapp_1_label",
+      "label": "Etiqueta del WhatsApp 1",
+      "default": "WhatsApp"
+    },
+    {
+      "type": "text",
+      "id": "store_whatsapp_2",
+      "label": "WhatsApp 2 (opcional)"
+    },
+    {
+      "type": "text",
+      "id": "store_whatsapp_2_label",
+      "label": "Etiqueta del WhatsApp 2",
+      "default": "Línea 2"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Tienda"
+    }
+  ]
+}
+{% endschema %}

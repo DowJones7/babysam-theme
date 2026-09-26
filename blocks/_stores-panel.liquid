@@ -1,0 +1,454 @@
+{%- doc -%}
+  Panel "Nuestras tiendas": bloque estático del header que despliega un <dialog> debajo de la
+  barra, con una columna por zona (bloques hijos `_stores-zone`).
+
+  No tiene botón propio en el header. Se abre desde cualquier enlace cuyo hash sea #tiendas:
+  el ítem del menú principal, el acceso del drawer de catálogo, o entrando directo a
+  /#tiendas. De eso se encarga assets/stores-panel.js.
+
+  Reusa `dialog-component` (assets/dialog.js) igual que el carrito y el drawer de catálogo, así
+  que Escape, clic fuera, foco y bloqueo de scroll ya vienen resueltos.
+{%- enddoc -%}
+
+{% liquid
+  assign titulo = block.settings.panel_title | default: 'Nuestras tiendas'
+  assign intro = block.settings.panel_intro
+%}
+
+<script src="{{ 'dialog.js' | asset_url }}" type="module"></script>
+<script src="{{ 'stores-panel.js' | asset_url }}" type="module" fetchpriority="low"></script>
+
+<dialog-component
+  id="stores-panel"
+  class="stores-panel"
+  {{ block.shopify_attributes }}
+>
+  {%- comment -%}
+    Las tres clases finales son las del carrito y el drawer de catálogo: `dialog-modal` trae
+    el backdrop animado, `dialog-drawer` el mecanismo de animación por variables, y
+    `color-…` el esquema propio (sin eso hereda el del header, cuyo foreground_heading es
+    rgba(0,0,0,0) y dejaría los títulos transparentes).
+  {%- endcomment -%}
+  <dialog
+    ref="dialog"
+    id="stores-panel-dialog"
+    class="stores-panel__dialog dialog-modal dialog-drawer color-{{ settings.drawer_color_scheme }}"
+    role="dialog"
+    aria-label="{{ titulo | escape }}"
+    scroll-lock
+  >
+    <div class="stores-panel__inner">
+      <div class="stores-panel__head">
+        <div>
+          <h2 class="stores-panel__title">{{ titulo }}</h2>
+          {%- if intro != blank -%}
+            <div class="stores-panel__intro">{{ intro }}</div>
+          {%- endif -%}
+        </div>
+        <button
+          type="button"
+          class="stores-panel__close"
+          on:click="#stores-panel/closeDialog"
+          aria-label="Cerrar"
+          autofocus
+        >
+          <span class="svg-wrapper">{{- 'icon-close.svg' | inline_asset_content -}}</span>
+        </button>
+      </div>
+
+      <div class="stores-panel__zones">
+        {% content_for 'blocks' %}
+      </div>
+    </div>
+  </dialog>
+</dialog-component>
+
+{% stylesheet %}
+  .stores-panel {
+    --stores-accent: var(--color-foreground);
+    --stores-accent-rgb: var(--color-foreground-rgb);
+    --stores-easing: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* Keyframes propios: los del tema no sirven acá. `slideInTop` entra desde ABAJO
+     (translateY(100%) -> 0) y `elementSlideInTop` es un nudge con margin-top. Para un panel
+     anclado arriba que baja hace falta -100% -> 0, que el tema no tiene. Se enchufan a las
+     variables que ya lee `.dialog-drawer[open]`, así `closeDialog()` y su onAnimationEnd
+     siguen funcionando sin tocar el JS del tema. */
+  @keyframes storesPanelIn {
+    from {
+      transform: translateY(-100%);
+    }
+
+    to {
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes storesPanelOut {
+    from {
+      transform: translateY(0);
+    }
+
+    to {
+      transform: translateY(-100%);
+    }
+  }
+
+  .stores-panel__dialog {
+    --dialog-drawer-opening-animation: storesPanelIn;
+    --dialog-drawer-closing-animation: storesPanelOut;
+    --animation-speed: 380ms;
+    --animation-easing: var(--stores-easing, cubic-bezier(0.22, 1, 0.36, 1));
+
+    position: fixed;
+    inset-block-start: var(--header-height, 0px);
+    inset-inline: 0;
+    inset-block-end: auto;
+    width: 100%;
+    max-width: 100%;
+    max-height: calc(100dvh - var(--header-height, 0px));
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+    border-block-end: 1px solid var(--color-border);
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    box-shadow: 0 18px 40px rgb(var(--color-shadow-rgb, 0 0 0) / 16%);
+  }
+
+  .stores-panel__dialog::backdrop {
+    background: rgb(var(--backdrop-color-rgb) / 45%);
+  }
+
+  .stores-panel__inner {
+    max-height: calc(100dvh - var(--header-height, 0px));
+    padding: var(--padding-lg, 1.25rem) var(--padding-xl, 2rem) var(--padding-xl, 2rem);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--color-foreground-rgb) / 22%) transparent;
+  }
+
+  .stores-panel__inner::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .stores-panel__inner::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .stores-panel__inner::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background: rgb(var(--color-foreground-rgb) / 22%);
+  }
+
+  .stores-panel__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--gap-md, 1rem);
+    margin-block-end: var(--gap-lg, 1.5rem);
+  }
+
+  /* `color` explícito: base.css fuerza sobre h2 `color: var(--color, var(--font-h2--color))`
+     y en varios esquemas del tema esa variable vale rgba(0,0,0,0). */
+  .stores-panel__title {
+    margin: 0;
+    color: var(--color-foreground);
+    font-family: var(--font-accent);
+    font-size: var(--font-size--xl, 1.4rem);
+    font-weight: 700;
+    line-height: 1.15;
+  }
+
+  .stores-panel__intro {
+    margin-block-start: 0.35rem;
+    color: rgb(var(--color-foreground-rgb) / 75%);
+    font-size: var(--font-size--sm, 0.95rem);
+  }
+
+  .stores-panel__close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    border: 0;
+    border-radius: 999px;
+    background: none;
+    color: currentcolor;
+    cursor: pointer;
+    transition:
+      background-color 180ms var(--stores-easing),
+      transform 180ms var(--stores-easing);
+  }
+
+  .stores-panel__close:hover,
+  .stores-panel__close:focus-visible {
+    background-color: rgb(var(--color-foreground-rgb) / 12%);
+  }
+
+  .stores-panel__close:active {
+    transform: scale(0.92);
+  }
+
+  .stores-panel__close .svg-wrapper {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Dos columnas en desktop, una por zona. */
+  .stores-panel__zones {
+    display: grid;
+    gap: var(--gap-xl, 2rem);
+    grid-template-columns: 1fr;
+  }
+
+  @media screen and (min-width: 990px) {
+    .stores-panel__zones {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  /* ---------------------------------------------------------------- zona */
+
+  .stores-zone__head {
+    margin-block-end: var(--gap-sm, 0.75rem);
+  }
+
+  .stores-zone__title {
+    margin: 0;
+    color: var(--color-foreground);
+    font-family: var(--font-accent);
+    font-size: var(--font-size--lg, 1.15rem);
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .stores-zone__subtitle {
+    margin: 0.15rem 0 0;
+    color: rgb(var(--color-foreground-rgb) / 70%);
+    font-size: var(--font-size--sm, 0.95rem);
+  }
+
+  .stores-zone__map {
+    margin-block-end: var(--gap-md, 1rem);
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    border-radius: var(--style-border-radius-lg, 14px);
+    aspect-ratio: 16 / 10;
+  }
+
+  .stores-zone__map iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  /* Solo se ve dentro del theme editor. */
+  .stores-zone__map-error {
+    margin-block-end: var(--gap-md, 1rem);
+    padding: 0.7rem 0.9rem;
+    border: 1px dashed var(--color-border);
+    border-radius: var(--style-border-radius-md, 10px);
+    color: rgb(var(--color-foreground-rgb) / 70%);
+    font-size: var(--font-size--xs, 0.85rem);
+  }
+
+  .stores-zone__cards {
+    display: grid;
+    gap: var(--gap-md, 1rem);
+  }
+
+  /* ---------------------------------------------------------------- tarjeta */
+
+  .store-card {
+    display: grid;
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    border-radius: var(--style-border-radius-lg, 14px);
+    background-color: rgb(var(--color-foreground-rgb) / 3%);
+  }
+
+  .store-card__media img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-height: 190px;
+    object-fit: cover;
+  }
+
+  .store-card__body {
+    padding: var(--padding-md, 1rem);
+  }
+
+  .store-card__name {
+    margin: 0;
+    color: var(--color-foreground);
+    font-family: var(--font-accent);
+    font-size: var(--font-size--md, 1rem);
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .store-card__unit {
+    margin: 0.2rem 0 0;
+    color: var(--stores-accent);
+    font-size: var(--font-size--xs, 0.85rem);
+    font-weight: 600;
+  }
+
+  .store-card__address {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.4rem;
+    margin: 0.6rem 0 0;
+    color: rgb(var(--color-foreground-rgb) / 80%);
+    font-size: var(--font-size--sm, 0.92rem);
+    line-height: 1.4;
+  }
+
+  .store-card__icon {
+    display: block;
+    flex: none;
+    width: 16px;
+    height: 16px;
+    margin-block-start: 0.1rem;
+    opacity: 0.6;
+  }
+
+  .store-card__icon svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .store-card__hours,
+  .store-card__description {
+    margin-block-start: 0.55rem;
+    font-size: var(--font-size--sm, 0.92rem);
+    line-height: 1.45;
+  }
+
+  .store-card__hours {
+    color: rgb(var(--color-foreground-rgb) / 80%);
+  }
+
+  .store-card__description {
+    color: rgb(var(--color-foreground-rgb) / 70%);
+  }
+
+  .store-card__hours p,
+  .store-card__description p {
+    margin: 0;
+  }
+
+  .store-card__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-block-start: var(--gap-sm, 0.8rem);
+  }
+
+  .store-card__wa {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.9rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--style-border-radius-pills, 999px);
+    color: inherit;
+    font-size: var(--font-size--xs, 0.85rem);
+    font-weight: 600;
+    text-decoration: none;
+    transition:
+      background-color 180ms var(--stores-easing),
+      border-color 180ms var(--stores-easing),
+      transform 180ms var(--stores-easing);
+  }
+
+  .store-card__wa:hover,
+  .store-card__wa:focus-visible {
+    border-color: var(--stores-accent);
+    background-color: rgb(var(--stores-accent-rgb) / 10%);
+    transform: translateY(-1px);
+  }
+
+  .store-card__wa-icon {
+    display: block;
+    flex: none;
+    width: 15px;
+    height: 15px;
+  }
+
+  .store-card__wa-icon svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* ---------------------------------------------------------------- móvil */
+
+  @media screen and (max-width: 989px) {
+    /* Pantalla completa: en móvil el header ocupa demasiado para dejarlo arriba. */
+    .stores-panel__dialog {
+      inset-block-start: 0;
+      max-height: 100dvh;
+      height: 100dvh;
+      border-block-end: 0;
+    }
+
+    .stores-panel__inner {
+      max-height: 100dvh;
+      height: 100dvh;
+      padding: var(--padding-md, 1rem);
+    }
+
+    .stores-zone__map {
+      aspect-ratio: 16 / 11;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .stores-panel__dialog[open],
+    .stores-panel__dialog.dialog-closing,
+    .stores-panel__dialog[open]::backdrop {
+      animation: none;
+    }
+
+    .stores-panel__close,
+    .store-card__wa {
+      transition: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Nuestras tiendas",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "panel_title",
+      "label": "Título del panel",
+      "default": "Nuestras tiendas"
+    },
+    {
+      "type": "richtext",
+      "id": "panel_intro",
+      "label": "Texto de introducción (opcional)"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "_stores-zone"
+    }
+  ]
+}
+{% endschema %}
