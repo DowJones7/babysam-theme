@@ -63,7 +63,9 @@
             "catalog_drawer_menu": "colecciones",
             "catalog_drawer_heading": "Catálogo",
             "catalog_drawer_show_search": true,
-            "catalog_drawer_search_placeholder": "¿Qué estás buscando?"
+            "catalog_drawer_search_placeholder": "¿Qué estás buscando?",
+            "catalog_drawer_show_stores": true,
+            "catalog_drawer_stores_label": "Nuestras tiendas"
           },
           "blocks": {}
         },
@@ -71,7 +73,8 @@
           "type": "_stores-panel",
           "static": true,
           "settings": {
-            "panel_title": "Nuestras tiendas"
+            "panel_title": "Nuestras tiendas",
+            "panel_intro": ""
           },
           "blocks": {
             "zone_centro": {
@@ -79,7 +82,7 @@
               "settings": {
                 "zone_title": "Centro",
                 "zone_subtitle": "C.C. Pasaje Zamoraco",
-                "zone_map_embed": ""
+                "zone_map_embed": "<iframe src=\"https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3982.5901913194048!2d-76.5312158!3d3.4493686!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e30a666c55492df%3A0xc58f8c6b9d837fbb!2sBabysam!5e0!3m2!1sen!2sco!4v1790615191229!5m2!1sen!2sco\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"strict-origin-when-cross-origin\"></iframe>"
               },
               "blocks": {
                 "store_ropa": {
@@ -88,12 +91,12 @@
                     "store_name": "Babysam Ropa",
                     "store_unit": "Local 112 A",
                     "store_address": "Calle 14 # 8-54, Local 112 A, C.C. Pasaje Zamoraco, Centro, Cali",
-                    "store_hours": "<p>Lunes a s\u00e1bado: 9:00 a.m. \u2013 6:30 p.m.<br>Domingos y festivos: cerrado</p>",
-                    "store_description": "<p>Cuando tu beb\u00e9 crece, nosotros crecemos con \u00e9l: ropa desde los 12 meses hasta los 6 a\u00f1os.</p>",
-                    "store_opens": "09:00",
-                    "store_closes": "18:30",
+                    "store_hours": "<p>Lunes a sábado: 9:00 a.m. – 6:30 p.m.<br/>Domingos y festivos: cerrado</p>",
+                    "store_description": "<p>Cuando tu bebé crece, nosotros crecemos con él: ropa desde los 12 meses hasta los 6 años.</p>",
                     "store_whatsapp_1": "3216243002",
-                    "store_whatsapp_1_label": "WhatsApp"
+                    "store_whatsapp_1_label": "WhatsApp",
+                    "store_whatsapp_2": "",
+                    "store_whatsapp_2_label": "Línea 2"
                   },
                   "blocks": {}
                 },
@@ -103,14 +106,12 @@
                     "store_name": "Babysam Tienda Principal",
                     "store_unit": "Locales 202 y 203, Mezanine",
                     "store_address": "Calle 14 # 8-54, Locales 202 y 203 (Mezanine), C.C. Pasaje Zamoraco, Centro, Cali",
-                    "store_hours": "<p>Lunes a s\u00e1bado: 9:00 a.m. \u2013 6:30 p.m.<br>Domingos y festivos: cerrado</p>",
-                    "store_description": "<p>Todo para tu beb\u00e9 en un solo lugar: lencer\u00eda, ropa de 0 a 24 meses, lactancia, coches, corrales, pa\u00f1aleras, ba\u00f1eras, accesorios y juegos para reci\u00e9n nacidos. En diciembre, tambi\u00e9n somos jugueter\u00eda.</p>",
-                    "store_opens": "09:00",
-                    "store_closes": "18:30",
+                    "store_hours": "<p>Lunes a sábado: 9:00 a.m. – 6:30 p.m.<br/>Domingos y festivos: cerrado</p>",
+                    "store_description": "<p>Todo para tu bebé en un solo lugar: lencería, ropa de 0 a 24 meses, lactancia, coches, corrales, pañaleras, bañeras, accesorios y juegos para recién nacidos. En diciembre, también somos juguetería.</p>",
                     "store_whatsapp_1": "3166569000",
-                    "store_whatsapp_1_label": "L\u00ednea 1",
+                    "store_whatsapp_1_label": "Línea 1",
                     "store_whatsapp_2": "3224520915",
-                    "store_whatsapp_2_label": "L\u00ednea 2"
+                    "store_whatsapp_2_label": "Línea 2"
                   },
                   "blocks": {}
                 }
@@ -125,7 +126,7 @@
               "settings": {
                 "zone_title": "Sur",
                 "zone_subtitle": "Barrio Capri",
-                "zone_map_embed": ""
+                "zone_map_embed": "<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3982.822514610169!2d-76.54375492571428!3d3.3934653516036364!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e30a175fc83ad0d%3A0xa67e2d655c6e59eb!2sBabysam%20Sede%20Capri!5e0!3m2!1sen!2sco!4v1790615417051!5m2!1sen!2sco\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"strict-origin-when-cross-origin\"></iframe>"
               },
               "blocks": {
                 "store_sur": {
@@ -134,12 +135,12 @@
                     "store_name": "Babysam Sur",
                     "store_unit": "Capri",
                     "store_address": "Carrera 70 # 10A-66, Barrio Capri, Cali",
-                    "store_hours": "<p>Lunes a s\u00e1bado: 10:00 a.m. \u2013 6:30 p.m.<br>Domingos y festivos: cerrado</p>",
-                    "store_description": "<p>Nuestra sede m\u00e1s nueva: las \u00faltimas colecciones y todo lo que tu beb\u00e9 necesita, en el sur de la ciudad.</p>",
-                    "store_opens": "10:00",
-                    "store_closes": "18:30",
+                    "store_hours": "<p>Lunes a sábado: 10:00 a.m. – 6:30 p.m.<br>Domingos y festivos: cerrado</p>",
+                    "store_description": "<p>Nuestra sede más nueva: las últimas colecciones y todo lo que tu bebé necesita, en el sur de la ciudad.</p>",
                     "store_whatsapp_1": "3102367180",
-                    "store_whatsapp_1_label": "WhatsApp"
+                    "store_whatsapp_1_label": "WhatsApp",
+                    "store_whatsapp_2": "",
+                    "store_whatsapp_2_label": "Línea 2"
                   },
                   "blocks": {}
                 }
