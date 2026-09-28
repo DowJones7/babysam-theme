@@ -15,31 +15,72 @@
         "text_hero_heading": {
           "type": "text",
           "settings": {
+            "image_link": "",
+            "image_alignment": "center",
             "text": "<h1>Todo para tu bebé, en un solo lugar</h1>",
-            "type_preset": "h1",
+            "width": "fit-content",
             "max_width": "narrow",
-            "alignment": "center"
-          }
+            "alignment": "center",
+            "type_preset": "h1",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
         },
         "text_hero_subheading": {
           "type": "text",
           "settings": {
+            "image_link": "",
+            "image_alignment": "center",
             "text": "<p>Productos pensados con amor para acompañar cada etapa de tu bebé.</p>",
+            "width": "fit-content",
             "max_width": "narrow",
             "alignment": "center",
-            "padding-block-end": 0
-          }
+            "type_preset": "rte",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
         },
         "button_hero_cta": {
           "type": "button",
           "settings": {
             "label": "Comprar ahora",
             "link": "shopify://collections/all",
+            "whatsapp_number": "",
+            "whatsapp_message": "",
             "open_in_new_tab": false,
             "style_class": "button",
             "width": "fit-content",
-            "width_mobile": "fit-content"
-          }
+            "custom_width": 100,
+            "width_mobile": "fit-content",
+            "custom_width_mobile": 100
+          },
+          "blocks": {}
         }
       },
       "block_order": [
@@ -52,16 +93,535 @@
         "media_type_1": "image",
         "image_1": "shopify://shop_images/banner_2_solo.png",
         "media_type_2": "image",
+        "link": "",
+        "open_in_new_tab": false,
         "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
         "horizontal_alignment_flex_direction_column": "center",
         "vertical_alignment_flex_direction_column": "flex-end",
         "gap": 16,
         "section_width": "full-width",
         "section_height": "large",
+        "section_height_custom": 50,
         "color_scheme": "scheme-1",
         "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "blurred_reflection": false,
+        "reflection_opacity": 75,
         "padding-block-start": 40,
         "padding-block-end": 56
+      }
+    },
+    "brands_marquee": {
+      "type": "marquee",
+      "blocks": {
+        "image_brand_drbrowns": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/Sin_titulo_500_x_250_px.png",
+            "link": "",
+            "image_ratio": "adapt",
+            "width": "fit-content",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "image_brand_pigeon": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/logo_pigeon.png",
+            "link": "",
+            "image_ratio": "adapt",
+            "width": "fit-content",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "image_brand_rascal": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/rascals_logo-removebg-preview.png",
+            "link": "",
+            "image_ratio": "adapt",
+            "width": "fit-content",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "image_brand_palmers": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/Palmers_logo.svg",
+            "link": "",
+            "image_ratio": "adapt",
+            "width": "fit-content",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "image_brand_genial": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/genial_logo.png",
+            "link": "",
+            "image_ratio": "adapt",
+            "width": "fit-content",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "image_brand_avent": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/avents_logo.png",
+            "link": "",
+            "image_ratio": "adapt",
+            "width": "fit-content",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "image_brand_littleme": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/little_me_logo.webp",
+            "link": "",
+            "image_ratio": "adapt",
+            "width": "fit-content",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "image_brand_momcozy": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/momcozy-logo-480x480.webp",
+            "link": "",
+            "image_ratio": "adapt",
+            "width": "fit-content",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "image_brand_kidilo": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/kidilo_logo.png",
+            "link": "",
+            "image_ratio": "adapt",
+            "width": "fit-content",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "image_brand_drbrowns",
+        "image_brand_pigeon",
+        "image_brand_rascal",
+        "image_brand_palmers",
+        "image_brand_genial",
+        "image_brand_avent",
+        "image_brand_littleme",
+        "image_brand_momcozy",
+        "image_brand_kidilo"
+      ],
+      "name": "Marcas",
+      "settings": {
+        "movement_direction": "normal",
+        "speed": 25,
+        "color_scheme": "scheme-3",
+        "padding-block-start": 32,
+        "padding-block-end": 32,
+        "gap_between_elements": 56
+      }
+    },
+    "trust_row": {
+      "type": "section",
+      "blocks": {
+        "group_trust_shipping": {
+          "type": "group",
+          "settings": {
+            "link": "",
+            "open_in_new_tab": false,
+            "content_direction": "column",
+            "vertical_on_mobile": true,
+            "horizontal_alignment": "flex-start",
+            "vertical_alignment": "center",
+            "align_baseline": false,
+            "horizontal_alignment_flex_direction_column": "center",
+            "vertical_alignment_flex_direction_column": "center",
+            "gap": 8,
+            "width": "fill",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "custom_height": 100,
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "background_media": "none",
+            "video_position": "cover",
+            "background_image_position": "cover",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "placeholder": "",
+            "toggle_overlay": false,
+            "overlay_color": "#00000026",
+            "overlay_style": "solid",
+            "gradient_direction": "to top",
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "icon_trust_shipping": {
+              "type": "icon",
+              "settings": {
+                "icon": "truck",
+                "width": 56,
+                "link": "",
+                "open_in_new_tab": false
+              },
+              "blocks": {}
+            },
+            "text_trust_shipping": {
+              "type": "text",
+              "settings": {
+                "image_link": "",
+                "image_alignment": "center",
+                "text": "<h3><strong>Envíos seguros</strong></h3><h5>A todos los rincones de Colombia</h5>",
+                "width": "fit-content",
+                "max_width": "normal",
+                "alignment": "center",
+                "type_preset": "rte",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "icon_trust_shipping",
+            "text_trust_shipping"
+          ]
+        },
+        "group_trust_addi": {
+          "type": "group",
+          "settings": {
+            "link": "https://co.addi.com/preaprobado",
+            "open_in_new_tab": true,
+            "content_direction": "column",
+            "vertical_on_mobile": true,
+            "horizontal_alignment": "flex-start",
+            "vertical_alignment": "center",
+            "align_baseline": false,
+            "horizontal_alignment_flex_direction_column": "center",
+            "vertical_alignment_flex_direction_column": "center",
+            "gap": 8,
+            "width": "fill",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "custom_height": 100,
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "background_media": "none",
+            "video_position": "cover",
+            "background_image_position": "cover",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "placeholder": "",
+            "toggle_overlay": false,
+            "overlay_color": "#00000026",
+            "overlay_style": "solid",
+            "gradient_direction": "to top",
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "icon_trust_addi": {
+              "type": "icon",
+              "settings": {
+                "icon": "price_tag",
+                "width": 56,
+                "link": "",
+                "open_in_new_tab": false
+              },
+              "blocks": {}
+            },
+            "text_trust_addi": {
+              "type": "text",
+              "settings": {
+                "image_link": "",
+                "image_alignment": "center",
+                "text": "<h3><strong>Cuotas sin interés</strong></h3><h5>Paga con Addi, fácil y rápido</h5>",
+                "width": "fit-content",
+                "max_width": "normal",
+                "alignment": "center",
+                "type_preset": "rte",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "icon_trust_addi",
+            "text_trust_addi"
+          ]
+        },
+        "group_trust_stores": {
+          "type": "group",
+          "settings": {
+            "link": "/#tiendas",
+            "open_in_new_tab": false,
+            "content_direction": "column",
+            "vertical_on_mobile": true,
+            "horizontal_alignment": "flex-start",
+            "vertical_alignment": "center",
+            "align_baseline": false,
+            "horizontal_alignment_flex_direction_column": "center",
+            "vertical_alignment_flex_direction_column": "center",
+            "gap": 8,
+            "width": "fill",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "custom_height": 100,
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "background_media": "none",
+            "video_position": "cover",
+            "background_image_position": "cover",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "placeholder": "",
+            "toggle_overlay": false,
+            "overlay_color": "#00000026",
+            "overlay_style": "solid",
+            "gradient_direction": "to top",
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "icon_trust_stores": {
+              "type": "icon",
+              "settings": {
+                "icon": "map_pin",
+                "width": 56,
+                "link": "",
+                "open_in_new_tab": false
+              },
+              "blocks": {}
+            },
+            "text_trust_stores": {
+              "type": "text",
+              "settings": {
+                "image_link": "",
+                "image_alignment": "center",
+                "text": "<h3><strong>Tiendas físicas</strong></h3><h5>Visítanos en Cali</h5>",
+                "width": "fit-content",
+                "max_width": "normal",
+                "alignment": "center",
+                "type_preset": "rte",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "icon_trust_stores",
+            "text_trust_stores"
+          ]
+        }
+      },
+      "block_order": [
+        "group_trust_shipping",
+        "group_trust_addi",
+        "group_trust_stores"
+      ],
+      "name": "Fila de confianza",
+      "settings": {
+        "content_direction": "row",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "space-between",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 24,
+        "section_width": "page-width",
+        "section_height": "",
+        "section_height_custom": 50,
+        "color_scheme": "scheme-trust-turquoise",
+        "background_media": "none",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "padding-block-start": 32,
+        "padding-block-end": 32
       }
     },
     "carrusel_productos_w3cKLp": {
@@ -184,7 +744,7 @@
         "image_jugueteria": "shopify://shop_images/portada_didacticos.png",
         "image_lenceria": "shopify://shop_images/portada_lenceria.png",
         "image_panaleras": "shopify://shop_images/portada_panalera.png",
-        "image_teteros": "shopify://shop_images/portada_teteros.png",
+        "image_teteros": "shopify://shop_images/Portada_teteros_correccion_1.1.png",
         "image_toallas": "shopify://shop_images/portada_toallas.png",
         "image_cuidado_materno": "shopify://shop_images/portada_cuidado_materno.png",
         "image_lactancia": "shopify://shop_images/portada_lactancia.png",
@@ -568,224 +1128,6 @@
         "padding-block-end": 15
       }
     },
-    "brands_marquee": {
-      "type": "marquee",
-      "blocks": {
-        "image_brand_drbrowns": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/Sin_titulo_500_x_250_px.png",
-            "image_ratio": "adapt",
-            "width": "fit-content",
-            "height": "fit"
-          },
-          "blocks": {}
-        },
-        "image_brand_pigeon": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/logo_pigeon.png",
-            "image_ratio": "adapt",
-            "width": "fit-content",
-            "height": "fit"
-          },
-          "blocks": {}
-        },
-        "image_brand_rascal": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/rascals_logo-removebg-preview.png",
-            "image_ratio": "adapt",
-            "width": "fit-content",
-            "height": "fit"
-          },
-          "blocks": {}
-        },
-        "image_brand_palmers": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/Palmers_logo.svg",
-            "image_ratio": "adapt",
-            "width": "fit-content",
-            "height": "fit"
-          },
-          "blocks": {}
-        },
-        "image_brand_genial": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/genial_logo.png",
-            "image_ratio": "adapt",
-            "width": "fit-content",
-            "height": "fit"
-          },
-          "blocks": {}
-        },
-        "image_brand_avent": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/avents_logo.png",
-            "image_ratio": "adapt",
-            "width": "fit-content",
-            "height": "fit"
-          },
-          "blocks": {}
-        },
-        "image_brand_littleme": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/little_me_logo.webp",
-            "image_ratio": "adapt",
-            "width": "fit-content",
-            "height": "fit"
-          },
-          "blocks": {}
-        },
-        "image_brand_momcozy": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/momcozy-logo-480x480.webp",
-            "image_ratio": "adapt",
-            "width": "fit-content",
-            "height": "fit"
-          },
-          "blocks": {}
-        },
-        "image_brand_kidilo": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/kidilo_logo.png",
-            "image_ratio": "adapt",
-            "width": "fit-content",
-            "height": "fit"
-          },
-          "blocks": {}
-        },
-        "image_brand_maxibaby": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/images-removebg-preview.png",
-            "image_ratio": "adapt",
-            "width": "fit-content",
-            "height": "fit"
-          },
-          "blocks": {}
-        }
-      },
-      "block_order": [
-        "image_brand_drbrowns",
-        "image_brand_pigeon",
-        "image_brand_rascal",
-        "image_brand_palmers",
-        "image_brand_genial",
-        "image_brand_avent",
-        "image_brand_littleme",
-        "image_brand_momcozy",
-        "image_brand_kidilo",
-        "image_brand_maxibaby"
-      ],
-      "name": "Marcas",
-      "settings": {
-        "movement_direction": "normal",
-        "speed": 25,
-        "color_scheme": "scheme-3",
-        "gap_between_elements": 56,
-        "padding-block-start": 32,
-        "padding-block-end": 32
-      }
-    },
-    "trust_row": {
-      "type": "section",
-      "blocks": {
-        "group_trust_shipping": {
-          "type": "group",
-          "settings": {
-            "content_direction": "column",
-            "horizontal_alignment_flex_direction_column": "center",
-            "vertical_alignment_flex_direction_column": "center",
-            "gap": 8
-          },
-          "blocks": {
-            "icon_trust_shipping": {
-              "type": "icon",
-              "settings": { "icon": "truck", "width": 56 }
-            },
-            "text_trust_shipping": {
-              "type": "text",
-              "settings": {
-                "text": "<h3><strong>Envíos seguros</strong></h3><h5>A todos los rincones de Colombia</h5>",
-                "alignment": "center",
-                "type_preset": "rte"
-              }
-            }
-          },
-          "block_order": ["icon_trust_shipping", "text_trust_shipping"]
-        },
-        "group_trust_addi": {
-          "type": "group",
-          "settings": {
-            "link": "https://co.addi.com/preaprobado",
-            "open_in_new_tab": true,
-            "content_direction": "column",
-            "horizontal_alignment_flex_direction_column": "center",
-            "vertical_alignment_flex_direction_column": "center",
-            "gap": 8
-          },
-          "blocks": {
-            "icon_trust_addi": {
-              "type": "icon",
-              "settings": { "icon": "price_tag", "width": 56 }
-            },
-            "text_trust_addi": {
-              "type": "text",
-              "settings": {
-                "text": "<h3><strong>Cuotas sin interés</strong></h3><h5>Paga con Addi, fácil y rápido</h5>",
-                "alignment": "center",
-                "type_preset": "rte"
-              }
-            }
-          },
-          "block_order": ["icon_trust_addi", "text_trust_addi"]
-        },
-        "group_trust_stores": {
-          "type": "group",
-          "settings": {
-            "content_direction": "column",
-            "horizontal_alignment_flex_direction_column": "center",
-            "vertical_alignment_flex_direction_column": "center",
-            "gap": 8
-          },
-          "blocks": {
-            "icon_trust_stores": {
-              "type": "icon",
-              "settings": { "icon": "map_pin", "width": 56 }
-            },
-            "text_trust_stores": {
-              "type": "text",
-              "settings": {
-                "text": "<h3><strong>Tiendas físicas</strong></h3><h5>Visítanos en Cali</h5>",
-                "alignment": "center",
-                "type_preset": "rte"
-              }
-            }
-          },
-          "block_order": ["icon_trust_stores", "text_trust_stores"]
-        }
-      },
-      "block_order": ["group_trust_shipping", "group_trust_addi", "group_trust_stores"],
-      "name": "Fila de confianza",
-      "settings": {
-        "content_direction": "row",
-        "vertical_on_mobile": true,
-        "horizontal_alignment": "space-between",
-        "vertical_alignment": "center",
-        "gap": 24,
-        "section_width": "page-width",
-        "color_scheme": "scheme-trust-turquoise",
-        "padding-block-start": 32,
-        "padding-block-end": 32
-      }
-    },
     "testimonials_row": {
       "type": "testimonials-carousel",
       "blocks": {
@@ -830,7 +1172,13 @@
           }
         }
       },
-      "block_order": ["review_1", "review_2", "review_3", "review_4", "review_5"],
+      "block_order": [
+        "review_1",
+        "review_2",
+        "review_3",
+        "review_4",
+        "review_5"
+      ],
       "name": "Testimonios",
       "settings": {
         "title": "Lo que dicen nuestras mamás y papás",
@@ -866,20 +1214,37 @@
         "group_baby_shower_card": {
           "type": "group",
           "settings": {
+            "link": "",
+            "open_in_new_tab": false,
             "content_direction": "column",
             "vertical_on_mobile": true,
+            "horizontal_alignment": "flex-start",
+            "vertical_alignment": "center",
+            "align_baseline": false,
             "horizontal_alignment_flex_direction_column": "center",
             "vertical_alignment_flex_direction_column": "center",
             "gap": 10,
             "width": "fill",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
             "height": "fit",
+            "custom_height": 100,
             "inherit_color_scheme": false,
             "color_scheme": "",
             "background_media": "image",
+            "video_position": "cover",
             "background_image": "shopify://shop_images/Copia_de_ask.png",
             "background_image_position": "cover",
             "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
             "border_radius": 32,
+            "placeholder": "",
+            "toggle_overlay": false,
+            "overlay_color": "#00000026",
+            "overlay_style": "solid",
+            "gradient_direction": "to top",
             "padding-block-start": 48,
             "padding-block-end": 48,
             "padding-inline-start": 48,
@@ -907,22 +1272,41 @@
               "blocks": {}
             }
           },
-          "block_order": ["baby_shower_form_full"]
+          "block_order": [
+            "baby_shower_form_full"
+          ]
         }
       },
-      "block_order": ["video_baby_shower_full", "group_baby_shower_card"],
+      "block_order": [
+        "video_baby_shower_full",
+        "group_baby_shower_card"
+      ],
       "name": "Baby Shower (completo)",
       "settings": {
         "content_direction": "row",
         "vertical_on_mobile": true,
         "horizontal_alignment": "center",
         "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "center",
         "gap": 10,
         "section_width": "page-width",
+        "section_height": "",
+        "section_height_custom": 50,
         "color_scheme": "scheme-172f1528-c19a-4677-a995-61b4838b7072",
         "background_media": "image",
+        "video_position": "cover",
         "background_image": "shopify://shop_images/fondo_2.png",
         "background_image_position": "cover",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
         "padding-block-start": 40,
         "padding-block-end": 40
       }
@@ -930,14 +1314,63 @@
     "instagram_feed": {
       "type": "instagram-feed",
       "blocks": {
-        "photo_1": { "type": "photo", "settings": { "image": "shopify://shop_images/IG_foto_1.jpg", "link": "https://www.instagram.com/babysamcolombia/" } },
-        "photo_2": { "type": "photo", "settings": { "image": "shopify://shop_images/IG_foto_2.jpg", "link": "https://www.instagram.com/babysamcolombia/" } },
-        "photo_3": { "type": "photo", "settings": { "image": "shopify://shop_images/IG_foto_3.jpg", "link": "https://www.instagram.com/babysamcolombia/" } },
-        "photo_4": { "type": "photo", "settings": { "image": "shopify://shop_images/IG_foto_7.jpg", "link": "https://www.instagram.com/babysamcolombia/" } },
-        "photo_5": { "type": "photo", "settings": { "image": "shopify://shop_images/IG_foto_5.jpg", "link": "https://www.instagram.com/babysamcolombia/" } },
-        "photo_6": { "type": "photo", "settings": { "image": "shopify://shop_images/IG_foto_6.jpg", "link": "https://www.instagram.com/babysamcolombia/" } }
+        "photo_1": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/IG_foto_1.jpg",
+            "link": "https://www.instagram.com/babysamcolombia/",
+            "focal_position": ""
+          }
+        },
+        "photo_2": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/IG_foto_2.jpg",
+            "link": "https://www.instagram.com/babysamcolombia/",
+            "focal_position": ""
+          }
+        },
+        "photo_3": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/IG_foto_3.jpg",
+            "link": "https://www.instagram.com/babysamcolombia/",
+            "focal_position": ""
+          }
+        },
+        "photo_4": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/IG_foto_7.jpg",
+            "link": "https://www.instagram.com/babysamcolombia/",
+            "focal_position": ""
+          }
+        },
+        "photo_5": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/IG_foto_5.jpg",
+            "link": "https://www.instagram.com/babysamcolombia/",
+            "focal_position": ""
+          }
+        },
+        "photo_6": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/IG_foto_6.jpg",
+            "link": "https://www.instagram.com/babysamcolombia/",
+            "focal_position": ""
+          }
+        }
       },
-      "block_order": ["photo_1", "photo_2", "photo_3", "photo_4", "photo_5", "photo_6"],
+      "block_order": [
+        "photo_1",
+        "photo_2",
+        "photo_3",
+        "photo_4",
+        "photo_5",
+        "photo_6"
+      ],
       "name": "Instagram",
       "settings": {
         "title": "Síguenos @babysamcolombia",
