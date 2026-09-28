@@ -149,8 +149,10 @@
     overflow: hidden;
     border: 0;
     border-block-end: 1px solid var(--color-border);
-    background-color: var(--stores-bg);
-    color: var(--stores-ink);
+    /* Fallbacks por si un setting de color queda vacío: sin ellos `var(--stores-bg)` sería
+        inválido y el panel se volvería transparente en vez de caer al color del esquema. */
+    background-color: var(--stores-bg, var(--color-background));
+    color: var(--stores-ink, var(--color-foreground));
     box-shadow: 0 18px 40px rgb(var(--stores-ink-rgb, 90 63 40) / 18%);
   }
 
