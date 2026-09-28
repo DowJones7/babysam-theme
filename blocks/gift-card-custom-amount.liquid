@@ -30,7 +30,23 @@
   assign min_amount = block.settings.min_amount | default: 20000
   assign label = block.settings.button_label | default: 'Monto personalizado por WhatsApp'
   assign panel_id = 'GiftCardCustomAmount-' | append: block.id
+  assign message = block.settings.whatsapp_message
 %}
+
+{%- comment -%}
+  Respaldo si el setting queda vacío: el mismo texto que el default del schema. Los saltos de
+  línea son reales; el JS lo codifica completo con encodeURIComponent.
+{%- endcomment -%}
+{%- if message == blank -%}
+  {%- capture message -%}
+¡Hola, Babysam! 👋🍼
+Vengo de la página web y quiero regalar un *bono de regalo* 🎁
+
+💰 Monto: *${monto}*
+
+¿Me ayudan con el proceso de pago? 💕
+  {%- endcapture -%}
+{%- endif -%}
 
 {%- if product_resource.gift_card? and wa != blank -%}
   <script src="{{ 'gift-card-custom-amount.js' | asset_url }}" type="module" fetchpriority="low"></script>
@@ -39,7 +55,7 @@
     class="gcca"
     data-whatsapp="{{ wa }}"
     data-min-amount="{{ min_amount }}"
-    data-message="Hola, vengo de la página web y quiero un bono de regalo Babysam por [monto]"
+    data-message="{{ message | strip | escape }}"
     {{ block.shopify_attributes }}
   >
     <button
@@ -286,7 +302,14 @@
       "id": "whatsapp_number",
       "label": "Número de WhatsApp",
       "info": "Con o sin 57; se normaliza solo. Sin número el botón no aparece.",
-      "default": "3166569000"
+      "default": "3102367180"
+    },
+    {
+      "type": "textarea",
+      "id": "whatsapp_message",
+      "label": "Mensaje de WhatsApp",
+      "info": "{monto} se reemplaza por el valor con puntos de miles (176.500). Los *asteriscos* salen en negrita en WhatsApp.",
+      "default": "¡Hola, Babysam! 👋🍼\nVengo de la página web y quiero regalar un *bono de regalo* 🎁\n\n💰 Monto: *${monto}*\n\n¿Me ayudan con el proceso de pago? 💕"
     },
     {
       "type": "number",

@@ -100,7 +100,8 @@ class GiftCardCustomAmount extends HTMLElement {
   }
 
   #actualizarEnlace() {
-    const mensaje = this.plantilla.replace('[monto]', `$${conPuntos(String(this.#monto()))}`);
+    // {monto} lleva solo el número con puntos: el "$" (si va) es parte del texto editable.
+    const mensaje = this.plantilla.replaceAll('{monto}', conPuntos(String(this.#monto())));
     this.enviar.href = `https://wa.me/${this.numero}?text=${encodeURIComponent(mensaje)}`;
   }
 }

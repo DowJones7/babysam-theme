@@ -216,7 +216,8 @@
                       "settings": {
                         "button_label": "Monto personalizado por WhatsApp",
                         "help_text": "«Agregar al carrito» compra la denominación que elegiste arriba. Este monto solo se solicita por WhatsApp: te confirmamos el pago y te enviamos el bono.",
-                        "whatsapp_number": "3166569000",
+                        "whatsapp_number": "3102367180",
+                        "whatsapp_message": "¡Hola, Babysam! 👋🍼\nVengo de la página web y quiero regalar un *bono de regalo* 🎁\n\n💰 Monto: *${monto}*\n\n¿Me ayudan con el proceso de pago? 💕",
                         "min_amount": 20000
                       },
                       "blocks": {}
