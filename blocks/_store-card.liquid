@@ -64,7 +64,7 @@
   assign wa2_label = block.settings.store_whatsapp_2_label | default: 'WhatsApp'
 
   assign mensaje = 'Hola, vengo de la página web y quiero información de ' | append: nombre
-  assign mensaje_url = mensaje | url_encode
+  assign mensaje_url = mensaje | url_encode | replace: '+', '%20'
 %}
 
 <article class="store-card" {{ block.shopify_attributes }}>
@@ -129,7 +129,7 @@
         {%- if wa1 != blank -%}
           <a
             class="store-card__wa"
-            href="https://wa.me/{{ wa1 }}?text={{ mensaje_url }}"
+            href="https://api.whatsapp.com/send?phone={{ wa1 }}&amp;text={{ mensaje_url }}"
             target="_blank"
             rel="noopener"
           >
@@ -145,7 +145,7 @@
         {%- if wa2 != blank -%}
           <a
             class="store-card__wa"
-            href="https://wa.me/{{ wa2 }}?text={{ mensaje_url }}"
+            href="https://api.whatsapp.com/send?phone={{ wa2 }}&amp;text={{ mensaje_url }}"
             target="_blank"
             rel="noopener"
           >

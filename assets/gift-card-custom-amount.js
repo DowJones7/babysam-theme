@@ -102,7 +102,9 @@ class GiftCardCustomAmount extends HTMLElement {
   #actualizarEnlace() {
     // {monto} lleva solo el número con puntos: el "$" (si va) es parte del texto editable.
     const mensaje = this.plantilla.replaceAll('{monto}', conPuntos(String(this.#monto())));
-    this.enviar.href = `https://wa.me/${this.numero}?text=${encodeURIComponent(mensaje)}`;
+    // api.whatsapp.com y no wa.me: la redirección de wa.me cambia los emojis por "�" en
+    // WhatsApp Web y escritorio (en el celular abre la app directo y no se nota).
+    this.enviar.href = `https://api.whatsapp.com/send?phone=${this.numero}&text=${encodeURIComponent(mensaje)}`;
   }
 }
 

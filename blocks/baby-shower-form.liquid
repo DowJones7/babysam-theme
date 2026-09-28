@@ -103,7 +103,7 @@
     const encodedMessage = encodeURIComponent(message);
     
     // Construir la URL completa de WhatsApp
-    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+    const whatsappUrl = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodedMessage}`;
 
     // Abrir el enlace en una nueva pestaña
     window.open(whatsappUrl, '_blank');

@@ -16,7 +16,7 @@
   assign button_label = block.settings.label
   assign button_link = block.settings.link
   assign whatsapp_number = block.settings.whatsapp_number | replace: ' ', '' | replace: '(', '' | replace: ')', '' | replace: '-', ''
-  assign whatsapp_message = block.settings.whatsapp_message | url_encode
+  assign whatsapp_message = block.settings.whatsapp_message | url_encode | replace: '+', '%20'
   assign button_target = ''
 
   if block.settings.open_in_new_tab
@@ -30,9 +30,9 @@
   assign button_custom_width_mobile = block.settings.custom_width_mobile
 
   if whatsapp_number != blank
-    assign button_link = 'https://wa.me/' | append: whatsapp_number
+    assign button_link = 'https://api.whatsapp.com/send?phone=' | append: whatsapp_number
     if whatsapp_message != blank
-      assign button_link = button_link | append: '?text=' | append: whatsapp_message
+      assign button_link = button_link | append: '&amp;text=' | append: whatsapp_message
     endif
   endif
 %}

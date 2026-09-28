@@ -9,7 +9,7 @@
 
   El monto NUNCA llega al carrito ni cambia precios: el campo no tiene `name`, el bloque está
   fuera del <form> del producto (que vive en `buy-buttons`) y lo único que produce es un
-  enlace a wa.me. Comportamiento en assets/gift-card-custom-amount.js.
+  enlace a api.whatsapp.com. Comportamiento en assets/gift-card-custom-amount.js.
 {%- enddoc -%}
 
 {% liquid
@@ -93,7 +93,7 @@ Vengo de la página web y quiero regalar un *bono de regalo* 🎁
 
         <a
           class="gcca__send"
-          href="https://wa.me/{{ wa }}"
+          href="https://api.whatsapp.com/send?phone={{ wa }}"
           target="_blank"
           rel="noopener noreferrer"
           data-gcca-send
