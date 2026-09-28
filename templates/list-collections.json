@@ -14,7 +14,7 @@
       "settings": {
         "title": "Catálogo",
         "color_scheme": "scheme-7",
-        "show_products_count": true,
+        "show_products_count": false,
         "image_accesorios": "shopify://shop_images/portada_accesorios.png",
         "image_cobijas": "shopify://shop_images/portada_cobijas.png",
         "image_coches": "shopify://shop_images/portada_coches.png",
