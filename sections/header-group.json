@@ -69,12 +69,27 @@
           },
           "blocks": {}
         },
+        "mobile-links-strip": {
+          "type": "_mobile-links-strip",
+          "static": true,
+          "settings": {
+            "strip_menu": "menu-principal-1",
+            "strip_aria_label": "Navegación principal"
+          },
+          "blocks": {}
+        },
         "stores-panel": {
           "type": "_stores-panel",
           "static": true,
           "settings": {
             "panel_title": "Nuestras tiendas",
-            "panel_intro": ""
+            "panel_intro": "",
+            "color_scheme": "",
+            "stores_ink": "#5a3f28",
+            "stores_accent": "#e12956",
+            "panel_bg": "#E3C4AB",
+            "panel_pattern_opacity": 20,
+            "stores_button_radius": 100
           },
           "blocks": {
             "zone_centro": {
@@ -92,9 +107,9 @@
                     "store_unit": "Local 112 A",
                     "store_address": "Calle 14 # 8-54, Local 112 A, C.C. Pasaje Zamoraco, Centro, Cali",
                     "store_hours": "<p>Lunes a sábado: 9:00 a.m. – 6:30 p.m.<br/>Domingos y festivos: cerrado</p>",
-                    "store_description": "<p>Cuando tu bebé crece, nosotros crecemos con él: ropa desde los 12 meses hasta los 6 años.</p>",
                     "store_opens": "09:00",
                     "store_closes": "18:30",
+                    "store_description": "<p>Cuando tu bebé crece, nosotros crecemos con él: ropa desde los 12 meses hasta los 6 años.</p>",
                     "store_whatsapp_1": "3216243002",
                     "store_whatsapp_1_label": "WhatsApp",
                     "store_whatsapp_2": "",
@@ -109,9 +124,9 @@
                     "store_unit": "Locales 202 y 203, Mezanine",
                     "store_address": "Calle 14 # 8-54, Locales 202 y 203 (Mezanine), C.C. Pasaje Zamoraco, Centro, Cali",
                     "store_hours": "<p>Lunes a sábado: 9:00 a.m. – 6:30 p.m.<br/>Domingos y festivos: cerrado</p>",
-                    "store_description": "<p>Todo para tu bebé en un solo lugar: lencería, ropa de 0 a 24 meses, lactancia, coches, corrales, pañaleras, bañeras, accesorios y juegos para recién nacidos. En diciembre, también somos juguetería.</p>",
                     "store_opens": "09:00",
                     "store_closes": "18:30",
+                    "store_description": "<p>Todo para tu bebé en un solo lugar: lencería, ropa de 0 a 24 meses, lactancia, coches, corrales, pañaleras, bañeras, accesorios y juegos para recién nacidos. En diciembre, también somos juguetería.</p>",
                     "store_whatsapp_1": "3166569000",
                     "store_whatsapp_1_label": "Línea 1",
                     "store_whatsapp_2": "3224520915",
@@ -140,9 +155,9 @@
                     "store_unit": "Capri",
                     "store_address": "Carrera 70 # 10A-66, Barrio Capri, Cali",
                     "store_hours": "<p>Lunes a sábado: 10:00 a.m. – 6:30 p.m.<br>Domingos y festivos: cerrado</p>",
-                    "store_description": "<p>Nuestra sede más nueva: las últimas colecciones y todo lo que tu bebé necesita, en el sur de la ciudad.</p>",
-                    "store_opens": "10:00",
+                    "store_opens": "09:00",
                     "store_closes": "18:30",
+                    "store_description": "<p>Nuestra sede más nueva: las últimas colecciones y todo lo que tu bebé necesita, en el sur de la ciudad.</p>",
                     "store_whatsapp_1": "3102367180",
                     "store_whatsapp_1_label": "WhatsApp",
                     "store_whatsapp_2": "",

@@ -293,6 +293,13 @@
   {% endif %}
 
   {%- comment -%}
+    Tira de enlaces móvil (blocks/_mobile-links-strip.liquid). Va dentro de <header-component>
+    para que su alto entre en `--header-height` y quede pegada con el header sticky; suelta y
+    no por `header-row.liquid` porque es una fila completa, no una columna.
+  {%- endcomment -%}
+  {% content_for 'block', type: '_mobile-links-strip', id: 'mobile-links-strip' %}
+
+  {%- comment -%}
     Panel "Nuestras tiendas". Va suelto y no por el sistema de slots de `header-row.liquid`
     porque es un <dialog> a pantalla completa y su disparador no vive en la barra: lo abre
     cualquier enlace a #tiendas (el ítem del menú, el acceso del drawer, o /#tiendas directo).

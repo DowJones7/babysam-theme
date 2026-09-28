@@ -1,0 +1,154 @@
+{%- doc -%}
+  Bloque estático del header: tira horizontal de enlaces, solo en móvil.
+
+  Existe porque la hamburguesa nativa se reemplazó por el drawer de catálogo, que solo lista
+  colecciones: sin esto, en móvil los enlaces del menú principal (Inicio, Nuestras tiendas,
+  Baby Shower, ...) no aparecían en ningún lado.
+
+  Aparece en el mismo corte en que se oculta la navegación de desktop: `<header-menu>` usa
+  `mobile:hidden` (oculto hasta 749px) y esta tira usa `desktop:hidden` (oculta desde 750px),
+  las dos utilidades de assets/base.css. Así el corte coincide por construcción.
+
+  Se renderiza DENTRO de `<header-component>`, así que su alto entra en `--header-height`
+  (lo mide header.js con un ResizeObserver) y la tira queda pegada con el header sticky.
+
+  Descarta a propósito la `navigation_bar` nativa de `_header-menu`: es un <div> sin
+  aria-label, con áreas táctiles de menos de 44px y barra de scroll visible.
+
+  Los enlaces a #tiendas no necesitan nada: assets/stores-panel.js escucha los clics a nivel
+  de documento y abre el panel desde cualquier <a> con ese hash.
+
+  Si no hay menú elegido no renderiza nada.
+{%- enddoc -%}
+
+{% liquid
+  assign strip_menu = block.settings.strip_menu
+  assign strip_label = block.settings.strip_aria_label | default: 'Navegación principal'
+%}
+
+{%- if strip_menu != blank and strip_menu.links.size > 0 -%}
+  <nav
+    class="mobile-links-strip desktop:hidden color-{{ section.settings.color_scheme_top }}"
+    aria-label="{{ strip_label | escape }}"
+    {{ block.shopify_attributes }}
+  >
+    <ul class="mobile-links-strip__list list-unstyled" role="list">
+      {%- for link in strip_menu.links -%}
+        {%- comment -%}
+          Los enlaces con ancla (/#tiendas) no se marcan como página actual: en el home
+          `link.current` también da true para ellos y saldrían dos resaltados junto a "Inicio".
+        {%- endcomment -%}
+        {%- liquid
+          assign is_current = link.current
+          if link.url contains '#'
+            assign is_current = false
+          endif
+        -%}
+        <li class="mobile-links-strip__item">
+          <a
+            href="{{ link.url }}"
+            class="mobile-links-strip__link"
+            {% if is_current %}
+              aria-current="page"
+            {% endif %}
+          >
+            {{- link.title -}}
+          </a>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </nav>
+{%- endif -%}
+
+{% stylesheet %}
+  .mobile-links-strip {
+    --strip-fade-width: 32px;
+
+    /* El texto del esquema del header (#e44068 sobre #e3c4ab) da 2.44:1 y no pasa AA. Se
+       oscurece el mismo color del esquema con negro: 60% da 5.29:1. Sin soporte de color-mix
+       queda el color de texto de variantes del esquema (6.62:1), nunca el que no pasa. */
+    --strip-link-color: var(--color-variant-text);
+    --strip-link-color: color-mix(in srgb, var(--color-foreground) 60%, black);
+
+    position: relative;
+    background-color: var(--color-background);
+  }
+
+  /* Degradado del borde derecho: avisa que hay más enlaces deslizando. */
+  .mobile-links-strip::after {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    inset-inline-end: 0;
+    width: var(--strip-fade-width);
+    background: linear-gradient(to right, transparent, var(--color-background));
+    pointer-events: none;
+  }
+
+  .mobile-links-strip__list {
+    display: flex;
+    gap: var(--gap-xs);
+    margin: 0;
+    padding-inline: var(--padding-md) var(--strip-fade-width);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    scroll-padding-inline: var(--padding-md);
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .mobile-links-strip__list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .mobile-links-strip__item {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+  }
+
+  .mobile-links-strip__link {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    padding-inline: var(--padding-sm);
+    color: var(--strip-link-color);
+    font-size: var(--font-size--sm);
+    white-space: nowrap;
+    text-decoration: none;
+  }
+
+  .mobile-links-strip__link[aria-current='page'] {
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 6px;
+  }
+
+  .mobile-links-strip__link:focus-visible {
+    outline: 2px solid var(--strip-link-color);
+    outline-offset: -4px;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Tira de enlaces (móvil)",
+  "tag": null,
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "strip_menu",
+      "label": "Menú de la tira",
+      "info": "Tira deslizable debajo del header, solo en móvil. Sin menú elegido no aparece."
+    },
+    {
+      "type": "text",
+      "id": "strip_aria_label",
+      "label": "Nombre accesible de la navegación",
+      "info": "Lo anuncian los lectores de pantalla. No se ve en la página.",
+      "default": "Navegación principal"
+    }
+  ]
+}
+{% endschema %}
