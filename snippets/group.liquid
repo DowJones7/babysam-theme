@@ -87,4 +87,44 @@
   .group-block__link ~ .group-block-content--design-mode {
     pointer-events: auto;
   }
+
+  /* Realce de los grupos CLICKEABLES.
+     `:has(> .group-block__link)` acota el efecto a los que tienen enlace: ese <a> solo se
+     emite cuando el setting `link` está lleno, así que un grupo sin enlace queda exactamente
+     como está hoy. El tema ya usa :has() en otros lados (header.liquid), no es nuevo acá.
+
+     Se elige translateY + sombra y no opacidad para no apagar el texto, y ninguno de los dos
+     afecta el layout: el transform se resuelve al pintar y no recalcula posiciones. */
+  .group-block:has(> .group-block__link) {
+    transition:
+      transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 180ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* Solo en dispositivos con puntero real. En una pantalla táctil el :hover se queda pegado
+     después de tocar, hasta que tocás en otro lado. */
+  @media (hover: hover) {
+    .group-block:has(> .group-block__link):hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgb(var(--color-shadow-rgb, 0 0 0) / 14%);
+    }
+  }
+
+  /* Mismo realce con teclado. Va fuera del @media para que exista aunque el dispositivo no
+     tenga puntero. El contorno de foco lo sigue poniendo la regla global *:focus-visible. */
+  .group-block:has(> .group-block__link:focus-visible) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgb(var(--color-shadow-rgb, 0 0 0) / 14%);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .group-block:has(> .group-block__link) {
+      transition: none;
+    }
+
+    .group-block:has(> .group-block__link):hover,
+    .group-block:has(> .group-block__link:focus-visible) {
+      transform: none;
+    }
+  }
 {% endstylesheet %}
