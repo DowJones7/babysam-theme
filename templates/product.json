@@ -210,6 +210,17 @@
                       },
                       "blocks": {}
                     },
+                    "gift_card_custom_amount": {
+                      "type": "gift-card-custom-amount",
+                      "name": "Monto personalizado bono",
+                      "settings": {
+                        "button_label": "Monto personalizado por WhatsApp",
+                        "help_text": "«Agregar al carrito» compra la denominación que elegiste arriba. Este monto solo se solicita por WhatsApp: te confirmamos el pago y te enviamos el bono.",
+                        "whatsapp_number": "3166569000",
+                        "min_amount": 20000
+                      },
+                      "blocks": {}
+                    },
                     "review_XXHnqh": {
                       "type": "review",
                       "settings": {
@@ -225,6 +236,7 @@
                   "block_order": [
                     "price_WUhjKT",
                     "variant_picker_JH9R7V",
+                    "gift_card_custom_amount",
                     "review_XXHnqh"
                   ]
                 }

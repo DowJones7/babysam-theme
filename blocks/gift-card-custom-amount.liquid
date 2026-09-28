@@ -1,0 +1,304 @@
+{%- doc -%}
+  Monto personalizado del Bono de Regalo, por WhatsApp.
+
+  Va debajo del selector de denominaciones. La clienta escribe el valor y lo solicita por
+  WhatsApp; Babysam cobra con un pedido preliminar y emite el bono a mano desde el admin.
+
+  La plantilla `product.json` es compartida por todos los productos: el bloque solo renderiza
+  algo si el producto es una tarjeta de regalo (`gift_card?`).
+
+  El monto NUNCA llega al carrito ni cambia precios: el campo no tiene `name`, el bloque está
+  fuera del <form> del producto (que vive en `buy-buttons`) y lo único que produce es un
+  enlace a wa.me. Comportamiento en assets/gift-card-custom-amount.js.
+{%- enddoc -%}
+
+{% liquid
+  assign product_resource = closest.product
+  if request.visual_preview_mode and product_resource == blank
+    assign product_resource = collections.all.products.first
+  endif
+
+  # Mismo criterio que el panel de tiendas (blocks/_store-card.liquid): solo dígitos, con 57.
+  assign wa = block.settings.whatsapp_number | remove: ' ' | remove: '-' | remove: '(' | remove: ')' | remove: '+' | remove: '.'
+  if wa != blank
+    assign wa_pref = wa | slice: 0, 2
+    unless wa_pref == '57'
+      assign wa = '57' | append: wa
+    endunless
+  endif
+
+  assign min_amount = block.settings.min_amount | default: 20000
+  assign label = block.settings.button_label | default: 'Monto personalizado por WhatsApp'
+  assign panel_id = 'GiftCardCustomAmount-' | append: block.id
+%}
+
+{%- if product_resource.gift_card? and wa != blank -%}
+  <script src="{{ 'gift-card-custom-amount.js' | asset_url }}" type="module" fetchpriority="low"></script>
+
+  <gift-card-custom-amount
+    class="gcca"
+    data-whatsapp="{{ wa }}"
+    data-min-amount="{{ min_amount }}"
+    data-message="Hola, vengo de la página web y quiero un bono de regalo Babysam por [monto]"
+    {{ block.shopify_attributes }}
+  >
+    <button
+      type="button"
+      class="gcca__toggle"
+      aria-expanded="false"
+      aria-controls="{{ panel_id }}"
+      data-gcca-toggle
+    >
+      <span class="gcca__icon" aria-hidden="true">{% render 'icon', icon: 'whatsapp' %}</span>
+      <span>{{ label | escape }}</span>
+      <span class="gcca__chevron" aria-hidden="true"></span>
+    </button>
+
+    <div class="gcca__panel" id="{{ panel_id }}" data-gcca-panel inert>
+      <div class="gcca__panel-inner">
+        <label class="gcca__label" for="{{ panel_id }}-input">Valor del bono (pesos colombianos)</label>
+        <div class="gcca__field">
+          <span class="gcca__prefix" aria-hidden="true">$</span>
+          {%- comment -%} Sin `name` a propósito: este valor no se envía a ningún formulario. {%- endcomment -%}
+          <input
+            type="text"
+            id="{{ panel_id }}-input"
+            class="gcca__input"
+            inputmode="numeric"
+            autocomplete="off"
+            placeholder="Ej. 176.500"
+            aria-describedby="{{ panel_id }}-error {{ panel_id }}-help"
+            data-gcca-input
+          >
+        </div>
+        <p class="gcca__error" id="{{ panel_id }}-error" role="alert" hidden data-gcca-error>
+          El monto mínimo es [minimo].
+        </p>
+
+        <a
+          class="gcca__send"
+          href="https://wa.me/{{ wa }}"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-gcca-send
+        >
+          <span class="gcca__icon" aria-hidden="true">{% render 'icon', icon: 'whatsapp' %}</span>
+          Enviar por WhatsApp
+          <span class="visually-hidden">(se abre en una pestaña nueva)</span>
+        </a>
+
+        {%- if block.settings.help_text != blank -%}
+          <p class="gcca__help" id="{{ panel_id }}-help">{{ block.settings.help_text | escape }}</p>
+        {%- endif -%}
+      </div>
+    </div>
+  </gift-card-custom-amount>
+{%- endif -%}
+
+{% stylesheet %}
+  .gcca {
+    display: block;
+    width: 100%;
+    color: var(--color-variant-text);
+  }
+
+  /* Misma forma que las denominaciones (radio y alto de variant-main-picker), pero con borde
+     punteado del color del texto (14:1): se lee como otra cosa, no como una denominación más. */
+  .gcca__toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--gap-xs);
+    width: 100%;
+    min-height: 44px;
+    padding: var(--padding-sm) var(--padding-lg);
+    border: 2px dashed var(--color-variant-text);
+    border-radius: var(--variant-picker-button-radius);
+    background-color: transparent;
+    color: var(--color-variant-text);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color var(--animation-speed) var(--animation-easing);
+  }
+
+  .gcca__toggle:hover {
+    background-color: var(--color-variant-hover-background);
+  }
+
+  .gcca__toggle:focus-visible,
+  .gcca__send:focus-visible,
+  .gcca__input:focus-visible {
+    outline: 2px solid var(--color-variant-text);
+    outline-offset: 2px;
+  }
+
+  .gcca__icon {
+    display: inline-flex;
+    flex: 0 0 auto;
+    width: 20px;
+    height: 20px;
+  }
+
+  .gcca__icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .gcca__chevron {
+    width: 8px;
+    height: 8px;
+    margin-inline-start: var(--margin-2xs);
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: translateY(-2px) rotate(45deg);
+    transition: transform var(--animation-speed) var(--animation-easing);
+  }
+
+  .gcca[data-open] .gcca__chevron {
+    transform: translateY(2px) rotate(-135deg);
+  }
+
+  /* Despliegue: la fila del grid pasa de 0fr a 1fr, así el alto se anima sin medir nada. */
+  .gcca__panel {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transition: grid-template-rows 250ms var(--animation-easing), opacity 250ms var(--animation-easing);
+  }
+
+  .gcca[data-open] .gcca__panel {
+    grid-template-rows: 1fr;
+    opacity: 1;
+  }
+
+  .gcca__panel-inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-xs);
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .gcca[data-open] .gcca__panel-inner {
+    padding-block-start: var(--padding-md);
+  }
+
+  .gcca__label {
+    font-weight: 600;
+  }
+
+  .gcca__field {
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+    padding-inline: var(--padding-md);
+    border: var(--style-border-width-inputs) solid var(--color-variant-text);
+    border-radius: var(--style-border-radius-inputs);
+    background-color: var(--color-variant-background);
+  }
+
+  .gcca__prefix {
+    font-weight: 600;
+    margin-inline-end: var(--margin-2xs);
+  }
+
+  .gcca__input {
+    flex: 1;
+    min-width: 0;
+    min-height: 44px;
+    border: 0;
+    background: transparent;
+    color: var(--color-variant-text);
+    /* 16px evita el zoom automático de iOS al enfocar el campo. */
+    font: inherit;
+    font-size: max(16px, 1rem);
+  }
+
+  .gcca__input:focus {
+    outline: none;
+  }
+
+  .gcca__field:has(.gcca__input[aria-invalid='true']) {
+    border-color: var(--color-error);
+    border-width: 2px;
+  }
+
+  .gcca__error {
+    margin: 0;
+    color: var(--color-error);
+    font-size: var(--font-size--sm);
+    font-weight: 600;
+  }
+
+  .gcca__send {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--gap-xs);
+    min-height: 44px;
+    padding: var(--padding-sm) var(--padding-xl);
+    border-radius: var(--variant-picker-button-radius);
+    background-color: var(--color-selected-variant-background);
+    color: var(--color-selected-variant-text);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .gcca__help {
+    margin: 0;
+    font-size: var(--font-size--sm);
+    line-height: var(--line-height--body-normal);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .gcca__panel,
+    .gcca__chevron,
+    .gcca__toggle {
+      transition: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Monto personalizado bono",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Solo aparece en productos que son tarjeta de regalo. El monto no se agrega al carrito: se envía como mensaje de WhatsApp."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Texto del botón",
+      "default": "Monto personalizado por WhatsApp"
+    },
+    {
+      "type": "textarea",
+      "id": "help_text",
+      "label": "Texto de ayuda",
+      "default": "«Agregar al carrito» compra la denominación que elegiste arriba. Este monto solo se solicita por WhatsApp: te confirmamos el pago y te enviamos el bono."
+    },
+    {
+      "type": "text",
+      "id": "whatsapp_number",
+      "label": "Número de WhatsApp",
+      "info": "Con o sin 57; se normaliza solo. Sin número el botón no aparece.",
+      "default": "3166569000"
+    },
+    {
+      "type": "number",
+      "id": "min_amount",
+      "label": "Monto mínimo (pesos)",
+      "default": 20000
+    }
+  ],
+  "presets": [
+    {
+      "name": "Monto personalizado bono"
+    }
+  ]
+}
+{% endschema %}
