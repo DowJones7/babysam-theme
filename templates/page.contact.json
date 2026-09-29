@@ -91,14 +91,17 @@
             "padding-block-start": 0,
             "padding-block-end": 0,
             "padding-inline-start": 0,
-            "padding-inline-end": 0
+            "padding-inline-end": 0,
+            "whatsapp_number": "573102367180",
+            "whatsapp_intro": "¿Prefieres una respuesta más rápida? Escríbenos por WhatsApp",
+            "whatsapp_label": "Escríbenos por WhatsApp"
           },
           "blocks": {
             "submit-button": {
               "type": "contact-form-submit-button",
               "static": true,
               "settings": {
-                "label": "Submit",
+                "label": "Enviar mensaje",
                 "style_class": "button",
                 "width": "fit-content",
                 "custom_width": 100,
