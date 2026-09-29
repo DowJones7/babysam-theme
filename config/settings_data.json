@@ -11,7 +11,6 @@
   "current": {
     "logo": "shopify://shop_images/Babysam_lo_pag_2.png",
     "favicon": "shopify://shop_images/LOGO_BABY_SAM.png",
-    "card_hover_effect": "subtle-zoom",
     "type_body_font": "poppins_n4",
     "type_subheading_font": "poppins_n6",
     "type_heading_font": "poppins_n6",
@@ -40,6 +39,7 @@
     "type_letter_spacing_h6": "heading-normal",
     "page_width": "wide",
     "transition_to_main_product": true,
+    "card_hover_effect": "subtle-zoom",
     "badge_corner_radius": 0,
     "badge_sale_color_scheme": "scheme-3",
     "badge_sold_out_color_scheme": "scheme-5",
@@ -84,23 +84,6 @@
     "variant_button_radius": 100,
     "variant_button_width": "equal-width-buttons",
     "content_for_index": [],
-    "blocks": {
-      "8208493610395315515": {
-        "type": "shopify://apps/dondy-whatsapp-chat-marketing/blocks/app-block/7f5a70cb-e171-4cc7-ac02-e2220203abd6",
-        "disabled": false,
-        "settings": {}
-      },
-      "13687764805362907416": {
-        "type": "shopify://apps/omega-instafeed/blocks/app-embed-block/710f3bb4-c962-4be4-a6e2-1cee2ca38517",
-        "disabled": false,
-        "settings": {}
-      },
-      "13768625480086291342": {
-        "type": "shopify://apps/forms/blocks/forms/8744a304-fcb1-4347-b211-bb6b4759a76a",
-        "disabled": false,
-        "settings": {}
-      }
-    },
     "color_schemes": {
       "scheme-1": {
         "settings": {
