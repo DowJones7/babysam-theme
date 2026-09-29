@@ -4423,3 +4423,32 @@ text-component {
     transition: none !important;
   }
 }
+
+/* Ficha de producto: botones tipo píldora y texto más destacado.
+   Solo en la sección product-information (no toca los radios globales del tema, que siguen en
+   0 para el resto del sitio). Cubre: Agregar al carrito, Comprar ahora (pago dinámico de
+   Shopify), el bloque genérico "button" (p. ej. "Comprar ahora por Addi") y el selector de
+   cantidad. El botón de WhatsApp contraentrega trae su forma en blocks/whatsapp-cod.liquid.
+   `.button-unstyled` se excluye: el tema lo usa para botones de cerrar/ícono. */
+.product-information {
+  --babysam-pill-radius: 999px;
+}
+
+.product-information :is(.add-to-cart-button, a.button:not(.button-unstyled), .quantity-selector) {
+  border-radius: var(--babysam-pill-radius);
+}
+
+.product-information :is(.add-to-cart-button, a.button:not(.button-unstyled)) {
+  font-family: var(--font-body--family);
+  font-weight: 600;
+  font-size: 1.0625rem;
+  letter-spacing: 0.01em;
+}
+
+/* Comprar ahora: Shopify lo dibuja dentro de su propio componente y solo expone variables. El
+   radio lo fija una regla de base.css con :has() (especificidad 0,3,1); el !important sobre la
+   variable evita depender del orden de las reglas. El texto y la tipografía de ese botón los
+   controla Shopify: no se pueden cambiar desde el tema. */
+.product-information :is(shopify-accelerated-checkout, shopify-accelerated-checkout-cart) {
+  --shopify-accelerated-checkout-button-border-radius: var(--babysam-pill-radius) !important;
+}
