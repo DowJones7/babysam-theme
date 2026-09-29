@@ -113,7 +113,8 @@
                     "store_whatsapp_1": "3216243002",
                     "store_whatsapp_1_label": "WhatsApp",
                     "store_whatsapp_2": "",
-                    "store_whatsapp_2_label": "Línea 2"
+                    "store_whatsapp_2_label": "Línea 2",
+                    "store_whatsapp_place": "Babysam Ropa, Centro"
                   },
                   "blocks": {}
                 },
@@ -130,7 +131,8 @@
                     "store_whatsapp_1": "3166569000",
                     "store_whatsapp_1_label": "Línea 1",
                     "store_whatsapp_2": "3224520915",
-                    "store_whatsapp_2_label": "Línea 2"
+                    "store_whatsapp_2_label": "Línea 2",
+                    "store_whatsapp_place": "Babysam Tienda Principal, Centro"
                   },
                   "blocks": {}
                 }
@@ -161,7 +163,8 @@
                     "store_whatsapp_1": "3102367180",
                     "store_whatsapp_1_label": "WhatsApp",
                     "store_whatsapp_2": "",
-                    "store_whatsapp_2_label": "Línea 2"
+                    "store_whatsapp_2_label": "Línea 2",
+                    "store_whatsapp_place": "Babysam Sur, Capri"
                   },
                   "blocks": {}
                 }

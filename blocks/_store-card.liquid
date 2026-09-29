@@ -43,29 +43,21 @@
     endif
   endif
 
-  # Normalización del número: se quita todo lo que no sea dígito y se antepone 57 si falta.
-  assign wa1 = block.settings.store_whatsapp_1 | remove: ' ' | remove: '-' | remove: '(' | remove: ')' | remove: '+' | remove: '.'
-  if wa1 != blank
-    assign wa1_pref = wa1 | slice: 0, 2
-    unless wa1_pref == '57'
-      assign wa1 = '57' | append: wa1
-    endunless
-  endif
-
-  assign wa2 = block.settings.store_whatsapp_2 | remove: ' ' | remove: '-' | remove: '(' | remove: ')' | remove: '+' | remove: '.'
-  if wa2 != blank
-    assign wa2_pref = wa2 | slice: 0, 2
-    unless wa2_pref == '57'
-      assign wa2 = '57' | append: wa2
-    endunless
-  endif
+  # Normalización del número y codificación del mensaje: snippets/whatsapp-url.liquid.
+  assign wa1 = block.settings.store_whatsapp_1 | strip
+  assign wa2 = block.settings.store_whatsapp_2 | strip
 
   assign wa1_label = block.settings.store_whatsapp_1_label | default: 'WhatsApp'
   assign wa2_label = block.settings.store_whatsapp_2_label | default: 'WhatsApp'
 
-  assign mensaje = 'Hola, vengo de la página web y quiero información de ' | append: nombre
-  assign mensaje_url = mensaje | url_encode | replace: '+', '%20'
+  # La zona (Centro / Sur) es un setting del bloque padre y la tarjeta no la ve: por eso cada
+  # tienda trae su propia "Ubicación para WhatsApp". Vacía, el mensaje usa el nombre.
+  assign lugar = block.settings.store_whatsapp_place | strip | default: nombre
+  assign mensaje = '¡Hola! 👋💕 Vengo de la página web de Babysam y quiero información sobre la tienda ' | append: lugar | append: ' 🏪 ¿Me pueden ayudar? 😊'
 %}
+
+{%- capture wa1_href -%}{% render 'whatsapp-url', number: wa1, message: mensaje %}{%- endcapture -%}
+{%- capture wa2_href -%}{% render 'whatsapp-url', number: wa2, message: mensaje %}{%- endcapture -%}
 
 <article class="store-card" {{ block.shopify_attributes }}>
   {%- if imagen != blank -%}
@@ -129,7 +121,7 @@
         {%- if wa1 != blank -%}
           <a
             class="store-card__wa"
-            href="https://api.whatsapp.com/send?phone={{ wa1 }}&amp;text={{ mensaje_url }}"
+            href="{{ wa1_href }}"
             target="_blank"
             rel="noopener"
           >
@@ -145,7 +137,7 @@
         {%- if wa2 != blank -%}
           <a
             class="store-card__wa"
-            href="https://api.whatsapp.com/send?phone={{ wa2 }}&amp;text={{ mensaje_url }}"
+            href="{{ wa2_href }}"
             target="_blank"
             rel="noopener"
           >
@@ -292,6 +284,12 @@
       "id": "store_whatsapp_2_label",
       "label": "Etiqueta del WhatsApp 2",
       "default": "Línea 2"
+    },
+    {
+      "type": "text",
+      "id": "store_whatsapp_place",
+      "label": "Ubicación para WhatsApp",
+      "info": "Cómo se nombra la tienda en el mensaje: «…información sobre la tienda [esto] 🏪». Vacío = nombre de la tienda."
     }
   ],
   "presets": [
