@@ -78,6 +78,7 @@
   .whatsapp-cod {
     display: block;
     width: 100%;
+    container-type: inline-size;
   }
 
   /* Verde WhatsApp oscurecido: el #25D366 de la marca con texto blanco da 1.98:1; #15803D da
@@ -98,11 +99,24 @@
     color: #fff;
     font-family: var(--font-body--family);
     font-weight: 600;
-    font-size: 1.0625rem;
-    line-height: 1.2;
+    /* Mobile: tamaño legible; si el texto no cabe baja a dos líneas equilibradas y centradas. */
+    font-size: 1rem;
+    line-height: 1.3;
     text-align: center;
+    text-wrap: balance;
     text-decoration: none;
     transition: background-color var(--animation-speed) var(--animation-easing);
+  }
+
+  /* Desktop: una sola línea. El texto por defecto medido en Poppins 600 ocupa 23,2 px por cada
+     px de fuente, más ~70 px fijos (ícono 22 + gap 8 + padding 2×20). El tamaño sale del ancho
+     del propio botón (100cqi) para caber justo: 17 px en columnas anchas, hasta 14 px en las
+     angostas (cabe en una línea desde ~395 px de botón). Sin nowrap a propósito: si el texto se
+     cambia en el editor por uno más largo, baja a dos líneas en vez de salirse del botón. */
+  @media screen and (min-width: 750px) {
+    .whatsapp-cod__button {
+      font-size: clamp(0.875rem, calc((100cqi - 72px) / 23.6), 1.0625rem);
+    }
   }
 
   .whatsapp-cod__button:hover {
