@@ -43,19 +43,30 @@
     endif
   endif
 
+  # Números y ubicación: si la tarjeta está conectada a una sede, salen de Configuración del
+  # tema → "Sedes y WhatsApp" (la misma fuente que usa el footer); si no, de sus propios campos.
   # Normalización del número y codificación del mensaje: snippets/whatsapp-url.liquid.
-  assign wa1 = block.settings.store_whatsapp_1 | strip
-  assign wa2 = block.settings.store_whatsapp_2 | strip
+  assign sede = block.settings.store_sede | default: 'manual'
+  if sede == 'manual'
+    assign wa1 = block.settings.store_whatsapp_1 | strip
+    assign wa2 = block.settings.store_whatsapp_2 | strip
+    # La zona (Centro / Sur) es un setting del bloque padre y la tarjeta no la ve: por eso cada
+    # tienda trae su propia "Ubicación para WhatsApp". Vacía, el mensaje usa el nombre.
+    assign lugar = block.settings.store_whatsapp_place | strip | default: nombre
+  else
+    assign clave_wa1 = 'sede_' | append: sede | append: '_wa1'
+    assign clave_wa2 = 'sede_' | append: sede | append: '_wa2'
+    assign clave_lugar = 'sede_' | append: sede | append: '_lugar'
+    assign wa1 = settings[clave_wa1] | strip
+    assign wa2 = settings[clave_wa2] | strip
+    assign lugar = settings[clave_lugar] | strip | default: nombre
+  endif
 
   assign wa1_label = block.settings.store_whatsapp_1_label | default: 'WhatsApp'
   assign wa2_label = block.settings.store_whatsapp_2_label | default: 'WhatsApp'
-
-  # La zona (Centro / Sur) es un setting del bloque padre y la tarjeta no la ve: por eso cada
-  # tienda trae su propia "Ubicación para WhatsApp". Vacía, el mensaje usa el nombre.
-  assign lugar = block.settings.store_whatsapp_place | strip | default: nombre
-  assign mensaje = '¡Hola! 👋💕 Vengo de la página web de Babysam y quiero información sobre la tienda ' | append: lugar | append: ' 🏪 ¿Me pueden ayudar? 😊'
 %}
 
+{%- capture mensaje -%}{% render 'whatsapp-mensaje-sede', lugar: lugar %}{%- endcapture -%}
 {%- capture wa1_href -%}{% render 'whatsapp-url', number: wa1, message: mensaje %}{%- endcapture -%}
 {%- capture wa2_href -%}{% render 'whatsapp-url', number: wa2, message: mensaje %}{%- endcapture -%}
 
@@ -263,10 +274,24 @@
       "content": "WhatsApp"
     },
     {
+      "type": "select",
+      "id": "store_sede",
+      "label": "Sede",
+      "info": "Con una sede elegida, los números y la ubicación salen de Configuración del tema → Sedes y WhatsApp (lo mismo que muestra el footer).",
+      "options": [
+        { "value": "manual", "label": "Escribir los números acá" },
+        { "value": "ropa", "label": "Babysam Ropa (Centro)" },
+        { "value": "principal", "label": "Babysam Tienda Principal (Centro)" },
+        { "value": "sur", "label": "Babysam Sur (Capri)" }
+      ],
+      "default": "manual"
+    },
+    {
       "type": "text",
       "id": "store_whatsapp_1",
       "label": "WhatsApp 1",
-      "info": "Solo el número, sin +57. Se normaliza solo."
+      "info": "Solo el número, sin +57. Se normaliza solo.",
+      "visible_if": "{{ block.settings.store_sede == 'manual' }}"
     },
     {
       "type": "text",
@@ -277,7 +302,8 @@
     {
       "type": "text",
       "id": "store_whatsapp_2",
-      "label": "WhatsApp 2 (opcional)"
+      "label": "WhatsApp 2 (opcional)",
+      "visible_if": "{{ block.settings.store_sede == 'manual' }}"
     },
     {
       "type": "text",
@@ -289,7 +315,8 @@
       "type": "text",
       "id": "store_whatsapp_place",
       "label": "Ubicación para WhatsApp",
-      "info": "Cómo se nombra la tienda en el mensaje: «…información sobre la tienda [esto] 🏪». Vacío = nombre de la tienda."
+      "info": "Cómo se nombra la tienda en el mensaje: «…información sobre la tienda [esto] 🏪». Vacío = nombre de la tienda.",
+      "visible_if": "{{ block.settings.store_sede == 'manual' }}"
     }
   ],
   "presets": [

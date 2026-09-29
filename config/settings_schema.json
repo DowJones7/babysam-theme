@@ -2313,5 +2313,102 @@
         "default": "equal-width-buttons"
       }
     ]
+  },
+  {
+    "name": "Sedes y WhatsApp",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Única fuente de los números de WhatsApp de las sedes: los leen el panel «Nuestras tiendas» (cada tarjeta elige su sede) y el footer."
+      },
+      {
+        "type": "header",
+        "content": "Sede Centro — Babysam Ropa"
+      },
+      {
+        "type": "text",
+        "id": "sede_ropa_nombre",
+        "label": "Nombre",
+        "default": "Babysam Ropa"
+      },
+      {
+        "type": "text",
+        "id": "sede_ropa_lugar",
+        "label": "Ubicación para el mensaje de WhatsApp",
+        "info": "«…información sobre la tienda [esto] 🏪».",
+        "default": "Babysam Ropa, Centro"
+      },
+      {
+        "type": "text",
+        "id": "sede_ropa_wa1",
+        "label": "WhatsApp línea 1",
+        "info": "Con o sin 57; se normaliza solo.",
+        "default": "3216243002"
+      },
+      {
+        "type": "text",
+        "id": "sede_ropa_wa2",
+        "label": "WhatsApp línea 2 (opcional)"
+      },
+      {
+        "type": "header",
+        "content": "Sede Centro — Babysam Tienda Principal"
+      },
+      {
+        "type": "text",
+        "id": "sede_principal_nombre",
+        "label": "Nombre",
+        "default": "Babysam Tienda Principal"
+      },
+      {
+        "type": "text",
+        "id": "sede_principal_lugar",
+        "label": "Ubicación para el mensaje de WhatsApp",
+        "info": "«…información sobre la tienda [esto] 🏪».",
+        "default": "Babysam Tienda Principal, Centro"
+      },
+      {
+        "type": "text",
+        "id": "sede_principal_wa1",
+        "label": "WhatsApp línea 1",
+        "info": "Con o sin 57; se normaliza solo.",
+        "default": "3166569000"
+      },
+      {
+        "type": "text",
+        "id": "sede_principal_wa2",
+        "label": "WhatsApp línea 2 (opcional)",
+        "default": "3224520915"
+      },
+      {
+        "type": "header",
+        "content": "Sede Sur (Capri)"
+      },
+      {
+        "type": "text",
+        "id": "sede_sur_nombre",
+        "label": "Nombre",
+        "default": "Babysam Sur"
+      },
+      {
+        "type": "text",
+        "id": "sede_sur_lugar",
+        "label": "Ubicación para el mensaje de WhatsApp",
+        "info": "«…información sobre la tienda [esto] 🏪».",
+        "default": "Babysam Sur, Capri"
+      },
+      {
+        "type": "text",
+        "id": "sede_sur_wa1",
+        "label": "WhatsApp línea 1",
+        "info": "Con o sin 57; se normaliza solo.",
+        "default": "3102367180"
+      },
+      {
+        "type": "text",
+        "id": "sede_sur_wa2",
+        "label": "WhatsApp línea 2 (opcional)"
+      }
+    ]
   }
 ]

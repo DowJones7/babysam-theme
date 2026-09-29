@@ -83,6 +83,18 @@
     "variant_swatch_height": 30,
     "variant_button_radius": 100,
     "variant_button_width": "equal-width-buttons",
+    "sede_ropa_nombre": "Babysam Ropa",
+    "sede_ropa_lugar": "Babysam Ropa, Centro",
+    "sede_ropa_wa1": "3216243002",
+    "sede_ropa_wa2": "",
+    "sede_principal_nombre": "Babysam Tienda Principal",
+    "sede_principal_lugar": "Babysam Tienda Principal, Centro",
+    "sede_principal_wa1": "3166569000",
+    "sede_principal_wa2": "3224520915",
+    "sede_sur_nombre": "Babysam Sur",
+    "sede_sur_lugar": "Babysam Sur, Capri",
+    "sede_sur_wa1": "3102367180",
+    "sede_sur_wa2": "",
     "content_for_index": [],
     "color_schemes": {
       "scheme-1": {

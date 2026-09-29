@@ -13,6 +13,7 @@
   "sections": {
     "footer": {
       "type": "footer",
+      "disabled": true,
       "blocks": {
         "group_contact": {
           "type": "group",
@@ -260,9 +261,94 @@
         "padding-block-start": 20,
         "padding-block-end": 0
       }
+    },
+    "footer_babysam": {
+      "type": "footer-babysam",
+      "blocks": {
+        "link_quienes": {
+          "type": "link",
+          "settings": {
+            "label": "Quiénes somos",
+            "url": "shopify://pages/catalogo",
+            "privacy": false
+          }
+        },
+        "link_regala": {
+          "type": "link",
+          "settings": {
+            "label": "Regala felicidad",
+            "url": "shopify://pages/bonos-de-regalo-babysam",
+            "privacy": false
+          }
+        },
+        "link_baby_shower": {
+          "type": "link",
+          "settings": {
+            "label": "Baby shower",
+            "url": "shopify://pages/baby-shower",
+            "privacy": false
+          }
+        },
+        "link_contacto": {
+          "type": "link",
+          "settings": {
+            "label": "Contáctanos",
+            "url": "shopify://pages/contact",
+            "privacy": false
+          }
+        },
+        "link_privacidad": {
+          "type": "link",
+          "settings": {
+            "label": "Política de privacidad",
+            "url": "",
+            "privacy": true
+          }
+        }
+      },
+      "block_order": [
+        "link_quienes",
+        "link_regala",
+        "link_baby_shower",
+        "link_contacto",
+        "link_privacidad"
+      ],
+      "name": "Footer Babysam",
+      "settings": {
+        "logo_height": 56,
+        "logo_height_mobile": 52,
+        "tagline": "Todo para tu bebé, en un solo lugar 💕",
+        "facebook_url": "https://www.facebook.com/share/1Ecr1gN2FS/?mibextid=wwXIfr",
+        "instagram_url": "https://www.instagram.com/babysamcolombia?igsh=MXkxdW5kNjg3MDYzeQ%3D%3D&utm_source=qr",
+        "tiktok_url": "https://www.tiktok.com/@babysamcolombia",
+        "show_whatsapp": true,
+        "collections_heading": "Categorías",
+        "collections": [
+          "accesorios",
+          "coches",
+          "coleccion-mi-primer-dia",
+          "lenceria",
+          "panaleras-1",
+          "teteros",
+          "cuidado-materno",
+          "lactancia",
+          "aseo",
+          "baneras",
+          "gimnasios",
+          "silla-de-carro",
+          "sillas-mecedoras"
+        ],
+        "info_heading": "Información",
+        "sedes_heading": "Nuestras sedes",
+        "centro_label": "Sede Centro",
+        "sur_label": "Sede Sur (Capri)",
+        "privacy_label": "Política de privacidad",
+        "payment_types": "visa,master,american_express,pse,nequi,daviplata,bancolombia,addi"
+      }
     }
   },
   "order": [
-    "footer"
+    "footer",
+    "footer_babysam"
   ]
 }

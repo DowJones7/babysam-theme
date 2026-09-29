@@ -1,0 +1,715 @@
+{%- comment -%}
+  Footer Babysam: 4 columnas (Marca, Categorías, Información, Nuestras sedes) + barra inferior.
+
+  Reemplaza a la sección genérica `footer` del grupo (que queda desactivada, no borrada, en
+  sections/footer-group.json: para volver atrás basta con reactivarla y ocultar esta).
+
+  - Números de las sedes: NO viven acá. Salen de Configuración del tema → "Sedes y WhatsApp"
+    (config/settings_schema.json), la misma fuente que el panel «Nuestras tiendas». El mensaje
+    es el mismo del panel (snippets/whatsapp-mensaje-sede.liquid) y el enlace lo arma
+    snippets/whatsapp-url.liquid.
+  - Categorías: collection_list precargado con las colecciones del catálogo del home.
+  - Información: bloques de enlace editables desde el Customizer.
+  - Medios de pago: payment_type_svg_tag (librería oficial de Shopify; trae los 8 de Colombia).
+  - Mobile: Categorías e Información en acordeón (<details>), cerrados en mobile y siempre
+    abiertos en desktop; sin JS quedan abiertos.
+  - Contraste sobre el crema #fffaf7: texto #5a3f28 (9,3:1), títulos Fredoka 700 en carmesí
+    #e44068 (3,87:1, válido por ser texto grande), hover de links #d2345b (4,6:1), círculos de
+    redes #3d8a7d con ícono blanco (4,1:1).
+{%- endcomment -%}
+
+{%- liquid
+  assign logo_alto = section.settings.logo_height | default: 56
+  assign logo_alto_m = section.settings.logo_height_mobile | default: 52
+  assign politica = shop.privacy_policy.url | default: '/policies/privacy-policy'
+
+  assign sedes_centro = 'ropa,principal' | split: ','
+-%}
+
+{%- comment -%} Acordeones: abiertos y fijos desde 750 px, cerrados (y plegables) en mobile. {%- endcomment -%}
+{%- capture js_acordeon -%}
+  (function () {
+    var root = document.currentScript && document.currentScript.closest('.footer-bs');
+    if (!root) return;
+    var mq = window.matchMedia('(min-width: 750px)');
+    var items = root.querySelectorAll('details[data-footer-acc]');
+    function aplicar() {
+      items.forEach(function (d) { d.open = mq.matches; });
+    }
+    items.forEach(function (d) {
+      d.querySelector('summary').addEventListener('click', function (e) {
+        if (mq.matches) e.preventDefault();
+      });
+    });
+    aplicar();
+    mq.addEventListener('change', aplicar);
+  })();
+{%- endcapture -%}
+
+<footer class="footer-bs" role="contentinfo">
+  <div class="section section--page-width">
+  <div class="footer-bs__inner">
+    <div class="footer-bs__grid">
+      {%- comment -%} 1. Marca {%- endcomment -%}
+      <div class="footer-bs__col footer-bs__col--marca">
+        <a class="footer-bs__logo" href="{{ routes.root_url }}" aria-label="{{ shop.name | escape }}">
+          {%- if settings.logo -%}
+            {%- liquid
+              # Ancho pedido al CDN: 2× el ancho en pantalla (retina), sin pasar del original.
+              assign logo_ancho = logo_alto | times: settings.logo.aspect_ratio | times: 2 | ceil
+              if logo_ancho > settings.logo.width
+                assign logo_ancho = settings.logo.width
+              endif
+              assign logo_style = '--footer-logo-h: ' | append: logo_alto | append: 'px; --footer-logo-h-m: ' | append: logo_alto_m | append: 'px;'
+            -%}
+            {{
+              settings.logo
+              | image_url: width: logo_ancho
+              | image_tag: class: 'footer-bs__logo-img', alt: shop.name, loading: 'lazy', style: logo_style
+            }}
+          {%- else -%}
+            <span class="footer-bs__logo-text">{{ shop.name }}</span>
+          {%- endif -%}
+        </a>
+
+        {%- if section.settings.tagline != blank -%}
+          <p class="footer-bs__tagline">{{ section.settings.tagline | escape }}</p>
+        {%- endif -%}
+
+        <ul class="footer-bs__social list-unstyled" role="list">
+          {%- liquid
+            assign redes = 'facebook,instagram,tiktok' | split: ','
+          -%}
+          {%- for red in redes -%}
+            {%- assign clave = red | append: '_url' -%}
+            {%- assign url = section.settings[clave] -%}
+            {%- if url != blank -%}
+              <li>
+                <a class="footer-bs__social-link" href="{{ url }}" target="_blank" rel="noopener noreferrer" aria-label="{{ red | capitalize }} (se abre en una pestaña nueva)">
+                  <svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                    {%- render 'icon', icon: red -%}
+                  </svg>
+                </a>
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+          {%- if section.settings.show_whatsapp and settings.sede_sur_wa1 != blank -%}
+            {%- capture wa_msg -%}{% render 'whatsapp-mensaje-sede', lugar: settings.sede_sur_lugar %}{%- endcapture -%}
+            <li>
+              <a class="footer-bs__social-link" href="{% render 'whatsapp-url', number: settings.sede_sur_wa1, message: wa_msg %}" target="_blank" rel="noopener" aria-label="WhatsApp (se abre en una pestaña nueva)">
+                <svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                  {%- render 'icon', icon: 'whatsapp' -%}
+                </svg>
+              </a>
+            </li>
+          {%- endif -%}
+        </ul>
+      </div>
+
+      {%- comment -%} 2. Categorías {%- endcomment -%}
+      {%- if section.settings.collections != blank -%}
+        <details class="footer-bs__col footer-bs__acc" data-footer-acc open>
+          <summary class="footer-bs__summary">
+            <h2 class="footer-bs__title">{{ section.settings.collections_heading | escape }}</h2>
+            <span class="footer-bs__chevron" aria-hidden="true"></span>
+          </summary>
+          <ul class="footer-bs__links list-unstyled" role="list">
+            {%- for c in section.settings.collections -%}
+              <li><a href="{{ c.url }}">{{ c.title | escape }}</a></li>
+            {%- endfor -%}
+          </ul>
+        </details>
+      {%- endif -%}
+
+      {%- comment -%} 3. Información {%- endcomment -%}
+      {%- if section.blocks.size > 0 -%}
+        <details class="footer-bs__col footer-bs__acc" data-footer-acc open>
+          <summary class="footer-bs__summary">
+            <h2 class="footer-bs__title">{{ section.settings.info_heading | escape }}</h2>
+            <span class="footer-bs__chevron" aria-hidden="true"></span>
+          </summary>
+          <ul class="footer-bs__links list-unstyled" role="list">
+            {%- for b in section.blocks -%}
+              {%- liquid
+                assign destino = b.settings.url
+                if b.settings.privacy
+                  assign destino = politica
+                endif
+              -%}
+              {%- if b.settings.label != blank and destino != blank -%}
+                <li {{ b.shopify_attributes }}><a href="{{ destino }}">{{ b.settings.label | escape }}</a></li>
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
+        </details>
+      {%- endif -%}
+
+      {%- comment -%} 4. Nuestras sedes: nombre + número, sin direcciones {%- endcomment -%}
+      <div class="footer-bs__col footer-bs__col--sedes">
+        <h2 class="footer-bs__title">{{ section.settings.sedes_heading | escape }}</h2>
+
+        {%- capture sedes_html -%}
+          {%- for grupo in (1..2) -%}
+            {%- if grupo == 1 -%}
+              {%- assign claves = sedes_centro -%}
+              {%- assign titulo_grupo = section.settings.centro_label -%}
+            {%- else -%}
+              {%- assign claves = 'sur' | split: ',' -%}
+              {%- assign titulo_grupo = section.settings.sur_label -%}
+            {%- endif -%}
+            <div class="footer-bs__sede-grupo">
+              <p class="footer-bs__sede-titulo">{{ titulo_grupo | escape }}</p>
+              <ul class="footer-bs__sedes list-unstyled" role="list">
+                {%- for k in claves -%}
+                  {%- liquid
+                    assign k_nombre = 'sede_' | append: k | append: '_nombre'
+                    assign k_lugar = 'sede_' | append: k | append: '_lugar'
+                    assign k_wa1 = 'sede_' | append: k | append: '_wa1'
+                    assign k_wa2 = 'sede_' | append: k | append: '_wa2'
+                    assign nombre = settings[k_nombre]
+                    assign lugar = settings[k_lugar] | default: nombre
+                  -%}
+                  {%- capture msg -%}{% render 'whatsapp-mensaje-sede', lugar: lugar %}{%- endcapture -%}
+                  {%- assign numeros = settings[k_wa1] | append: '|' | append: settings[k_wa2] | split: '|' -%}
+                  {%- assign hay = false -%}
+                  {%- for n in numeros -%}{%- if n != blank -%}{%- assign hay = true -%}{%- endif -%}{%- endfor -%}
+                  {%- if hay -%}
+                    <li class="footer-bs__sede">
+                      {%- if grupo == 1 -%}<span class="footer-bs__sede-nombre">{{ nombre | escape }}</span>{%- endif -%}
+                      {%- for n in numeros -%}
+                        {%- if n != blank -%}
+                          {%- liquid
+                            assign dig = n | remove: ' ' | remove: '-' | remove: '(' | remove: ')' | remove: '+' | remove: '.'
+                            assign pref = dig | slice: 0, 2
+                            if pref == '57' and dig.size == 12
+                              assign dig = dig | slice: 2, 10
+                            endif
+                            # Número legible: 3216243002 → 321 624 3002.
+                            if dig.size == 10
+                              assign p1 = dig | slice: 0, 3
+                              assign p2 = dig | slice: 3, 3
+                              assign p3 = dig | slice: 6, 4
+                              assign visible = p1 | append: ' ' | append: p2 | append: ' ' | append: p3
+                            else
+                              assign visible = dig
+                            endif
+                          -%}
+                          <a class="footer-bs__numero" href="{% render 'whatsapp-url', number: n, message: msg %}" target="_blank" rel="noopener">
+                            <svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                              {%- render 'icon', icon: 'whatsapp' -%}
+                            </svg>
+                            <span>{{ visible }}</span>
+                            <span class="visually-hidden">(WhatsApp de {{ nombre | escape }}, se abre en una pestaña nueva)</span>
+                          </a>
+                        {%- endif -%}
+                      {%- endfor -%}
+                    </li>
+                  {%- endif -%}
+                {%- endfor -%}
+              </ul>
+            </div>
+          {%- endfor -%}
+        {%- endcapture -%}
+        {{ sedes_html }}
+      </div>
+    </div>
+
+    {%- comment -%} Barra inferior {%- endcomment -%}
+    <div class="footer-bs__bottom">
+      <div class="footer-bs__legal">
+        <span>© {{ 'now' | date: '%Y' }} {{ shop.name }}</span>
+        <span aria-hidden="true">·</span>
+        <a href="{{ politica }}">{{ section.settings.privacy_label | escape }}</a>
+        <span aria-hidden="true">·</span>
+        {%- comment -%} Crédito obligatorio por la licencia de las ilustraciones de Storyset. {%- endcomment -%}
+        <a href="https://storyset.com/people" target="_blank" rel="noopener">People illustrations by Storyset</a>
+      </div>
+
+      {%- assign tipos_pago = section.settings.payment_types | remove: ' ' | split: ',' -%}
+      {%- if tipos_pago.size > 0 -%}
+        <div class="footer-bs__pagos">
+          <span class="visually-hidden">{{ 'blocks.payment_methods' | t }}</span>
+          <ul class="footer-bs__pagos-lista list-unstyled" role="list">
+            {%- for tipo in tipos_pago -%}
+              {%- if tipo != blank -%}
+                <li>{{ tipo | payment_type_svg_tag: class: 'icon icon--full-color footer-bs__pago' }}</li>
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+  </div>
+
+  <script>{{ js_acordeon }}</script>
+</footer>
+
+{% stylesheet %}
+  .footer-bs {
+    --fbs-crema: #fffaf7;
+    --fbs-texto: #5a3f28;
+    --fbs-titulo: #e44068;
+    --fbs-hover: #d2345b;
+    --fbs-turquesa: #78c0b3;
+    --fbs-redes: #3d8a7d;
+
+    background-color: var(--fbs-crema);
+    color: var(--fbs-texto);
+    border-top: 3px solid var(--fbs-turquesa);
+    font-family: var(--font-body--family);
+  }
+
+  .footer-bs__inner {
+    padding-block: var(--padding-5xl) var(--padding-xl);
+  }
+
+  .footer-bs__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--gap-2xl);
+  }
+
+  @media screen and (min-width: 750px) {
+    .footer-bs__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--gap-3xl) var(--gap-2xl);
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .footer-bs__grid {
+      grid-template-columns: 1.3fr 1fr 1fr 1fr;
+    }
+  }
+
+  .footer-bs__col {
+    min-width: 0;
+  }
+
+  /* Títulos de columna: Fredoka 700 (regla global de h2 en base.css) en carmesí. */
+  .footer-bs__title {
+    margin: 0 0 var(--margin-md);
+    color: var(--fbs-titulo);
+    font-size: 1.375rem;
+    line-height: 1.2;
+  }
+
+  .footer-bs__summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    list-style: none;
+    cursor: pointer;
+  }
+
+  .footer-bs__summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .footer-bs__chevron {
+    width: 10px;
+    height: 10px;
+    margin-block-end: var(--margin-md);
+    border-right: 2px solid var(--fbs-titulo);
+    border-bottom: 2px solid var(--fbs-titulo);
+    transform: rotate(45deg);
+    transition: transform 200ms ease;
+  }
+
+  .footer-bs__acc[open] .footer-bs__chevron {
+    transform: rotate(-135deg);
+  }
+
+  @media screen and (min-width: 750px) {
+    .footer-bs__summary {
+      cursor: default;
+    }
+
+    .footer-bs__chevron {
+      display: none;
+    }
+  }
+
+  .footer-bs__links {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-xs);
+    margin: 0;
+  }
+
+  .footer-bs a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 200ms ease;
+  }
+
+  .footer-bs__links a:hover,
+  .footer-bs__legal a:hover,
+  .footer-bs__numero:hover {
+    color: var(--fbs-hover);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .footer-bs a:focus-visible {
+    outline: 2px solid var(--fbs-redes);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  /* Marca */
+  .footer-bs__col--marca {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-md);
+  }
+
+  .footer-bs__logo-img {
+    display: block;
+    width: auto;
+    height: var(--footer-logo-h);
+    max-width: 100%;
+    object-fit: contain;
+  }
+
+  .footer-bs__tagline {
+    margin: 0;
+    font-weight: 600;
+  }
+
+  .footer-bs__social {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--gap-sm);
+    margin: 0;
+  }
+
+  /* Círculos de 48 px: #3d8a7d con ícono blanco (4,1:1); hover: se elevan y pasan a carmesí. */
+  .footer-bs__social-link {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: var(--fbs-redes);
+    color: #fff;
+    transition: background-color 200ms ease, transform 200ms ease, box-shadow 200ms ease;
+  }
+
+  .footer-bs__social-link svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .footer-bs__social-link:hover {
+    background-color: var(--fbs-hover);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 14px rgb(210 52 91 / 0.3);
+  }
+
+  /* Sedes */
+  .footer-bs__sede-grupo + .footer-bs__sede-grupo {
+    margin-block-start: var(--margin-lg);
+  }
+
+  .footer-bs__sede-titulo {
+    margin: 0 0 var(--margin-2xs);
+    font-weight: 700;
+  }
+
+  .footer-bs__sedes {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-xs);
+    margin: 0;
+  }
+
+  .footer-bs__sede {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--gap-2xs) var(--gap-sm);
+  }
+
+  .footer-bs__sede-nombre {
+    flex-basis: 100%;
+  }
+
+  .footer-bs__numero {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--gap-2xs);
+    min-height: 32px;
+    font-weight: 600;
+  }
+
+  .footer-bs__numero svg {
+    width: 18px;
+    height: 18px;
+    color: var(--fbs-redes);
+  }
+
+  /* Barra inferior */
+  .footer-bs__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--gap-md);
+    margin-block-start: var(--margin-4xl);
+    padding-block-start: var(--padding-lg);
+    border-top: 1px solid rgb(90 63 40 / 0.18);
+    font-size: 0.8125rem;
+  }
+
+  .footer-bs__legal {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--gap-2xs) var(--gap-xs);
+  }
+
+  .footer-bs__pagos-lista {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--gap-xs);
+    margin: 0;
+  }
+
+  .footer-bs__pago {
+    display: block;
+    width: auto;
+    height: 26px;
+  }
+
+  /* Mobile: todo apilado; marca centrada; pagos arriba y copyright abajo, centrados. */
+  @media screen and (max-width: 749px) {
+    .footer-bs__col--marca {
+      align-items: center;
+      text-align: center;
+    }
+
+    .footer-bs__logo-img {
+      height: var(--footer-logo-h-m);
+    }
+
+    .footer-bs__social {
+      justify-content: center;
+    }
+
+    .footer-bs__acc {
+      border-bottom: 1px solid rgb(90 63 40 / 0.18);
+      padding-block-end: var(--padding-xs);
+    }
+
+    .footer-bs__acc .footer-bs__summary {
+      min-height: 44px;
+    }
+
+    .footer-bs__acc .footer-bs__title {
+      margin-block-end: 0;
+    }
+
+    .footer-bs__acc .footer-bs__chevron {
+      margin-block-end: 0;
+    }
+
+    .footer-bs__acc .footer-bs__links {
+      padding-block: var(--padding-xs) var(--padding-sm);
+    }
+
+    .footer-bs__bottom {
+      flex-direction: column-reverse;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .footer-bs__legal,
+    .footer-bs__pagos-lista {
+      justify-content: center;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .footer-bs a,
+    .footer-bs__social-link,
+    .footer-bs__chevron {
+      transition: none;
+    }
+
+    .footer-bs__social-link:hover {
+      transform: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Footer Babysam",
+  "tag": "div",
+  "class": "footer-babysam-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Marca"
+    },
+    {
+      "type": "range",
+      "id": "logo_height",
+      "label": "Alto del logo (escritorio)",
+      "min": 32,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "default": 56,
+      "info": "El logo es la misma imagen del header. Nítido hasta 72 px con el archivo actual (500 px de ancho)."
+    },
+    {
+      "type": "range",
+      "id": "logo_height_mobile",
+      "label": "Alto del logo (móvil)",
+      "min": 32,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "default": 52
+    },
+    {
+      "type": "text",
+      "id": "tagline",
+      "label": "Frase",
+      "default": "Todo para tu bebé, en un solo lugar 💕"
+    },
+    {
+      "type": "url",
+      "id": "facebook_url",
+      "label": "Facebook"
+    },
+    {
+      "type": "url",
+      "id": "instagram_url",
+      "label": "Instagram"
+    },
+    {
+      "type": "url",
+      "id": "tiktok_url",
+      "label": "TikTok"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_whatsapp",
+      "label": "Mostrar WhatsApp en las redes",
+      "info": "Usa la línea 1 de la Sede Sur (Configuración del tema → Sedes y WhatsApp).",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Categorías"
+    },
+    {
+      "type": "text",
+      "id": "collections_heading",
+      "label": "Título",
+      "default": "Categorías"
+    },
+    {
+      "type": "collection_list",
+      "id": "collections",
+      "label": "Colecciones",
+      "limit": 20
+    },
+    {
+      "type": "header",
+      "content": "Información"
+    },
+    {
+      "type": "text",
+      "id": "info_heading",
+      "label": "Título",
+      "default": "Información"
+    },
+    {
+      "type": "paragraph",
+      "content": "Los enlaces se agregan como bloques «Enlace» de esta sección."
+    },
+    {
+      "type": "header",
+      "content": "Nuestras sedes"
+    },
+    {
+      "type": "paragraph",
+      "content": "Nombres y números: Configuración del tema → Sedes y WhatsApp (los mismos que usa el panel «Nuestras tiendas»)."
+    },
+    {
+      "type": "text",
+      "id": "sedes_heading",
+      "label": "Título",
+      "default": "Nuestras sedes"
+    },
+    {
+      "type": "text",
+      "id": "centro_label",
+      "label": "Título del grupo Centro",
+      "default": "Sede Centro"
+    },
+    {
+      "type": "text",
+      "id": "sur_label",
+      "label": "Título del grupo Sur",
+      "default": "Sede Sur (Capri)"
+    },
+    {
+      "type": "header",
+      "content": "Barra inferior"
+    },
+    {
+      "type": "text",
+      "id": "privacy_label",
+      "label": "Texto del enlace a la política de privacidad",
+      "default": "Política de privacidad"
+    },
+    {
+      "type": "text",
+      "id": "payment_types",
+      "label": "Medios de pago",
+      "info": "Separados por coma, con los nombres de la librería de Shopify (visa, master, american_express, pse, nequi, daviplata, bancolombia, addi…).",
+      "default": "visa,master,american_express,pse,nequi,daviplata,bancolombia,addi"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "link",
+      "name": "Enlace",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Texto"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Enlace"
+        },
+        {
+          "type": "checkbox",
+          "id": "privacy",
+          "label": "Es la política de privacidad",
+          "info": "Enlaza a la política de privacidad de la tienda (ignora el enlace de arriba).",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Footer Babysam"
+    }
+  ],
+  "enabled_on": {
+    "groups": ["footer"]
+  }
+}
+{% endschema %}

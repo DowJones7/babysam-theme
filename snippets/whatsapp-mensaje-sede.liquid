@@ -1,0 +1,15 @@
+{%- doc -%}
+  Mensaje de WhatsApp para escribirle a una sede. Un solo texto para el panel «Nuestras tiendas»
+  (blocks/_store-card.liquid) y el footer (sections/footer-babysam.liquid).
+
+  Se emite con `echo` dentro de un tag liquid para que el texto salga sin espacios ni saltos de
+  línea alrededor (va tal cual al mensaje).
+
+  @param {string} lugar - Cómo se nombra la tienda, p. ej. "Babysam Sur, Capri".
+
+  @example
+  {%- capture mensaje -%}{% render 'whatsapp-mensaje-sede', lugar: 'Babysam Sur, Capri' %}{%- endcapture -%}
+{%- enddoc -%}
+{%- liquid
+  echo '¡Hola! 👋💕 Vengo de la página web de Babysam y quiero información sobre la tienda ' | append: lugar | append: ' 🏪 ¿Me pueden ayudar? 😊'
+-%}
