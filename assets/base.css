@@ -4452,3 +4452,34 @@ text-component {
 .product-information :is(shopify-accelerated-checkout, shopify-accelerated-checkout-cart) {
   --shopify-accelerated-checkout-button-border-radius: var(--babysam-pill-radius) !important;
 }
+
+/* Agregar al carrito: pulso sutil e intermitente para llamar la atención.
+   Ciclo de 4,5 s en el que el botón está quieto ~88% del tiempo y late una vez al final (solo
+   transform: lo resuelve el compositor, sin repintar ni mover el layout). Se detiene al pasar
+   el mouse o enfocarlo con teclado, no corre si el botón está deshabilitado (agotado) y no
+   existe para quien pidió reducir el movimiento. */
+@keyframes babysam-atc-pulse {
+  0%,
+  88%,
+  100% {
+    transform: scale(1);
+  }
+
+  92% {
+    transform: scale(1.04);
+  }
+
+  96% {
+    transform: scale(0.99);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .product-information .add-to-cart-button:not(:disabled) {
+    animation: babysam-atc-pulse 4.5s ease-in-out 2s infinite;
+  }
+
+  .product-information .add-to-cart-button:is(:hover, :focus-visible, :active) {
+    animation: none;
+  }
+}
