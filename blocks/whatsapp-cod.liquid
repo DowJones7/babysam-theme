@@ -1,0 +1,153 @@
+{%- doc -%}
+  Botón "Compra por WhatsApp y paga contraentrega" de la ficha de producto.
+
+  El mensaje se arma COMPLETO en Liquid con los datos reales del producto (título, opciones de
+  la variante, `variant.price | money_without_trailing_zeros`, URL con la variante): nada de
+  precios escritos a mano. Cuando el cliente cambia de variante, el tema dispara `variant:update`
+  con la sección ya renderizada por el servidor para la variante nueva; assets/whatsapp-cod.js
+  solo copia de ahí el href de este mismo bloque (mismo patrón que product-price.js).
+
+  No se muestra en tarjetas de regalo: el Bono tiene su propio flujo por WhatsApp.
+{%- enddoc -%}
+
+{% liquid
+  assign product_resource = closest.product
+  if request.visual_preview_mode and product_resource == blank
+    assign product_resource = collections.all.products.first
+  endif
+%}
+
+{%- if product_resource != blank and product_resource.gift_card? == false -%}
+  {%- liquid
+    assign variant = product_resource.selected_or_first_available_variant
+    assign label = block.settings.button_label | default: 'Compra por WhatsApp y paga contraentrega'
+  -%}
+
+  {%- comment -%}
+    Mensaje línea por línea. Cada línea se agrega con `nl` (un salto real) para que el texto no
+    arrastre la indentación del archivo. Sin variantes reales se omiten las opciones; con
+    precio $0 se omite el precio.
+  {%- endcomment -%}
+  {%- liquid
+    # Salto de línea real: los literales de Liquid no interpretan "\n".
+    assign nl = '%0A' | url_decode
+    assign mensaje = '¡Hola! 👋 Quiero comprar este producto y pagar contra entrega 🚚💵' | append: nl
+    assign mensaje = mensaje | append: '🛍️ *' | append: product_resource.title | append: '*' | append: nl
+
+    unless product_resource.has_only_default_variant
+      for option in product_resource.options_with_values
+        assign valor = variant.options[forloop.index0]
+        assign mensaje = mensaje | append: '🎨 ' | append: option.name | append: ': ' | append: valor | append: nl
+      endfor
+    endunless
+
+    if variant.price > 0
+      assign precio = variant.price | money_without_trailing_zeros
+      assign mensaje = mensaje | append: '💰 Precio: ' | append: precio | append: nl
+    endif
+
+    assign mensaje = mensaje | append: request.origin | append: variant.url | append: nl
+    assign mensaje = mensaje | append: '¿Me ayudan con mi pedido? 😊'
+  -%}
+
+  <script src="{{ 'whatsapp-cod.js' | asset_url }}" type="module" fetchpriority="low"></script>
+
+  <whatsapp-cod
+    class="whatsapp-cod"
+    data-product-id="{{ product_resource.id }}"
+    {{ block.shopify_attributes }}
+  >
+    <a
+      class="whatsapp-cod__button"
+      href="{% render 'whatsapp-url', number: block.settings.whatsapp_number, message: mensaje %}"
+      target="_blank"
+      rel="noopener"
+      data-wa-cod="{{ block.id }}"
+    >
+      <svg class="whatsapp-cod__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+        <path d="M12 2a10 10 0 0 0-8.6 15.09L2 22l5.05-1.32A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.18-1.14l-.3-.18-3 .78.8-2.92-.2-.31A8.2 8.2 0 1 1 12 20.2Z" />
+        <path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.76-1.66-2.06-.17-.3-.02-.46.13-.61.14-.14.3-.35.45-.53.15-.18.2-.3.3-.5.1-.2.05-.38-.02-.53-.08-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.38-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.22 3.08c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.7.63.71.23 1.36.2 1.87.12.57-.08 1.76-.72 2-1.41.25-.7.25-1.29.18-1.41-.07-.13-.27-.2-.57-.35Z" />
+      </svg>
+      <span>{{ label | escape }}</span>
+      <span class="visually-hidden">(se abre WhatsApp en una pestaña nueva)</span>
+    </a>
+  </whatsapp-cod>
+{%- endif -%}
+
+{% stylesheet %}
+  .whatsapp-cod {
+    display: block;
+    width: 100%;
+  }
+
+  /* Verde WhatsApp oscurecido: el #25D366 de la marca con texto blanco da 1.98:1; #15803D da
+     5.02:1 (AA). Forma y tipografía: las mismas píldoras de la ficha (assets/base.css). */
+  .whatsapp-cod__button {
+    --wa-cod-bg: #15803d;
+    --wa-cod-bg-hover: #116b33;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--gap-xs);
+    width: 100%;
+    min-height: var(--height-buy-buttons, 48px);
+    padding: var(--padding-sm) var(--padding-xl);
+    border-radius: 999px;
+    background-color: var(--wa-cod-bg);
+    color: #fff;
+    font-family: var(--font-body--family);
+    font-weight: 600;
+    font-size: 1.0625rem;
+    line-height: 1.2;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color var(--animation-speed) var(--animation-easing);
+  }
+
+  .whatsapp-cod__button:hover {
+    background-color: var(--wa-cod-bg-hover);
+  }
+
+  .whatsapp-cod__button:focus-visible {
+    outline: 2px solid var(--wa-cod-bg);
+    outline-offset: 3px;
+  }
+
+  .whatsapp-cod__icon {
+    flex: 0 0 auto;
+    width: 22px;
+    height: 22px;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "WhatsApp contraentrega",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "El mensaje lleva el producto, la variante elegida, el precio y el enlace, tomados de Shopify. No aparece en tarjetas de regalo."
+    },
+    {
+      "type": "text",
+      "id": "whatsapp_number",
+      "label": "Número de WhatsApp",
+      "info": "Con o sin 57; se normaliza solo.",
+      "default": "573102367180"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Texto del botón",
+      "default": "Compra por WhatsApp y paga contraentrega"
+    }
+  ],
+  "presets": [
+    {
+      "name": "WhatsApp contraentrega"
+    }
+  ]
+}
+{% endschema %}

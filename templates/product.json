@@ -321,6 +321,15 @@
                   },
                   "block_order": []
                 },
+                "whatsapp_cod": {
+                  "type": "whatsapp-cod",
+                  "name": "WhatsApp contraentrega",
+                  "settings": {
+                    "whatsapp_number": "573102367180",
+                    "button_label": "Compra por WhatsApp y paga contraentrega"
+                  },
+                  "blocks": {}
+                },
                 "button_k7mDMN": {
                   "type": "button",
                   "name": "t:names.button",
@@ -367,6 +376,7 @@
               },
               "block_order": [
                 "buy_buttons_6p8c63",
+                "whatsapp_cod",
                 "button_k7mDMN",
                 "product_description_e8PyaT"
               ]
