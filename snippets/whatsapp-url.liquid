@@ -1,0 +1,39 @@
+{%- doc -%}
+  Arma el enlace a WhatsApp de todo el tema: un número y un mensaje entran, sale la URL lista
+  para un atributo `href` (con `&amp;`).
+
+  Usa https://api.whatsapp.com/send y NO wa.me: la redirección de wa.me reemplaza los emojis
+  (caracteres de 4 bytes en UTF-8) por "�" antes de llegar a WhatsApp Web y escritorio. En el
+  celular no se nota porque wa.me abre la app directo.
+
+  Número: solo dígitos y con 57 adelante si no lo trae (mismo criterio que tenía el panel de
+  tiendas). Mensaje: `url_encode` codifica en UTF-8 y los saltos de línea como %0A; deja los
+  espacios como "+", que se pasan a %20 para que se lean igual que con encodeURIComponent (un
+  "+" escrito en el mensaje ya sale como %2B, así que no se confunde).
+
+  Los enlaces que se arman en JS con lo que escribe el cliente (monto del Bono, formulario de
+  Baby Shower) no pueden usar este snippet; usan el mismo formato con encodeURIComponent.
+
+  @param {string} number - Número de WhatsApp, con o sin 57, espacios, guiones o "+".
+  @param {string} [message] - Texto del mensaje. Puede traer emojis, *negritas* y saltos de línea.
+
+  @example
+  {%- capture wa_href -%}{% render 'whatsapp-url', number: '310 236 7180', message: mensaje %}{%- endcapture -%}
+  <a href="{{ wa_href }}" target="_blank" rel="noopener">WhatsApp</a>
+{%- enddoc -%}
+
+{%- liquid
+  assign wa_number = number | append: '' | remove: ' ' | remove: '-' | remove: '(' | remove: ')' | remove: '+' | remove: '.'
+  if wa_number != blank
+    assign wa_prefix = wa_number | slice: 0, 2
+    unless wa_prefix == '57'
+      assign wa_number = '57' | append: wa_number
+    endunless
+  endif
+
+  echo 'https://api.whatsapp.com/send?phone=' | append: wa_number
+  if message != blank
+    assign wa_text = message | url_encode | replace: '+', '%20'
+    echo '&amp;text=' | append: wa_text
+  endif
+-%}

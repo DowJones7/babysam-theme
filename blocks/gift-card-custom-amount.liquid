@@ -93,7 +93,7 @@ Vengo de la página web y quiero regalar un *bono de regalo* 🎁
 
         <a
           class="gcca__send"
-          href="https://api.whatsapp.com/send?phone={{ wa }}"
+          href="{% render 'whatsapp-url', number: wa %}"
           target="_blank"
           rel="noopener noreferrer"
           data-gcca-send
