@@ -114,12 +114,14 @@
     padding-inline: var(--padding-sm);
     color: var(--strip-link-color);
     font-size: var(--font-size--sm);
+    /* Negrilla como el menú de escritorio (assets/base.css); el link actual sube a 700. */
+    font-weight: 600;
     white-space: nowrap;
     text-decoration: none;
   }
 
   .mobile-links-strip__link[aria-current='page'] {
-    font-weight: 600;
+    font-weight: 700;
     text-decoration: underline;
     text-decoration-thickness: 2px;
     text-underline-offset: 6px;

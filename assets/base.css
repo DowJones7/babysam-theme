@@ -4483,3 +4483,16 @@ text-component {
     animation: none;
   }
 }
+
+/* Header: menú principal de escritorio en negrilla (Poppins 600, ya cargada: es el peso de los
+   títulos) y separación entre links de 20 a 14 px. Medido con Chromium en theme dev: con el
+   logo a 52 px y el menú en 600, a 1280 px el último link se iba al botón "Más"; con 14 px de
+   separación caben los 7 links en una línea desde 1280 px. Solo el primer nivel del menú del
+   header (incluye los links que caen en "Más"); tamaño y color sin cambios. */
+.header-menu .menu-list__link {
+  font-weight: 600;
+}
+
+.header-menu .menu-list {
+  --menu-horizontal-gap: 0.875rem;
+}
