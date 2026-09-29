@@ -40,15 +40,45 @@
   href="{{ button_link }}"
   class="button {{ button_style }} button--desktop-{{ button_width }} button--mobile-{{ button_width_mobile }}"
   {{ button_target }}
-  {% if button_width == 'custom' %}
-    style="--button-width-desktop: {{ button_custom_width }}%;"
-  {% endif %}
-  {% if button_width_mobile == 'custom' %}
-    style="--button-width-mobile: {{ button_custom_width_mobile }}%;"
+  {%- comment -%}
+    Un solo atributo style: con los dos anchos en "custom" antes salían dos `style=` y el
+    navegador descartaba el segundo (el de mobile).
+  {%- endcomment -%}
+  {%- capture button_width_style -%}
+    {%- if button_width == 'custom' %}--button-width-desktop: {{ button_custom_width }}%;{% endif -%}
+    {%- if button_width_mobile == 'custom' %} --button-width-mobile: {{ button_custom_width_mobile }}%;{% endif -%}
+  {%- endcapture -%}
+  {% if button_width_style != blank %}
+    style="{{ button_width_style | strip }}"
   {% endif %}
 >
   {{- button_label -}}
 </a>
+
+{%- comment -%}
+  Los settings de ancho del bloque (Ajustar al contenido / Personalizado) generaban las clases
+  y variables pero ninguna regla del tema las usaba: el ancho elegido no tenía efecto. Estas
+  reglas lo implementan. "Ajustar al contenido" en desktop no lleva regla: queda como estaba.
+{%- endcomment -%}
+{% stylesheet %}
+  .button.button--desktop-custom {
+    width: var(--button-width-desktop, 100%);
+    justify-content: center;
+    text-align: center;
+  }
+
+  @media screen and (max-width: 749px) {
+    .button.button--mobile-custom {
+      width: var(--button-width-mobile, 100%);
+      justify-content: center;
+      text-align: center;
+    }
+
+    .button.button--mobile-fit-content {
+      width: fit-content;
+    }
+  }
+{% endstylesheet %}
 
 {% schema %}
 {
