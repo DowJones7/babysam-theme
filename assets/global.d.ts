@@ -26,6 +26,7 @@ declare global {
       cart_change_url: string;
       cart_update_url: string;
       cart_url: string;
+      checkout_url: string;
       predictive_search_url: string;
       search_url: string;
     };

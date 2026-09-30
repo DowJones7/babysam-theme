@@ -17,6 +17,14 @@
   endif
 %}
 
+{%- comment -%}
+  Botón "Comprar ahora" propio del tema en lugar de `{{ form | payment_button }}`. En esta tienda
+  (Colombia, sin Shopify Payments) el botón dinámico solo pintaba el "Comprar ahora" sin marca
+  (no hay Shop Pay, Apple Pay ni Google Pay que ofrecer), con una tipografía que el tema no puede
+  cambiar. Este botón agrega la variante y la cantidad del formulario y lleva a /checkout; la
+  lógica vive en ProductFormComponent#handleBuyNow (assets/product-form.js), que también lo
+  desactiva cuando la variante no está disponible, igual que "Agregar al carrito".
+{%- endcomment -%}
 <div
   class="accelerated-checkout-block"
   ref="acceleratedCheckoutButtonContainer"
@@ -24,14 +32,20 @@
   {% if request.visual_preview_mode %}
     data-shopify-visual-preview
   {% endif %}
-  {% unless can_add_to_cart %}
-    hidden
-  {% endunless %}
 >
   {% if product != blank %}
-    {%- form 'product', product -%}
-      {{ form | payment_button }}
-    {%- endform -%}
+    <button
+      type="button"
+      class="button buy-now-button"
+      ref="buyNowButton"
+      on:click="/handleBuyNow"
+      {% unless can_add_to_cart %}
+        disabled
+      {% endunless %}
+    >
+      <span class="buy-now-button__text">Comprar ahora</span>
+      <span class="buy-now-button__loading" aria-hidden="true"></span>
+    </button>
   {% endif %}
 </div>
 
@@ -40,20 +54,50 @@
     width: 300px;
   }
 
-  more-payment-options-link {
-    font-size: smaller;
+  .buy-now-button {
+    position: relative;
+    height: var(--height-buy-buttons);
+    text-transform: var(--button-text-case-primary);
   }
 
-  more-payment-options-link a {
-    --button-color: var(--color-primary);
-  }
-
-  more-payment-options-link a:hover {
-    --button-color: var(--color-primary-hover);
-  }
-
-  .shopify-payment-button__more-options[aria-hidden='true'] {
+  /* Estado de carga: el texto se oculta sin cambiar el ancho y aparece un spinner. */
+  .buy-now-button__loading {
     display: none;
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 1.25em;
+    height: 1.25em;
+    border: 2px solid currentColor;
+    border-inline-end-color: transparent;
+    border-radius: 50%;
+    animation: buy-now-spin 700ms linear infinite;
+  }
+
+  .buy-now-button[aria-busy='true'] .buy-now-button__text {
+    visibility: hidden;
+  }
+
+  .buy-now-button[aria-busy='true'] .buy-now-button__loading {
+    display: block;
+  }
+
+  /* Mientras procesa no se ve "desactivado" (opacidad), solo el spinner. */
+  .buy-now-button[aria-busy='true']:disabled {
+    opacity: 1;
+    cursor: progress;
+  }
+
+  @keyframes buy-now-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .buy-now-button__loading {
+      animation-duration: 2s;
+    }
   }
 {% endstylesheet %}
 

@@ -121,6 +121,7 @@ if (!customElements.get('add-to-cart-component')) {
  * @property {AddToCartComponent | undefined} addToCartButtonContainer - The add to cart button container element.
  * @property {HTMLElement | undefined} addToCartTextError - The add to cart text error.
  * @property {HTMLElement | undefined} acceleratedCheckoutButtonContainer - The accelerated checkout button container element.
+ * @property {HTMLButtonElement | undefined} buyNowButton - Botón "Comprar ahora" propio (blocks/accelerated-checkout.liquid).
  * @property {HTMLElement} liveRegion - The live region.
  *
  * @extends Component<ProductFormRefs>
@@ -139,6 +140,9 @@ class ProductFormComponent extends Component {
     const target = this.closest('.shopify-section, dialog, product-card');
     target?.addEventListener(ThemeEvents.variantUpdate, this.#onVariantUpdate, { signal });
     target?.addEventListener(ThemeEvents.variantSelected, this.#onVariantSelected, { signal });
+    // Al volver desde el checkout con "atrás", el navegador puede restaurar la página desde el
+    // bfcache con "Comprar ahora" todavía en estado de carga.
+    window.addEventListener('pageshow', this.#resetBuyNow, { signal });
   }
 
   disconnectedCallback() {
@@ -270,6 +274,62 @@ class ProductFormComponent extends Component {
   }
 
   /**
+   * "Comprar ahora": agrega la variante y la cantidad elegidas (el mismo formulario de "Agregar al
+   * carrito", así que respeta plan de venta y propiedades) y lleva directo al checkout.
+   */
+  async handleBuyNow() {
+    const { buyNowButton, variantId, addToCartTextError } = this.refs;
+    const form = this.querySelector('form');
+
+    if (!buyNowButton || buyNowButton.disabled || !form || !variantId.value) return;
+
+    if (this.#timeout) clearTimeout(this.#timeout);
+    addToCartTextError?.classList.add('hidden');
+
+    buyNowButton.disabled = true;
+    buyNowButton.setAttribute('aria-busy', 'true');
+
+    try {
+      const response = await fetch(Theme.routes.cart_add_url, fetchConfig('javascript', { body: new FormData(form) }));
+      const data = await response.json();
+
+      if (!response.ok || data.status) throw new Error(data.message || data.description || response.statusText);
+
+      window.location.assign(Theme.routes.checkout_url);
+    } catch (error) {
+      this.#resetBuyNow();
+
+      const message = error instanceof Error ? error.message : String(error);
+      console.error(error);
+
+      if (addToCartTextError && message) {
+        addToCartTextError.classList.remove('hidden');
+        const textNode = addToCartTextError.childNodes[2];
+        if (textNode) {
+          textNode.textContent = message;
+        } else {
+          addToCartTextError.appendChild(document.createTextNode(message));
+        }
+        this.#setLiveRegionText(message);
+        this.#timeout = setTimeout(() => {
+          addToCartTextError.classList.add('hidden');
+          this.#clearLiveRegionText();
+        }, 10000);
+      }
+    }
+  }
+
+  #resetBuyNow = () => {
+    const { buyNowButton } = this.refs;
+    if (!buyNowButton || buyNowButton.getAttribute('aria-busy') !== 'true') return;
+
+    buyNowButton.removeAttribute('aria-busy');
+    // Vuelve a quedar activo solo si "Agregar al carrito" lo está (misma regla de disponibilidad).
+    const addToCartButton = this.refs.addToCartButtonContainer?.refs.addToCartButton;
+    buyNowButton.disabled = addToCartButton ? addToCartButton.disabled : false;
+  };
+
+  /**
    * @param {*} text
    */
   #setLiveRegionText(text) {
@@ -302,10 +362,10 @@ class ProductFormComponent extends Component {
     // Update the button state
     if (event.detail.resource == null || event.detail.resource.available == false) {
       addToCartButtonContainer.disable();
-      this.refs.acceleratedCheckoutButtonContainer?.setAttribute('hidden', 'true');
+      if (this.refs.buyNowButton) this.refs.buyNowButton.disabled = true;
     } else {
       addToCartButtonContainer.enable();
-      this.refs.acceleratedCheckoutButtonContainer?.removeAttribute('hidden');
+      if (this.refs.buyNowButton) this.refs.buyNowButton.disabled = false;
     }
 
     // Update the add to cart button text and icon
@@ -330,6 +390,7 @@ class ProductFormComponent extends Component {
    */
   #onVariantSelected = () => {
     this.refs.addToCartButtonContainer?.disable();
+    if (this.refs.buyNowButton) this.refs.buyNowButton.disabled = true;
   };
 }
 

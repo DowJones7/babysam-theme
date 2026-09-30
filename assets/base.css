@@ -4485,61 +4485,60 @@ text-component {
 
 /* Ficha de producto: botones tipo píldora y texto más destacado.
    Solo en la sección product-information (no toca los radios globales del tema, que siguen en
-   0 para el resto del sitio). Cubre: Agregar al carrito, Comprar ahora (pago dinámico de
-   Shopify), el bloque genérico "button" (p. ej. "Comprar ahora por Addi") y el selector de
+   0 para el resto del sitio). Cubre: Agregar al carrito, Comprar ahora (botón propio de
+   blocks/accelerated-checkout.liquid), el bloque genérico "button" (p. ej. "Comprar ahora por Addi") y el selector de
    cantidad. El botón de WhatsApp contraentrega trae su forma en blocks/whatsapp-cod.liquid.
    `.button-unstyled` se excluye: el tema lo usa para botones de cerrar/ícono. */
 .product-information {
   --babysam-pill-radius: 999px;
 }
 
-.product-information :is(.add-to-cart-button, a.button:not(.button-unstyled), .quantity-selector) {
+.product-information :is(.add-to-cart-button, .buy-now-button, a.button:not(.button-unstyled), .quantity-selector) {
   border-radius: var(--babysam-pill-radius);
 }
 
-.product-information :is(.add-to-cart-button, a.button:not(.button-unstyled)) {
+.product-information :is(.add-to-cart-button, .buy-now-button, a.button:not(.button-unstyled)) {
   font-family: var(--font-body--family);
   font-weight: 600;
   font-size: 1.0625rem;
   letter-spacing: 0.01em;
 }
 
-/* Comprar ahora: Shopify lo dibuja dentro de su propio componente y solo expone variables. El
-   radio lo fija una regla de base.css con :has() (especificidad 0,3,1); el !important sobre la
-   variable evita depender del orden de las reglas. El texto y la tipografía de ese botón los
-   controla Shopify: no se pueden cambiar desde el tema. */
-.product-information :is(shopify-accelerated-checkout, shopify-accelerated-checkout-cart) {
-  --shopify-accelerated-checkout-button-border-radius: var(--babysam-pill-radius) !important;
-}
-
-/* Agregar al carrito: pulso sutil e intermitente para llamar la atención.
-   Ciclo de 4,5 s en el que el botón está quieto ~88% del tiempo y late una vez al final (solo
-   transform: lo resuelve el compositor, sin repintar ni mover el layout). Se detiene al pasar
-   el mouse o enfocarlo con teclado, no corre si el botón está deshabilitado (agotado) y no
-   existe para quien pidió reducir el movimiento. */
+/* Agregar al carrito y Comprar ahora: pulso sutil e intermitente para llamar la atención.
+   Ciclo de 4 s en el que cada botón está quieto ~88% del tiempo y late una vez al final (~0,5 s;
+   solo `scale`: lo resuelve el compositor, sin repintar ni mover el layout, y no pisa el
+   `transform` del "hundimiento" al hacer click). Comprar ahora arranca 2 s después, así que los
+   dos laten alternados y nunca al tiempo. Al pasar el mouse, enfocarlo con teclado o si el botón
+   está deshabilitado (agotado o procesando) el latido se anula con `scale` !important (le gana a
+   la animación) en vez de quitar la animación: así ningún ciclo se reinicia y el desfase de 2 s
+   se mantiene. No existe para quien pidió reducir el movimiento. */
 @keyframes babysam-atc-pulse {
   0%,
   88%,
   100% {
-    transform: scale(1);
+    scale: 1;
   }
 
   92% {
-    transform: scale(1.04);
+    scale: 1.04;
   }
 
   96% {
-    transform: scale(0.99);
+    scale: 0.99;
   }
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .product-information .add-to-cart-button:not(:disabled) {
-    animation: babysam-atc-pulse 4.5s ease-in-out 2s infinite;
+  .product-information .add-to-cart-button {
+    animation: babysam-atc-pulse 4s ease-in-out 2s infinite;
   }
 
-  .product-information .add-to-cart-button:is(:hover, :focus-visible, :active) {
-    animation: none;
+  .product-information .buy-now-button {
+    animation: babysam-atc-pulse 4s ease-in-out 4s infinite;
+  }
+
+  .product-information :is(.add-to-cart-button, .buy-now-button):is(:hover, :focus-visible, :active, :disabled) {
+    scale: 1 !important;
   }
 }
 
