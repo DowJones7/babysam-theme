@@ -769,20 +769,8 @@
         "padding-block-end": 1
       }
     },
-    "bono_banner": {
-      "type": "bono-banner",
-      "settings": {
-        "image": "shopify://shop_images/bono.png",
-        "title": "Regala felicidad a la medida del bebé",
-        "text": "<p>El regalo perfecto para la futura mamá, el nuevo papá o un baby shower inolvidable. Con el <strong>Bono de Regalo Babysam</strong> no tienes que adivinar qué necesita el bebé: ellos eligen exactamente lo que les hace falta, desde la cuna de sus sueños hasta la ropa más suave o los juguetes más divertidos.</p>",
-        "product": "bono-de-regalo-babysam",
-        "show_from": true,
-        "button_label": "Comprar ahora"
-      }
-    },
     "section_qNjNr8": {
       "type": "section",
-      "disabled": true,
       "blocks": {
         "group_pMBz9c": {
           "type": "group",
@@ -856,8 +844,8 @@
           "type": "group",
           "name": "t:names.group",
           "settings": {
-            "link": "",
-            "open_in_new_tab": false,
+            "link": "shopify://pages/bonos-de-regalo-babysam",
+            "open_in_new_tab": true,
             "content_direction": "column",
             "vertical_on_mobile": true,
             "horizontal_alignment": "flex-start",
@@ -1269,6 +1257,9 @@
                 "form_title": "Crea tu Lista de Baby Shower",
                 "form_description": "<p>Agenda un recorrido personalizado en nuestra tienda para preparar la lista de regalos perfecta para tu bebé.</p><p>Además, evitas regalos repetidos o cosas que no usarás.</p>",
                 "whatsapp_number": "",
+                "button_label": "Agendar cita por WhatsApp",
+                "message_intro": "¡Hola, Babysam! 👋🍼\nQuiero agendar una cita para crear mi *Lista de Baby Shower* 🎁",
+                "message_closing": "¿Me confirman la disponibilidad? 💕",
                 "width": "fit-content",
                 "custom_width": 100,
                 "width_mobile": "fit-content",
@@ -1396,7 +1387,6 @@
     "trust_row",
     "carrusel_productos_w3cKLp",
     "divider_zApW4A",
-    "bono_banner",
     "section_qNjNr8",
     "testimonials_row",
     "baby_shower_full",
