@@ -56,6 +56,37 @@
             {% # theme-check-enable %}
           </li>
         {% endfor %}
+
+        {%- comment -%}
+          Tarjeta de invitación por WhatsApp (snippets/whatsapp-invite-card.liquid): último
+          elemento de la cuadrícula, solo en la colección elegida (vacío = Lencería) y solo en la
+          última página. Lleva ref="cards[]" y data-page porque el scroll infinito
+          (assets/paginated-list.js) solo trae esos <li> de la página siguiente.
+        {%- endcomment -%}
+        {%- liquid
+          assign invite_collection = section.settings.invite_collection | default: collections['lenceria']
+          assign show_invite = false
+          if section.settings.invite_enabled and invite_collection and collection.id == invite_collection.id
+            if paginate.current_page == paginate.pages or paginate.pages == 0
+              assign show_invite = true
+            endif
+          endif
+        -%}
+        {%- if show_invite and collection.products.size > 0 -%}
+          <li
+            class="product-grid__item product-grid__item--invite"
+            data-page="{{ paginate.current_page }}"
+            ref="cards[]"
+          >
+            {%- render 'whatsapp-invite-card',
+              title: section.settings.invite_title,
+              text: section.settings.invite_text,
+              button_label: section.settings.invite_button,
+              number: section.settings.invite_number,
+              message: section.settings.invite_message
+            -%}
+          </li>
+        {%- endif -%}
       {% endcapture %}
 
       {% render 'product-grid',
@@ -170,6 +201,70 @@
   .product-grid__item--9 { animation-delay: 360ms; }
   .product-grid__item--10 { animation-delay: 400ms; }
   .product-grid__item--11 { animation-delay: 440ms; }
+
+  /*
+    Tarjeta de invitación (snippets/whatsapp-invite-card.liquid). Borde y radio iguales a la
+    galería de las tarjetas de producto (collection.json: solid 4px, radio 25) en turquesa, con
+    fondo turquesa suave. En desktop ocupa una celda y se estira al alto de la fila; en mobile
+    (2 columnas angostas) y en la vista "zoom-out" ocupa la fila completa para que el texto quepa.
+  */
+  .product-grid__item--invite {
+    display: flex;
+
+    @media screen and (max-width: 749px) {
+      grid-column: 1 / -1;
+    }
+  }
+
+  .product-grid[product-grid-view='zoom-out'] .product-grid__item--invite {
+    grid-column: 1 / -1;
+  }
+
+  .whatsapp-invite-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    padding: 28px 20px;
+    border: 4px solid #78c0b3;
+    border-radius: 25px;
+    background-color: rgb(120 192 179 / 0.16);
+    color: #5a3f28;
+    text-align: center;
+  }
+
+  .whatsapp-invite-card__icon {
+    width: 56px;
+    height: 56px;
+    color: #3d8a7d;
+  }
+
+  .whatsapp-invite-card__title {
+    margin: 0;
+    color: #5a3f28;
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  .whatsapp-invite-card__text {
+    margin: 0;
+    font-size: 0.9375rem;
+    line-height: 1.55;
+    text-wrap: pretty;
+  }
+
+  .whatsapp-invite-card__button {
+    margin-block-start: 4px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .whatsapp-invite-card {
+      padding: 24px 16px;
+    }
+  }
 
   @media (prefers-reduced-motion: reduce) {
     .product-grid__item {
@@ -308,6 +403,53 @@
       "step": 1,
       "unit": "px",
       "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Tarjeta de invitación (WhatsApp)"
+    },
+    {
+      "type": "checkbox",
+      "id": "invite_enabled",
+      "label": "Mostrar tarjeta al final de la cuadrícula",
+      "default": true
+    },
+    {
+      "type": "collection",
+      "id": "invite_collection",
+      "label": "Colección donde aparece",
+      "info": "Vacío: Lencería. Sale solo en la última página de esa colección."
+    },
+    {
+      "type": "text",
+      "id": "invite_title",
+      "label": "Título",
+      "default": "Personaliza tu lencería 🧸"
+    },
+    {
+      "type": "textarea",
+      "id": "invite_text",
+      "label": "Texto",
+      "default": "Arma tu combo con donas de lactancia, cobijas, toldillos, trenzas protectoras, estabilizadores y más. ¡Todo se puede personalizar con el nombre de tu bebé! ✨"
+    },
+    {
+      "type": "text",
+      "id": "invite_button",
+      "label": "Texto del botón",
+      "default": "Hablar con un asesor"
+    },
+    {
+      "type": "text",
+      "id": "invite_number",
+      "label": "Número de WhatsApp",
+      "info": "Con o sin 57. Por defecto: Sede Sur.",
+      "default": "573102367180"
+    },
+    {
+      "type": "textarea",
+      "id": "invite_message",
+      "label": "Mensaje de WhatsApp",
+      "default": "¡Hola! 👋💕 Vengo de la página web de Babysam y quiero personalizar la lencería para mi bebé 🧸✨ Me gustaría conocer las opciones de combos (donas de lactancia, cobijas, toldillos, trenzas protectoras, estabilizadores...) y la personalización con el nombre del bebé. ¿Me ayudan? 😊"
     },
     {
       "type": "header",
