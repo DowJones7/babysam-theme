@@ -183,13 +183,52 @@ select {
     box-shadow: none;
   }
 
-  /* Sombra al hover en tarjetas de producto (complementa card_hover_effect,
-     que solo controla transform). Las reglas de .header/.header-drawer de
-     arriba ya la cancelan ahí por tener mayor especificidad. */
-  .product-card:hover,
-  .collection-card:hover,
-  .resource-card:hover {
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15);
+  /* Hover de tarjetas (producto, colección, recurso). Con card_hover_effect
+     en "none" el tema no mueve la tarjeta; aquí todo el efecto vive DENTRO del
+     marco (.product-card__content ya trae border y border-radius desde
+     border-override): sin translate, así que nada se sale ni se corta.
+     .header/.header-drawer quedan fuera. */
+  .product-card__content,
+  .collection-card__content,
+  .resource-card__content {
+    transition: box-shadow 250ms ease-out;
+  }
+
+  .product-card .card-gallery img,
+  .collection-card .collection-card__image,
+  .resource-card .resource-card__image {
+    transition: transform 250ms ease-out;
+  }
+
+  .product-card:hover .product-card__content,
+  .collection-card:hover .collection-card__content,
+  .resource-card:hover .resource-card__content {
+    /* el borde viene por custom property inline (border-override): se
+       intensifica con un anillo de 1px del color de borde a opacidad plena */
+    box-shadow: 0 0 0 1px rgb(var(--color-border-rgb)), 0 8px 20px rgb(0 0 0 / 0.12);
+  }
+
+  .product-card:hover .card-gallery img,
+  .collection-card:hover .collection-card__image,
+  .resource-card:hover .resource-card__image {
+    transform: scale(1.05);
+  }
+
+  .header .product-card:hover .product-card__content,
+  .header-drawer .product-card:hover .product-card__content,
+  .predictive-search-results__card .product-card:hover .product-card__content {
+    box-shadow: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .product-card__content,
+  .card-gallery img {
+    transition: none;
+  }
+
+  .product-card:hover .card-gallery img {
+    transform: none;
   }
 }
 

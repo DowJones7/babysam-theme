@@ -39,7 +39,7 @@
     "type_letter_spacing_h6": "heading-normal",
     "page_width": "wide",
     "transition_to_main_product": true,
-    "card_hover_effect": "subtle-zoom",
+    "card_hover_effect": "none",
     "badge_corner_radius": 0,
     "badge_sale_color_scheme": "scheme-3",
     "badge_sold_out_color_scheme": "scheme-5",
