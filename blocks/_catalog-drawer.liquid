@@ -183,7 +183,7 @@
        (fondo opaco en assets/base.css). Acá solo lo que el esquema no resuelve: acento
        turquesa del sistema de diseño y una sola línea neutra para todos los separadores. */
     --catalog-drawer-accent: var(--bs-turquoise);
-    --catalog-drawer-line: rgb(90 63 40 / 0.12);
+    --catalog-drawer-line: rgb(90 63 40 / 0.05);
 
     --catalog-drawer-easing: cubic-bezier(0.22, 1, 0.36, 1);
     --animation-speed: 350ms;
@@ -322,17 +322,28 @@
 
   /* Píldora, borde suave y foco turquesa: .form--babysam / .form-babysam__input (base.css).
      Acá solo el margen y la lupa dentro del campo. */
+  /* Solo la píldora: el <form> no dibuja caja propia, y el input pierde la apariencia nativa
+     de type=search (WebKit la dibuja como un rectángulo alrededor/debajo de la píldora). */
   .catalog-drawer__search {
     position: relative;
     margin: var(--catalog-drawer-padding, 1.25rem);
+    padding: 0;
+    border: 0;
+    background: none;
+    box-shadow: none;
   }
 
   .catalog-drawer__search.form--babysam .catalog-drawer__search-input {
     padding-inline-end: 3rem;
+    -webkit-appearance: none;
+    appearance: none;
+    background-clip: padding-box;
   }
 
-  /* La X nativa del type=search rompe la píldora en WebKit. */
-  .catalog-drawer__search-input::-webkit-search-cancel-button {
+  /* La X y la decoración nativas del type=search rompen la píldora en WebKit. */
+  .catalog-drawer__search-input::-webkit-search-cancel-button,
+  .catalog-drawer__search-input::-webkit-search-decoration {
+    -webkit-appearance: none;
     appearance: none;
   }
 
