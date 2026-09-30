@@ -6,33 +6,149 @@
   </div>
 {% endif %}
 
-<div class="testimonials-wrapper page-width">
+{%- liquid
+  # Entrada del blog donde caen las reseñas públicas (comentarios publicados automáticamente).
+  assign articulo = section.settings.articulo_resenas | default: articles['resenas/opiniones-de-clientes']
+  assign resenas_abiertas = false
+  if articulo and articulo.comments_enabled?
+    assign resenas_abiertas = true
+  endif
+-%}
+
+<div class="testimonios-layout page-width{% if resenas_abiertas %} testimonios-layout--con-form{% endif %}">
   <ul
     class="testimonials-carousel"
     id="Slider-{{ section.id }}"
     role="list"
   >
     {%- for block in section.blocks -%}
-      <li
-        id="Slide-{{ section.id }}-{{ forloop.index }}"
-        class="testimonial-card-item"
-        {{ block.shopify_attributes }}
-        role="listitem"
-      >
-        <p class="testimonial-card-item__stars" aria-label="{{ block.settings.rating }} de 5 estrellas">
-          {% for i in (1..5) %}
-            {% if i <= block.settings.rating %}★{% else %}☆{% endif %}
-          {% endfor %}
-        </p>
-        {% if block.settings.quote != blank %}
-          <p class="testimonial-card-item__quote">«{{ block.settings.quote }}»</p>
-        {% endif %}
-        {% if block.settings.author != blank %}
-          <p class="testimonial-card-item__author"><strong>{{ block.settings.author }}</strong></p>
-        {% endif %}
-      </li>
+      {%- render 'testimonial-card',
+        rating: block.settings.rating,
+        quote: block.settings.quote,
+        author: block.settings.author,
+        attributes: block.shopify_attributes
+      -%}
     {%- endfor -%}
+
+    {%- comment -%}
+      Reseñas públicas: comentarios de la entrada del blog. El formulario guarda la calificación
+      al inicio del cuerpo con el formato fijo «[N/5] texto» (N de 1 a 5); acá se lee, se pinta
+      como estrellas y se quita del texto. Sin ese prefijo (p. ej. un comentario escrito a mano),
+      la tarjeta sale sin estrellas. El texto se recorta por si alguien salta el maxlength.
+    {%- endcomment -%}
+    {%- if articulo -%}
+      {%- assign comentarios = articulo.comments | sort: 'created_at' | reverse -%}
+      {%- for comentario in comentarios limit: 20 -%}
+        {%- liquid
+          assign cuerpo = comentario.content | strip_html | strip
+          assign calificacion = 0
+          assign apertura = cuerpo | slice: 0
+          assign cierre = cuerpo | slice: 2, 3
+          assign digito = cuerpo | slice: 1
+          if apertura == '[' and cierre == '/5]'
+            case digito
+              when '1', '2', '3', '4', '5'
+                assign calificacion = digito | plus: 0
+                assign cuerpo = cuerpo | slice: 5, 1000 | strip
+            endcase
+          endif
+          assign cuerpo = cuerpo | truncate: 260
+        -%}
+        {%- render 'testimonial-card', rating: calificacion, quote: cuerpo, author: comentario.author -%}
+      {%- endfor -%}
+    {%- endif -%}
   </ul>
+
+  {%- if resenas_abiertas -%}
+    <div class="resena-form form--babysam" id="resenas">
+      <h3 class="resena-form__titulo">{{ section.settings.titulo_form | escape }}</h3>
+
+      <div class="resena-form__exito" role="status" tabindex="-1" hidden>
+        {{- 'icon-checkmark.svg' | inline_asset_content -}}
+        <span>¡Gracias por tu reseña! 💕 En unos minutos aparece en el carrusel.</span>
+      </div>
+
+      {%- assign form_id = 'ResenaForm-' | append: section.id -%}
+      {%- capture volver -%}{{ routes.root_url }}?resena=enviada#resenas{%- endcapture -%}
+      {%- form 'new_comment', articulo, id: form_id, class: 'resena-form__form', novalidate: 'novalidate', data-babysam-resena: 'true', return_to: volver -%}
+        <fieldset class="resena-form__estrellas-grupo" aria-describedby="{{ form_id }}-rating-error">
+          <legend class="form-babysam__label">Tu calificación</legend>
+          <div class="resena-form__estrellas">
+            {%- for i in (1..5) -%}
+              <input
+                type="radio"
+                class="visually-hidden"
+                id="{{ form_id }}-rating-{{ i }}"
+                name="rating"
+                value="{{ i }}"
+              >
+              <label for="{{ form_id }}-rating-{{ i }}">
+                <span aria-hidden="true">★</span>
+                <span class="visually-hidden">{{ i }} de 5 estrellas</span>
+              </label>
+            {%- endfor -%}
+          </div>
+          <p class="form-babysam__error" id="{{ form_id }}-rating-error" hidden></p>
+        </fieldset>
+
+        <div class="form-babysam__field">
+          <label class="form-babysam__label" for="{{ form_id }}-body">Tu reseña</label>
+          <textarea
+            id="{{ form_id }}-body"
+            class="form-babysam__input form-babysam__textarea"
+            name="comment[body]"
+            rows="4"
+            maxlength="200"
+            placeholder="Cuéntanos cómo te fue con Babysam"
+            aria-describedby="{{ form_id }}-body-count {{ form_id }}-body-error"
+            data-babysam-rule="required"
+            data-babysam-msg="Escribe tu reseña."
+            data-babysam-required
+          ></textarea>
+          <p class="resena-form__contador" id="{{ form_id }}-body-count">0/200</p>
+          <p class="form-babysam__error" id="{{ form_id }}-body-error" hidden></p>
+        </div>
+
+        <div class="form-babysam__field">
+          <label class="form-babysam__label" for="{{ form_id }}-author">Tu nombre</label>
+          <input
+            type="text"
+            id="{{ form_id }}-author"
+            class="form-babysam__input"
+            name="comment[author]"
+            autocomplete="name"
+            aria-describedby="{{ form_id }}-author-error"
+            data-babysam-rule="required"
+            data-babysam-msg="Escribe tu nombre."
+            data-babysam-required
+          >
+          <p class="form-babysam__error" id="{{ form_id }}-author-error" hidden></p>
+        </div>
+
+        <div class="form-babysam__field">
+          <label class="form-babysam__label" for="{{ form_id }}-email">
+            Tu correo <span class="resena-form__nota">(No se publicará)</span>
+          </label>
+          <input
+            type="email"
+            id="{{ form_id }}-email"
+            class="form-babysam__input"
+            name="comment[email]"
+            autocomplete="email"
+            spellcheck="false"
+            autocapitalize="off"
+            aria-describedby="{{ form_id }}-email-error"
+            data-babysam-rule="email"
+            data-babysam-required
+          >
+          <p class="form-babysam__error" id="{{ form_id }}-email-error" hidden></p>
+        </div>
+
+        <button type="submit" class="button--babysam-carmesi resena-form__enviar">Publicar reseña</button>
+      {%- endform -%}
+    </div>
+    <script src="{{ 'resenas-babysam.js' | asset_url }}" type="module" fetchpriority="low"></script>
+  {%- endif -%}
 </div>
 
 <script>
@@ -110,6 +226,13 @@
   "settings": [
     { "type": "text", "id": "title", "default": "Lo que dicen nuestras mamás y papás", "label": "Título" },
     {
+      "type": "article",
+      "id": "articulo_resenas",
+      "label": "Entrada del blog para reseñas",
+      "info": "Sus comentarios publicados salen en el carrusel. Vacío: Reseñas › Opiniones de clientes."
+    },
+    { "type": "text", "id": "titulo_form", "default": "Cuéntanos tu experiencia", "label": "Título del formulario" },
+    {
       "type": "select",
       "id": "color_scheme",
       "label": "Esquema de color",
@@ -142,17 +265,38 @@
 }
 {% endschema %}
 
+
 {% stylesheet %}
+/*
+  Testimonios: tarjetas blancas redondeadas, texto café oscuro (#5a3f28, 9+:1 sobre blanco),
+  comillas turquesa, círculo con la inicial y estrellas grandes. Drag + snap (script de arriba);
+  en mobile cada tarjeta ocupa 85% para que la siguiente se asome.
+  Con formulario de reseñas: carrusel 2/3 + caja 1/3 desde 990px; debajo en anchos menores.
+*/
+.testimonios-layout {
+  display: grid;
+  gap: 32px;
+  padding-block-end: 48px;
+}
+
+@media screen and (min-width: 990px) {
+  .testimonios-layout--con-form {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    align-items: start;
+  }
+}
+
 .testimonials-carousel {
+  position: relative; /* offsetLeft de las tarjetas relativo al carrusel (snap del script) */
   display: flex;
-  align-items: flex-start;
+  align-items: stretch;
   gap: 20px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  padding: 10px;
+  padding: 10px 10px 24px;
   list-style: none;
   margin: 0;
   cursor: grab;
@@ -169,12 +313,18 @@
 }
 
 .testimonial-card-item {
+  position: relative;
   flex: 0 0 auto;
-  scroll-snap-align: start;
-  border: 2px solid var(--color-foreground);
-  border-radius: 15px;
-  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   width: 85%;
+  padding: 44px 24px 24px;
+  scroll-snap-align: start;
+  border-radius: 24px;
+  background-color: #fff;
+  box-shadow: 0 6px 20px rgb(90 63 40 / 0.1);
+  color: #5a3f28;
 }
 
 @media screen and (min-width: 750px) {
@@ -187,22 +337,184 @@
   .testimonial-card-item {
     width: 30%;
   }
+
+  .testimonios-layout--con-form .testimonial-card-item {
+    width: 46%;
+  }
+}
+
+.testimonial-card-item__mark {
+  position: absolute;
+  top: 6px;
+  left: 20px;
+  color: #78c0b3;
+  font-family: var(--font-accent), var(--font-heading--family);
+  font-size: 4rem;
+  font-weight: 700;
+  line-height: 1;
 }
 
 .testimonial-card-item__stars {
-  text-align: center;
+  margin: 0;
   color: #e4a400;
-  margin: 0 0 8px;
-  font-size: 1.25rem;
+  font-size: 1.5rem;
+  letter-spacing: 0.08em;
+  line-height: 1;
+}
+
+.testimonial-card-item__stars .is-empty {
+  color: rgb(90 63 40 / 0.2);
 }
 
 .testimonial-card-item__quote {
-  text-align: center;
-  margin: 0 0 12px;
+  flex: 1;
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
 }
 
 .testimonial-card-item__author {
-  text-align: center;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   margin: 0;
+}
+
+/* Blanco sobre #3d8a7d: 4,1:1, suficiente para texto grande en negrilla. */
+.testimonial-card-item__avatar {
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #3d8a7d;
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+/* Caja de reseñas: campos y botón de .form--babysam / .button--babysam-carmesi (base.css). */
+.resena-form {
+  padding: 28px 24px;
+  border-radius: 24px;
+  background-color: #fff;
+  box-shadow: 0 6px 20px rgb(90 63 40 / 0.1);
+  color: var(--babysam-texto);
+  scroll-margin-top: 100px;
+}
+
+.resena-form__titulo {
+  margin: 0 0 16px;
+  color: var(--babysam-texto);
+  font-size: 1.25rem;
+}
+
+.resena-form__form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.resena-form__estrellas-grupo {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.resena-form__estrellas {
+  display: flex;
+  gap: 4px;
+}
+
+.resena-form__estrellas label {
+  padding: 2px;
+  color: rgb(90 63 40 / 0.25);
+  font-size: 2rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: color var(--babysam-transicion), transform var(--babysam-transicion);
+}
+
+/* Llenas: hasta la elegida (la label que sigue a la radio marcada y las anteriores). */
+.resena-form__estrellas input:checked + label,
+.resena-form__estrellas label:has(~ input:checked) {
+  color: #e4a400;
+}
+
+/* Al pasar el mouse: se previsualiza hasta la estrella señalada. */
+.resena-form__estrellas:hover label {
+  color: rgb(90 63 40 / 0.25);
+}
+
+.resena-form__estrellas label:hover,
+.resena-form__estrellas label:has(~ label:hover) {
+  color: #e4a400;
+  transform: scale(1.1);
+}
+
+.resena-form__estrellas input:focus-visible + label {
+  outline: 2px solid var(--babysam-turquesa-foco);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+.resena-form__estrellas-grupo[aria-invalid='true'] label {
+  color: rgb(139 0 0 / 0.35);
+}
+
+.resena-form__nota {
+  font-weight: 400;
+}
+
+.resena-form__contador {
+  margin: 0;
+  align-self: flex-end;
+  font-size: var(--font-size--sm);
+  color: rgb(90 63 40 / 0.75);
+}
+
+.resena-form__contador.is-limite {
+  color: var(--color-error);
+  font-weight: 600;
+}
+
+.resena-form__enviar {
+  width: 100%;
+}
+
+.resena-form__exito {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  margin-block-end: 16px;
+  padding: var(--padding-md) var(--padding-lg);
+  border: 1.5px solid var(--babysam-turquesa);
+  border-radius: 16px;
+  background-color: rgb(120 192 179 / 0.18);
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.resena-form__exito[hidden] {
+  display: none;
+}
+
+.resena-form__exito svg {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .resena-form__estrellas label {
+    transition: none;
+  }
+
+  .resena-form__estrellas label:hover,
+  .resena-form__estrellas label:has(~ label:hover) {
+    transform: none;
+  }
 }
 {% endstylesheet %}

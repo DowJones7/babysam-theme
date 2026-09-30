@@ -1,0 +1,36 @@
+{%- doc -%}
+  Tarjeta de testimonio del carrusel del home (sections/testimonials-carousel.liquid). La usan
+  las reseñas fijas (bloques "review") y las que dejan los visitantes (comentarios del blog
+  Reseñas), para que las dos se vean iguales.
+
+  @param {number} rating - Estrellas de 1 a 5; 0 o vacío no muestra estrellas.
+  @param {string} quote - Texto de la reseña, ya limpio (sin HTML).
+  @param {string} author - Nombre de quien la escribió.
+  @param {string} [attributes] - Atributos extra del <li> (p. ej. block.shopify_attributes).
+{%- enddoc -%}
+
+{%- liquid
+  assign estrellas = rating | default: 0 | plus: 0
+  assign nombre = author | strip
+  assign inicial = nombre | slice: 0 | upcase
+-%}
+
+<li class="testimonial-card-item" {{ attributes }}>
+  <span class="testimonial-card-item__mark" aria-hidden="true">“</span>
+  {%- if estrellas > 0 -%}
+    <p class="testimonial-card-item__stars" role="img" aria-label="{{ estrellas }} de 5 estrellas">
+      {%- for i in (1..5) -%}
+        <span{% if i > estrellas %} class="is-empty"{% endif %} aria-hidden="true">★</span>
+      {%- endfor -%}
+    </p>
+  {%- endif -%}
+  {%- if quote != blank -%}
+    <p class="testimonial-card-item__quote">{{ quote }}</p>
+  {%- endif -%}
+  {%- if nombre != blank -%}
+    <p class="testimonial-card-item__author">
+      <span class="testimonial-card-item__avatar" aria-hidden="true">{{ inicial }}</span>
+      <strong>{{ nombre }}</strong>
+    </p>
+  {%- endif -%}
+</li>
