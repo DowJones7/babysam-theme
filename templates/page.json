@@ -12,528 +12,73 @@
     "main": {
       "type": "main-page",
       "blocks": {
-        "jumbo_text_E34b4e": {
-          "type": "jumbo-text",
-          "name": "t:names.jumbo_text",
+        "title": {
+          "type": "text",
+          "name": "t:names.title",
           "settings": {
-            "text": "Bonos de Regalo Babysam",
-            "font": "heading",
+            "text": "<h2>{{ closest.page.title }}</h2>",
+            "width": "100%",
+            "max_width": "normal",
             "alignment": "center",
-            "line_height": "0.8",
-            "letter_spacing": "-0.03em",
+            "type_preset": "rte",
+            "font": "var(--font-primary--family)",
+            "font_size": "",
+            "line_height": "normal",
+            "letter_spacing": "normal",
             "case": "none",
-            "text_effect": "none",
-            "text_stroke": "none",
-            "text_stroke_color": "#000000",
-            "text_background": false,
-            "text_background_color": "#ff0000",
-            "animation_repeat": false
+            "wrap": "pretty",
+            "color": "",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
           },
           "blocks": {}
         },
-        "divider_hRXzNq": {
-          "type": "_divider",
-          "name": "t:names.divider",
+        "content": {
+          "type": "text",
+          "name": "t:names.content",
           "settings": {
-            "thickness": 2.5,
-            "corner_radius": "rounded",
-            "width_percent": 100,
+            "text": "{{ closest.page.content }}",
+            "width": "100%",
+            "max_width": "narrow",
+            "alignment": "center",
+            "type_preset": "rte",
+            "font": "var(--font-primary--family)",
+            "font_size": "",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
             "padding-block-start": 0,
-            "padding-block-end": 0
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
           },
           "blocks": {}
         }
       },
       "block_order": [
-        "jumbo_text_E34b4e",
-        "divider_hRXzNq"
+        "title",
+        "content"
       ],
       "settings": {
         "content_direction": "column",
-        "gap": 0,
+        "gap": 32,
         "color_scheme": "",
-        "padding-block-start": 30,
-        "padding-block-end": 15
-      }
-    },
-    "media_with_content_RpcRTh": {
-      "type": "media-with-content",
-      "blocks": {
-        "media": {
-          "type": "_media-without-appearance",
-          "static": true,
-          "settings": {
-            "media_type": "image",
-            "image": "shopify://shop_images/Gemini_Generated_Image_w19625w19625w196.png",
-            "link": "",
-            "video_loop": true,
-            "video_autoplay": false,
-            "image_position": "cover",
-            "video_position": "cover"
-          },
-          "blocks": {}
-        },
-        "content": {
-          "type": "_content-without-appearance",
-          "static": true,
-          "settings": {
-            "horizontal_alignment_flex_direction_column": "flex-start",
-            "vertical_alignment_flex_direction_column": "space-between",
-            "gap": 24
-          },
-          "blocks": {
-            "text_4wdfPj": {
-              "type": "text",
-              "name": "t:names.caption",
-              "disabled": true,
-              "settings": {
-                "image_link": "",
-                "image_alignment": "center",
-                "text": "<p>Bestseller</p>",
-                "width": "fit-content",
-                "max_width": "normal",
-                "alignment": "left",
-                "type_preset": "h6",
-                "font": "var(--font-body--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "color": "var(--color-foreground)",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "group_9JQFQM": {
-              "type": "group",
-              "settings": {
-                "link": "",
-                "open_in_new_tab": false,
-                "content_direction": "column",
-                "vertical_on_mobile": true,
-                "horizontal_alignment": "flex-start",
-                "vertical_alignment": "center",
-                "align_baseline": false,
-                "horizontal_alignment_flex_direction_column": "flex-start",
-                "vertical_alignment_flex_direction_column": "center",
-                "gap": 12,
-                "width": "fill",
-                "custom_width": 100,
-                "width_mobile": "fill",
-                "custom_width_mobile": 100,
-                "height": "fit",
-                "custom_height": 100,
-                "inherit_color_scheme": true,
-                "color_scheme": "",
-                "background_media": "none",
-                "video_position": "cover",
-                "background_image_position": "cover",
-                "border": "none",
-                "border_width": 1,
-                "border_opacity": 100,
-                "border_radius": 0,
-                "placeholder": "",
-                "toggle_overlay": false,
-                "overlay_color": "#00000026",
-                "overlay_style": "solid",
-                "gradient_direction": "to top",
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {
-                "text_dzMRjC": {
-                  "type": "text",
-                  "name": "t:names.heading",
-                  "settings": {
-                    "image_link": "",
-                    "image_alignment": "center",
-                    "text": "<h3><strong>Que es un Bono de Regalo</strong></h3>",
-                    "width": "fit-content",
-                    "max_width": "normal",
-                    "alignment": "left",
-                    "type_preset": "h3",
-                    "font": "var(--font-body--family)",
-                    "font_size": "1rem",
-                    "line_height": "normal",
-                    "letter_spacing": "normal",
-                    "case": "none",
-                    "wrap": "pretty",
-                    "color": "var(--color-foreground)",
-                    "background": false,
-                    "background_color": "#00000026",
-                    "corner_radius": 0,
-                    "padding-block-start": 0,
-                    "padding-block-end": 0,
-                    "padding-inline-start": 0,
-                    "padding-inline-end": 0
-                  },
-                  "blocks": {}
-                },
-                "text_BXYkcP": {
-                  "type": "text",
-                  "settings": {
-                    "image_link": "",
-                    "image_alignment": "center",
-                    "text": "<p>¡Regalar la bienvenida perfecta nunca ha sido tan fácil! Sigue estos sencillos pasos para comprar y usar tu Bono de Regalo Babysam:</p>",
-                    "width": "fit-content",
-                    "max_width": "narrow",
-                    "alignment": "left",
-                    "type_preset": "rte",
-                    "font": "var(--font-body--family)",
-                    "font_size": "1rem",
-                    "line_height": "normal",
-                    "letter_spacing": "normal",
-                    "case": "none",
-                    "wrap": "pretty",
-                    "color": "var(--color-foreground)",
-                    "background": false,
-                    "background_color": "#00000026",
-                    "corner_radius": 0,
-                    "padding-block-start": 0,
-                    "padding-block-end": 0,
-                    "padding-inline-start": 0,
-                    "padding-inline-end": 0
-                  },
-                  "blocks": {}
-                },
-                "accordion_qm3BbJ": {
-                  "type": "accordion",
-                  "name": "t:names.accordion",
-                  "settings": {
-                    "icon": "plus",
-                    "dividers": true,
-                    "type_preset": "h6",
-                    "inherit_color_scheme": false,
-                    "color_scheme": "",
-                    "border": "solid",
-                    "border_width": 1,
-                    "border_opacity": 100,
-                    "border_radius": 10,
-                    "padding-block-start": 0,
-                    "padding-block-end": 0,
-                    "padding-inline-start": 0,
-                    "padding-inline-end": 0
-                  },
-                  "blocks": {
-                    "accordion_row_HeQnjN": {
-                      "type": "_accordion-row",
-                      "settings": {
-                        "heading": "1. Elige el Valor:",
-                        "open_by_default": true,
-                        "icon": "none",
-                        "width": 20
-                      },
-                      "blocks": {
-                        "text_4w8ein": {
-                          "type": "text",
-                          "settings": {
-                            "image_link": "",
-                            "image_alignment": "center",
-                            "text": "<p>Selecciona el monto del bono que deseas regalar.</p>",
-                            "width": "100%",
-                            "max_width": "normal",
-                            "alignment": "left",
-                            "type_preset": "rte",
-                            "font": "var(--font-body--family)",
-                            "font_size": "1rem",
-                            "line_height": "normal",
-                            "letter_spacing": "normal",
-                            "case": "none",
-                            "wrap": "pretty",
-                            "color": "var(--color-foreground)",
-                            "background": false,
-                            "background_color": "#00000026",
-                            "corner_radius": 0,
-                            "padding-block-start": 0,
-                            "padding-block-end": 0,
-                            "padding-inline-start": 0,
-                            "padding-inline-end": 0
-                          },
-                          "blocks": {}
-                        }
-                      },
-                      "block_order": [
-                        "text_4w8ein"
-                      ]
-                    },
-                    "accordion_row_jqeYQd": {
-                      "type": "_accordion-row",
-                      "settings": {
-                        "heading": "2. Recibe tu Regalo:",
-                        "open_by_default": false,
-                        "icon": "none",
-                        "width": 20
-                      },
-                      "blocks": {
-                        "text_JDYDmU": {
-                          "type": "text",
-                          "settings": {
-                            "image_link": "",
-                            "image_alignment": "center",
-                            "text": "<p>Después de la compra, recibirás un correo electrónico de confirmación con el Bono de Regalo digital y su código único. Puedes reenviarlo directamente al afortunado destinatario o imprimirlo para entregarlo en persona.</p>",
-                            "width": "100%",
-                            "max_width": "normal",
-                            "alignment": "left",
-                            "type_preset": "rte",
-                            "font": "var(--font-body--family)",
-                            "font_size": "1rem",
-                            "line_height": "normal",
-                            "letter_spacing": "normal",
-                            "case": "none",
-                            "wrap": "pretty",
-                            "color": "var(--color-foreground)",
-                            "background": false,
-                            "background_color": "#00000026",
-                            "corner_radius": 0,
-                            "padding-block-start": 0,
-                            "padding-block-end": 0,
-                            "padding-inline-start": 0,
-                            "padding-inline-end": 0
-                          },
-                          "blocks": {}
-                        }
-                      },
-                      "block_order": [
-                        "text_JDYDmU"
-                      ]
-                    },
-                    "accordion_row_7p7WUH": {
-                      "type": "_accordion-row",
-                      "settings": {
-                        "heading": "3. Para el Destinatario:",
-                        "open_by_default": false,
-                        "icon": "none",
-                        "width": 20
-                      },
-                      "blocks": {
-                        "text_GK6wah": {
-                          "type": "text",
-                          "settings": {
-                            "image_link": "",
-                            "image_alignment": "center",
-                            "text": "<p>El feliz receptor solo necesita ingresar el código único del bono en el carrito de compras, durante el proceso de pago, para aplicar el descuento. ¡Es así de simple!</p>",
-                            "width": "100%",
-                            "max_width": "normal",
-                            "alignment": "left",
-                            "type_preset": "rte",
-                            "font": "var(--font-body--family)",
-                            "font_size": "1rem",
-                            "line_height": "normal",
-                            "letter_spacing": "normal",
-                            "case": "none",
-                            "wrap": "pretty",
-                            "color": "var(--color-foreground)",
-                            "background": false,
-                            "background_color": "#00000026",
-                            "corner_radius": 0,
-                            "padding-block-start": 0,
-                            "padding-block-end": 0,
-                            "padding-inline-start": 0,
-                            "padding-inline-end": 0
-                          },
-                          "blocks": {}
-                        }
-                      },
-                      "block_order": [
-                        "text_GK6wah"
-                      ]
-                    }
-                  },
-                  "block_order": [
-                    "accordion_row_HeQnjN",
-                    "accordion_row_jqeYQd",
-                    "accordion_row_7p7WUH"
-                  ]
-                }
-              },
-              "block_order": [
-                "text_dzMRjC",
-                "text_BXYkcP",
-                "accordion_qm3BbJ"
-              ]
-            },
-            "group_dhB7iR": {
-              "type": "group",
-              "name": "t:names.group",
-              "settings": {
-                "link": "",
-                "open_in_new_tab": false,
-                "content_direction": "column",
-                "vertical_on_mobile": true,
-                "horizontal_alignment": "flex-start",
-                "vertical_alignment": "center",
-                "align_baseline": false,
-                "horizontal_alignment_flex_direction_column": "flex-start",
-                "vertical_alignment_flex_direction_column": "center",
-                "gap": 12,
-                "width": "fit-content",
-                "custom_width": 100,
-                "width_mobile": "fill",
-                "custom_width_mobile": 100,
-                "height": "fit",
-                "custom_height": 100,
-                "inherit_color_scheme": false,
-                "color_scheme": "scheme-1",
-                "background_media": "none",
-                "video_position": "cover",
-                "background_image_position": "cover",
-                "border": "none",
-                "border_width": 1,
-                "border_opacity": 100,
-                "border_radius": 0,
-                "placeholder": "",
-                "toggle_overlay": false,
-                "overlay_color": "#00000026",
-                "overlay_style": "solid",
-                "gradient_direction": "to top",
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {
-                "product_card_KXVELF": {
-                  "type": "product-card",
-                  "name": "t:names.product_card",
-                  "settings": {
-                    "product": "bono-de-regalo-babysam",
-                    "product_card_gap": 0,
-                    "inherit_color_scheme": true,
-                    "color_scheme": "",
-                    "border": "none",
-                    "border_width": 1,
-                    "border_opacity": 100,
-                    "border_radius": 0,
-                    "padding-block-start": 0,
-                    "padding-block-end": 0,
-                    "padding-inline-start": 0,
-                    "padding-inline-end": 0
-                  },
-                  "blocks": {
-                    "product_card_gallery_7XdKaf": {
-                      "type": "_product-card-gallery",
-                      "settings": {
-                        "image_ratio": "adapt",
-                        "border": "none",
-                        "border_width": 1,
-                        "border_opacity": 100,
-                        "border_radius": 19,
-                        "padding-block-start": 0,
-                        "padding-block-end": 0,
-                        "padding-inline-start": 0,
-                        "padding-inline-end": 0
-                      },
-                      "blocks": {}
-                    },
-                    "product_title_3U84XW": {
-                      "type": "product-title",
-                      "name": "t:names.product_title",
-                      "settings": {
-                        "width": "fit-content",
-                        "max_width": "normal",
-                        "alignment": "left",
-                        "type_preset": "rte",
-                        "font": "var(--font-body--family)",
-                        "font_size": "1rem",
-                        "line_height": "normal",
-                        "letter_spacing": "normal",
-                        "case": "none",
-                        "wrap": "pretty",
-                        "color": "var(--color-foreground)",
-                        "background": false,
-                        "background_color": "#00000026",
-                        "corner_radius": 0,
-                        "padding-block-start": 4,
-                        "padding-block-end": 0,
-                        "padding-inline-start": 0,
-                        "padding-inline-end": 0
-                      },
-                      "blocks": {}
-                    },
-                    "price_cP3gjY": {
-                      "type": "price",
-                      "name": "t:names.product_price",
-                      "settings": {
-                        "show_sale_price_first": true,
-                        "show_installments": false,
-                        "show_tax_info": false,
-                        "type_preset": "h6",
-                        "width": "100%",
-                        "alignment": "left",
-                        "font": "var(--font-body--family)",
-                        "font_size": "1rem",
-                        "line_height": "normal",
-                        "letter_spacing": "normal",
-                        "case": "none",
-                        "color": "var(--color-foreground)",
-                        "padding-block-start": 0,
-                        "padding-block-end": 0,
-                        "padding-inline-start": 0,
-                        "padding-inline-end": 0
-                      },
-                      "blocks": {}
-                    }
-                  },
-                  "block_order": [
-                    "product_card_gallery_7XdKaf",
-                    "product_title_3U84XW",
-                    "price_cP3gjY"
-                  ]
-                }
-              },
-              "block_order": [
-                "product_card_KXVELF"
-              ]
-            },
-            "button_Ht4bBK": {
-              "type": "button",
-              "settings": {
-                "label": "Compralo Ahora",
-                "link": "shopify://products/bono-de-regalo-babysam",
-                "whatsapp_number": "",
-                "whatsapp_message": "",
-                "open_in_new_tab": false,
-                "style_class": "button-secondary",
-                "width": "fit-content",
-                "custom_width": 100,
-                "width_mobile": "fit-content",
-                "custom_width_mobile": 100
-              },
-              "blocks": {}
-            }
-          },
-          "block_order": [
-            "text_4wdfPj",
-            "group_9JQFQM",
-            "group_dhB7iR",
-            "button_Ht4bBK"
-          ]
-        }
-      },
-      "name": "t:names.editorial",
-      "settings": {
-        "media_position": "left",
-        "media_width": "medium",
-        "media_height": "50svh",
-        "section_width": "page-width",
-        "extend_media": false,
-        "color_scheme": "scheme-3",
-        "padding-block-start": 0,
-        "padding-block-end": 20
+        "padding-block-start": 40,
+        "padding-block-end": 40
       }
     }
   },
   "order": [
-    "main",
-    "media_with_content_RpcRTh"
+    "main"
   ]
 }

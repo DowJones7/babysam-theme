@@ -1,0 +1,170 @@
+{%- comment -%}
+  Banner "Regala felicidad" del home: foto del bono a la izquierda (esquinas redondeadas, borde
+  carmesí) y a la derecha título + texto + "Desde $X" + los valores del Bono en píldoras con
+  "Comprar ahora" (snippets/bono-valores.liquid). Las píldoras y el botón ocupan el ancho de la
+  columna: ya no queda el hueco que dejaba la tarjeta de producto al 40 %.
+
+  Reemplaza a la sección genérica section_qNjNr8 de templates/index.json, que queda
+  desactivada (no borrada).
+{%- endcomment -%}
+
+{%- liquid
+  assign bono = section.settings.product
+  if bono == blank
+    assign bono = all_products['bono-de-regalo-babysam']
+  endif
+-%}
+
+<div class="bono-banner section section--page-width">
+  <div class="bono-banner__inner">
+    {%- if section.settings.image -%}
+{%- assign img_alt = section.settings.image.alt | default: section.settings.title -%}
+      <div class="bono-banner__media">
+        {{
+          section.settings.image
+          | image_url: width: 1000
+          | image_tag:
+            class: 'bono-banner__img',
+            widths: '400, 600, 800, 1000',
+            sizes: '(min-width: 990px) 42vw, 100vw',
+            loading: 'lazy',
+            alt: img_alt
+        }}
+      </div>
+    {%- endif -%}
+
+    <div class="bono-banner__content">
+      {%- if section.settings.title != blank -%}
+        <h2 class="bono-banner__title">{{ section.settings.title | escape }}</h2>
+      {%- endif -%}
+      {%- if section.settings.text != blank -%}
+        <div class="bono-banner__text">{{ section.settings.text }}</div>
+      {%- endif -%}
+      {%- if section.settings.show_from and bono != blank -%}
+        <p class="bono-banner__desde">
+          Desde <strong>{{ bono.price_min | money_without_trailing_zeros }}</strong>
+        </p>
+      {%- endif -%}
+
+      {% render 'bono-valores',
+        producto: bono,
+        boton: section.settings.button_label,
+        mostrar_wa: false
+      %}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .bono-banner {
+    background-color: #fffaf7;
+    color: #5a3f28;
+  }
+
+  .bono-banner__inner {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--gap-2xl);
+    align-items: center;
+    padding-block: var(--padding-4xl);
+  }
+
+  @media screen and (min-width: 990px) {
+    .bono-banner__inner {
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      gap: var(--gap-3xl);
+    }
+  }
+
+  /* Foto: esquinas redondeadas y borde carmesí. */
+  .bono-banner__img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 4px solid #e44068;
+    border-radius: 24px;
+  }
+
+  .bono-banner__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-md);
+  }
+
+  /* Título Fredoka (regla global de h2) en carmesí: 3,87:1 sobre crema, válido por ser grande. */
+  .bono-banner__title {
+    margin: 0;
+    color: #e44068;
+    font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+    line-height: 1.15;
+  }
+
+  .bono-banner__text {
+    font-size: 1.0625rem;
+    line-height: 1.6;
+  }
+
+  .bono-banner__text > * {
+    margin: 0;
+  }
+
+  .bono-banner__desde {
+    margin: 0;
+    font-size: 1.0625rem;
+  }
+
+  .bono-banner__desde strong {
+    color: #bc3454;
+    font-weight: 700;
+    font-size: 1.25rem;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Banner del bono",
+  "tag": "section",
+  "class": "section-wrapper",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Foto"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título",
+      "default": "Regala felicidad a la medida del bebé"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Texto"
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Producto del bono",
+      "info": "Sus variantes son los valores que se muestran."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_from",
+      "label": "Mostrar «Desde $…»",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Texto del botón de compra",
+      "default": "Comprar ahora"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Banner del bono"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,62 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "bono_regalo": {
+      "type": "bono-regalo",
+      "blocks": {
+        "paso_valor": {
+          "type": "paso",
+          "settings": {
+            "icon": "regalo",
+            "title": "Elige el valor",
+            "text": "<p>Selecciona el monto del bono que deseas regalar.</p>"
+          }
+        },
+        "paso_correo": {
+          "type": "paso",
+          "settings": {
+            "icon": "correo",
+            "title": "Recibe tu regalo",
+            "text": "<p>Después de la compra recibirás un correo con el Bono de Regalo digital y su código único. Puedes reenviarlo a quien lo recibe o imprimirlo para entregarlo en persona.</p>"
+          }
+        },
+        "paso_carrito": {
+          "type": "paso",
+          "settings": {
+            "icon": "carrito",
+            "title": "Úsalo al pagar",
+            "text": "<p>Quien lo recibe solo tiene que ingresar el código del bono en el carrito, durante el pago, para aplicar el descuento. ¡Así de simple!</p>"
+          }
+        }
+      },
+      "block_order": [
+        "paso_valor",
+        "paso_correo",
+        "paso_carrito"
+      ],
+      "settings": {
+        "image": "shopify://shop_images/Gemini_Generated_Image_w19625w19625w196.png",
+        "title": "Bonos de Regalo Babysam",
+        "subtitle": "¿Qué es un Bono de Regalo?",
+        "intro": "<p>¡Regalar la bienvenida perfecta nunca ha sido tan fácil! Elige el valor, recibe el bono en tu correo y entrégalo a quien quieras. Así funciona:</p>",
+        "product": "bono-de-regalo-babysam",
+        "button_label": "Cómpralo ahora",
+        "show_whatsapp": true,
+        "wa_label": "¿Otro monto? Pídelo por WhatsApp",
+        "wa_message": "¡Hola! 🎁✨ Quiero regalar un Bono Regala Felicidad de Babysam 💝\n\nMe interesa un monto diferente a los de la página. ¿Cómo lo puedo comprar?",
+        "steps_title": "Así de fácil"
+      }
+    }
+  },
+  "order": [
+    "bono_regalo"
+  ]
+}

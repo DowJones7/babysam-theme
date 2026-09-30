@@ -36,8 +36,10 @@
     assign compare_at_price = compare_at_price | money_with_currency
 
   else
-    assign price = price | money
-    assign compare_at_price = compare_at_price | money
+    # Sin ",00": el formato de la tienda es ${{amount_with_comma_separator}} y en pesos los
+    # centavos siempre son cero ("$50.000", no "$50.000,00").
+    assign price = price | money_without_trailing_zeros
+    assign compare_at_price = compare_at_price | money_without_trailing_zeros
   endif
 -%}
 

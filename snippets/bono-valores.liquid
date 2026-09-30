@@ -1,0 +1,167 @@
+{%- doc -%}
+  Valores del Bono de Regalo en píldoras + "Cómpralo ahora" (+ acceso opcional a WhatsApp para
+  otro monto). Lo usan la página del Bono (sections/bono-regalo.liquid) y el banner del home
+  (sections/bono-banner.liquid).
+
+  Es un formulario GET a la ficha del producto con `variant=<id>`: sin JS, el botón lleva al Bono
+  con el valor elegido ya seleccionado. Precios de Shopify con money_without_trailing_zeros.
+
+  El número de WhatsApp es la línea 1 de la Sede Sur (Configuración del tema → Sedes y
+  WhatsApp), la misma del botón "Monto personalizado" del Bono.
+
+  @param {object} producto - El producto del Bono.
+  @param {string} [boton] - Texto del botón de compra.
+  @param {boolean} [mostrar_wa] - Muestra el botón verde "¿Otro monto?".
+  @param {string} [wa_texto] - Texto del botón verde.
+  @param {string} [wa_mensaje] - Mensaje de WhatsApp para otro monto.
+{%- enddoc -%}
+
+{%- if producto != blank -%}
+  {%- liquid
+    assign boton = boton | default: 'Cómpralo ahora'
+    assign primera_disponible = producto.selected_or_first_available_variant
+  -%}
+  <div class="bono-valores">
+    <form class="bono-valores__form" action="{{ producto.url }}" method="get">
+      <fieldset class="bono-valores__opciones">
+        <legend class="bono-valores__leyenda">Elige el valor</legend>
+        <div class="bono-valores__pills">
+          {%- for v in producto.variants -%}
+            <label class="bono-valores__pill{% unless v.available %} bono-valores__pill--agotado{% endunless %}">
+              <input
+                type="radio"
+                name="variant"
+                value="{{ v.id }}"
+                {% if v.id == primera_disponible.id %}checked{% endif %}
+                {% unless v.available %}disabled{% endunless %}
+              >
+              <span>{{ v.price | money_without_trailing_zeros }}</span>
+            </label>
+          {%- endfor -%}
+        </div>
+      </fieldset>
+      <button type="submit" class="button--babysam-carmesi bono-valores__comprar">{{ boton | escape }}</button>
+    </form>
+
+    {%- if mostrar_wa and settings.sede_sur_wa1 != blank -%}
+      <a
+        class="button--babysam-wa bono-valores__wa"
+        href="{% render 'whatsapp-url', number: settings.sede_sur_wa1, message: wa_mensaje %}"
+        target="_blank"
+        rel="noopener"
+      >
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+          <path d="M12 2a10 10 0 0 0-8.6 15.09L2 22l5.05-1.32A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.18-1.14l-.3-.18-3 .78.8-2.92-.2-.31A8.2 8.2 0 1 1 12 20.2Z" />
+          <path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.76-1.66-2.06-.17-.3-.02-.46.13-.61.14-.14.3-.35.45-.53.15-.18.2-.3.3-.5.1-.2.05-.38-.02-.53-.08-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.38-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.22 3.08c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.7.63.71.23 1.36.2 1.87.12.57-.08 1.76-.72 2-1.41.25-.7.25-1.29.18-1.41-.07-.13-.27-.2-.57-.35Z" />
+        </svg>
+        <span>{{ wa_texto | default: '¿Otro monto? Pídelo por WhatsApp' | escape }}</span>
+        <span class="visually-hidden">(se abre en una pestaña nueva)</span>
+      </a>
+    {%- endif -%}
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .bono-valores {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-md);
+    width: 100%;
+  }
+
+  .bono-valores__form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-md);
+  }
+
+  .bono-valores__opciones {
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .bono-valores__leyenda {
+    margin-block-end: var(--margin-xs);
+    padding: 0;
+    color: #5a3f28;
+    font-weight: 700;
+    font-size: 1rem;
+  }
+
+  .bono-valores__pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--gap-xs);
+  }
+
+  /* Píldora: el radio queda invisible pero accesible (teclado y lector de pantalla). */
+  .bono-valores__pill {
+    position: relative;
+    cursor: pointer;
+  }
+
+  .bono-valores__pill input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    margin: 0;
+    cursor: pointer;
+  }
+
+  .bono-valores__pill span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding-inline: var(--padding-lg);
+    border: 2px solid rgb(90 63 40 / 0.25);
+    border-radius: 999px;
+    background-color: #fff;
+    color: #5a3f28;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: border-color 200ms ease, background-color 200ms ease, color 200ms ease;
+  }
+
+  .bono-valores__pill:hover span {
+    border-color: var(--babysam-carmesi);
+  }
+
+  /* Elegida: fondo carmesí suave, borde y texto en carmesí profundo (#bc3454 sobre el rosa
+     claro: 4,9:1). */
+  .bono-valores__pill input:checked + span {
+    border-color: var(--babysam-carmesi-hover);
+    background-color: #fdecf0;
+    color: var(--babysam-carmesi-hover);
+  }
+
+  .bono-valores__pill input:focus-visible + span {
+    outline: 2px solid #3d8a7d;
+    outline-offset: 2px;
+  }
+
+  .bono-valores__pill--agotado span {
+    opacity: 0.45;
+    text-decoration: line-through;
+    cursor: not-allowed;
+  }
+
+  .bono-valores__comprar,
+  .bono-valores__wa {
+    width: 100%;
+  }
+
+  @media screen and (min-width: 750px) {
+    .bono-valores__comprar,
+    .bono-valores__wa {
+      width: auto;
+      align-self: flex-start;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bono-valores__pill span {
+      transition: none;
+    }
+  }
+{% endstylesheet %}

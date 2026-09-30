@@ -1,0 +1,350 @@
+{%- comment -%}
+  Página de Bonos de Regalo (templates/page.bono-regalo.json).
+
+  Arriba, dos columnas: foto (esquinas redondeadas, borde carmesí) y título + "¿Qué es…?" +
+  texto + valores del Bono en píldoras con "Cómpralo ahora" y "¿Otro monto?" por WhatsApp
+  (snippets/bono-valores.liquid). Abajo, "Así de fácil": los pasos como tarjetas (bloques
+  «Paso», editables), lado a lado en desktop y apiladas en mobile.
+
+  Colores sobre el crema #fffaf7: títulos Fredoka en #e44068 (3,87:1, texto grande), texto en
+  #5a3f28 (9,3:1) a 17 px. Botones: .button--babysam-carmesi y .button--babysam-wa (base.css).
+{%- endcomment -%}
+
+{%- liquid
+  assign bono = section.settings.product
+  if bono == blank
+    assign bono = all_products['bono-de-regalo-babysam']
+  endif
+-%}
+
+<div class="bono-regalo section section--page-width">
+  <div class="bono-regalo__inner">
+    <div class="bono-regalo__top">
+      {%- if section.settings.image -%}
+{%- assign img_alt = section.settings.image.alt | default: section.settings.title -%}
+        <div class="bono-regalo__media">
+          {{
+            section.settings.image
+            | image_url: width: 1200
+            | image_tag:
+              class: 'bono-regalo__img',
+              widths: '400, 600, 800, 1000, 1200',
+              sizes: '(min-width: 990px) 45vw, 100vw',
+              loading: 'eager',
+              alt: img_alt
+          }}
+        </div>
+      {%- endif -%}
+
+      <div class="bono-regalo__content">
+        {%- if section.settings.title != blank -%}
+          <h1 class="bono-regalo__title">{{ section.settings.title | escape }}</h1>
+        {%- endif -%}
+        {%- if section.settings.subtitle != blank -%}
+          <h2 class="bono-regalo__subtitle">{{ section.settings.subtitle | escape }}</h2>
+        {%- endif -%}
+        {%- if section.settings.intro != blank -%}
+          <div class="bono-regalo__text">{{ section.settings.intro }}</div>
+        {%- endif -%}
+
+        {% render 'bono-valores',
+          producto: bono,
+          boton: section.settings.button_label,
+          mostrar_wa: section.settings.show_whatsapp,
+          wa_texto: section.settings.wa_label,
+          wa_mensaje: section.settings.wa_message
+        %}
+      </div>
+    </div>
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="bono-regalo__pasos-wrap">
+        {%- if section.settings.steps_title != blank -%}
+          <h2 class="bono-regalo__steps-title">{{ section.settings.steps_title | escape }}</h2>
+        {%- endif -%}
+        <ol class="bono-regalo__pasos list-unstyled" role="list">
+          {%- for b in section.blocks -%}
+            <li class="bono-regalo__paso" {{ b.shopify_attributes }}>
+              <div class="bono-regalo__paso-head">
+                <span class="bono-regalo__numero" aria-hidden="true">{{ forloop.index }}</span>
+                <span class="bono-regalo__icono" aria-hidden="true">
+                  {%- case b.settings.icon -%}
+                    {%- when 'correo' -%}
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m4 7 8 6 8-6"/></svg>
+                    {%- when 'carrito' -%}
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M3 4h2l2.2 10.2a1.5 1.5 0 0 0 1.5 1.2h8.6a1.5 1.5 0 0 0 1.5-1.1L21 8H6.2"/><circle cx="9.5" cy="19.5" r="1.5"/><circle cx="17" cy="19.5" r="1.5"/></svg>
+                    {%- else -%}
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M5 12v8h14v-8M12 8v12"/><path d="M12 8c-1.5-3-5-3.5-5-1.2C7 8.5 12 8 12 8Zm0 0c1.5-3 5-3.5 5-1.2C17 8.5 12 8 12 8Z"/></svg>
+                  {%- endcase -%}
+                </span>
+              </div>
+              <h3 class="bono-regalo__paso-title">
+                <span class="visually-hidden">Paso {{ forloop.index }}: </span>{{ b.settings.title | escape }}
+              </h3>
+              <div class="bono-regalo__paso-text">{{ b.settings.text }}</div>
+            </li>
+          {%- endfor -%}
+        </ol>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .bono-regalo {
+    --br-texto: #5a3f28;
+    --br-titulo: #e44068;
+    --br-turquesa: #78c0b3;
+    --br-turquesa-oscuro: #3d8a7d;
+
+    background-color: #fffaf7;
+    color: var(--br-texto);
+  }
+
+  .bono-regalo__inner {
+    padding-block: var(--padding-4xl) var(--padding-5xl);
+  }
+
+  .bono-regalo__top {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--gap-2xl);
+    align-items: center;
+  }
+
+  @media screen and (min-width: 990px) {
+    .bono-regalo__top {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+      gap: var(--gap-3xl);
+    }
+  }
+
+  /* Foto: esquinas redondeadas y borde carmesí, como la foto del banner del home. */
+  .bono-regalo__img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 4px solid var(--br-titulo);
+    border-radius: 24px;
+  }
+
+  .bono-regalo__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-md);
+  }
+
+  /* Títulos en Fredoka (regla global de h1/h2 en base.css). */
+  .bono-regalo__title {
+    margin: 0;
+    color: var(--br-titulo);
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    line-height: 1.1;
+  }
+
+  .bono-regalo__subtitle,
+  .bono-regalo__steps-title {
+    margin: 0;
+    color: var(--br-titulo);
+    font-size: clamp(1.375rem, 2.4vw, 1.75rem);
+    line-height: 1.2;
+  }
+
+  .bono-regalo__text {
+    font-size: 1.0625rem;
+    line-height: 1.6;
+  }
+
+  .bono-regalo__text > * {
+    margin: 0;
+  }
+
+  .bono-regalo__text > * + * {
+    margin-block-start: var(--margin-xs);
+  }
+
+  /* Pasos */
+  .bono-regalo__pasos-wrap {
+    margin-block-start: var(--margin-6xl);
+    text-align: center;
+  }
+
+  .bono-regalo__pasos {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--gap-lg);
+    margin: var(--margin-xl) 0 0;
+    text-align: start;
+  }
+
+  @media screen and (min-width: 750px) {
+    .bono-regalo__pasos {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .bono-regalo__paso {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-xs);
+    padding: var(--padding-2xl);
+    border-radius: 24px;
+    background-color: #fff;
+    box-shadow: 0 8px 24px rgb(90 63 40 / 0.08);
+  }
+
+  .bono-regalo__paso-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-block-end: var(--margin-xs);
+  }
+
+  /* Número en círculo turquesa: café sobre #78c0b3 da 4,6:1. */
+  .bono-regalo__numero {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background-color: var(--br-turquesa);
+    color: var(--br-texto);
+    font-family: var(--font-accent);
+    font-weight: 700;
+    font-size: 1.25rem;
+  }
+
+  .bono-regalo__icono {
+    display: inline-flex;
+    width: 32px;
+    height: 32px;
+    color: var(--br-turquesa-oscuro);
+  }
+
+  .bono-regalo__icono svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .bono-regalo__paso-title {
+    margin: 0;
+    color: var(--br-texto);
+    font-family: var(--font-body--family);
+    font-weight: 700;
+    font-size: 1.125rem;
+  }
+
+  .bono-regalo__paso-text {
+    font-size: 1rem;
+    line-height: 1.55;
+  }
+
+  .bono-regalo__paso-text > * {
+    margin: 0;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Bono de regalo",
+  "tag": "section",
+  "class": "section-wrapper",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Foto"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título",
+      "default": "Bonos de Regalo Babysam"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtítulo",
+      "default": "¿Qué es un Bono de Regalo?"
+    },
+    {
+      "type": "richtext",
+      "id": "intro",
+      "label": "Texto",
+      "default": "<p>¡Regalar la bienvenida perfecta nunca ha sido tan fácil! Elige el valor, recibe el bono en tu correo y entrégalo a quien quieras.</p>"
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Producto del bono",
+      "info": "Sus variantes son los valores que se muestran."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Texto del botón de compra",
+      "default": "Cómpralo ahora"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_whatsapp",
+      "label": "Mostrar «¿Otro monto?» por WhatsApp",
+      "info": "Usa la línea 1 de la Sede Sur (Configuración del tema → Sedes y WhatsApp).",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "wa_label",
+      "label": "Texto del botón de WhatsApp",
+      "default": "¿Otro monto? Pídelo por WhatsApp"
+    },
+    {
+      "type": "textarea",
+      "id": "wa_message",
+      "label": "Mensaje de WhatsApp",
+      "default": "¡Hola! 🎁✨ Quiero regalar un Bono Regala Felicidad de Babysam 💝\n\nMe interesa un monto diferente a los de la página. ¿Cómo lo puedo comprar?"
+    },
+    {
+      "type": "text",
+      "id": "steps_title",
+      "label": "Título de los pasos",
+      "default": "Así de fácil"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "paso",
+      "name": "Paso",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Ícono",
+          "options": [
+            { "value": "regalo", "label": "Regalo" },
+            { "value": "correo", "label": "Correo" },
+            { "value": "carrito", "label": "Carrito" }
+          ],
+          "default": "regalo"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Título"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Texto"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Bono de regalo"
+    }
+  ]
+}
+{% endschema %}
