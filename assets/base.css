@@ -184,14 +184,14 @@ select {
   }
 
   /* Hover de tarjetas (producto, colección, recurso). Con card_hover_effect
-     en "none" el tema no mueve la tarjeta; aquí todo el efecto vive DENTRO del
-     marco (.product-card__content ya trae border y border-radius desde
-     border-override): sin translate, así que nada se sale ni se corta.
-     .header/.header-drawer quedan fuera. */
-  .product-card__content,
-  .collection-card__content,
-  .resource-card__content {
-    transition: box-shadow 250ms ease-out;
+     en "none" el tema no mueve la tarjeta. El contenedor completo
+     (.product-card__content) no lleva borde, sombra ni fondo en hover: el
+     realce va SOLO en el marco de la imagen (.card-gallery), que es el que
+     trae el borde turquesa y el border-radius vía border-override, así que la
+     sombra sigue sus esquinas. Si el marco no tiene borde, solo hay zoom.
+     .header/.header-drawer/búsqueda predictiva quedan fuera. */
+  .product-card .card-gallery {
+    transition: border-color 250ms ease-out, box-shadow 250ms ease-out;
   }
 
   .product-card .card-gallery img,
@@ -200,12 +200,9 @@ select {
     transition: transform 250ms ease-out;
   }
 
-  .product-card:hover .product-card__content,
-  .collection-card:hover .collection-card__content,
-  .resource-card:hover .resource-card__content {
-    /* el borde viene por custom property inline (border-override): se
-       intensifica con un anillo de 1px del color de borde a opacidad plena */
-    box-shadow: 0 0 0 1px rgb(var(--color-border-rgb)), 0 8px 20px rgb(0 0 0 / 0.12);
+  .product-card:hover .card-gallery[style*='--border-style: solid'] {
+    border-color: color-mix(in srgb, rgb(var(--color-border-rgb)) 80%, black);
+    box-shadow: 0 6px 18px rgb(0 0 0 / 0.12);
   }
 
   .product-card:hover .card-gallery img,
@@ -214,15 +211,21 @@ select {
     transform: scale(1.05);
   }
 
-  .header .product-card:hover .product-card__content,
-  .header-drawer .product-card:hover .product-card__content,
-  .predictive-search-results__card .product-card:hover .product-card__content {
+  .header .product-card:hover .card-gallery,
+  .header-drawer .product-card:hover .card-gallery,
+  .predictive-search-results__card .product-card:hover .card-gallery {
+    border-color: var(--border-color);
     box-shadow: none;
   }
 }
 
+/* El zoom queda dentro del marco redondeado. */
+.product-card .card-gallery {
+  overflow: hidden;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .product-card__content,
+  .product-card .card-gallery,
   .card-gallery img {
     transition: none;
   }
