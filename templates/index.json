@@ -777,7 +777,9 @@
         "text": "<p>El regalo perfecto para la futura mamá, el nuevo papá o un baby shower inolvidable. Con el <strong>Bono de Regalo Babysam</strong> no tienes que adivinar qué necesita el bebé: ellos eligen exactamente lo que les hace falta, desde la cuna de sus sueños hasta la ropa más suave o los juguetes más divertidos.</p>",
         "product": "bono-de-regalo-babysam",
         "show_from": true,
-        "button_label": "Comprar ahora"
+        "button_label": "Comprar ahora",
+        "link_label": "Ver cómo funciona",
+        "link_url": "shopify://pages/bonos-de-regalo-babysam"
       }
     },
     "section_qNjNr8": {
