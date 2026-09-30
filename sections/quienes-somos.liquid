@@ -1,0 +1,173 @@
+{%- comment -%}
+  Página Quiénes somos (templates/page.catalogo.json). Columna de contenido (título de la
+  página, logo y el bloque Visión y Misión en tarjetas) de ~65ch, con el video a la derecha
+  estirado a la misma altura (object-fit: cover). En mobile: título, logo, tarjetas y video.
+  El título es el de la página (Tienda online › Páginas), con el estilo de título de sección
+  del sistema de diseño (.home-section-title: --bs-turquoise, --bs-h2-size).
+{%- endcomment -%}
+
+<div class="quienes-somos page-width">
+  <div class="quienes-somos__grid{% if section.settings.video == blank %} quienes-somos__grid--sin-video{% endif %}">
+    <div class="quienes-somos__content">
+      <h1 class="quienes-somos__title home-section-title">{{ page.title | default: section.settings.fallback_title | escape }}</h1>
+
+      {%- if section.settings.logo != blank -%}
+        {%- assign logo_style = '--logo-width: ' | append: section.settings.logo_width | append: 'px;' -%}
+        {{
+          section.settings.logo
+          | image_url: width: 640
+          | image_tag:
+            class: 'quienes-somos__logo',
+            widths: '240, 320, 480, 640',
+            sizes: '(min-width: 750px) 280px, 60vw',
+            style: logo_style,
+            loading: 'eager'
+        }}
+      {%- endif -%}
+
+      {% content_for 'blocks' %}
+    </div>
+
+    {%- if section.settings.video != blank -%}
+      <div class="quienes-somos__media">
+        {{
+          section.settings.video
+          | video_tag:
+            class: 'quienes-somos__video',
+            autoplay: true,
+            loop: true,
+            muted: true,
+            playsinline: true,
+            controls: false,
+            image_size: '1080x'
+        }}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .quienes-somos {
+    padding-block: 24px 48px;
+
+    @media screen and (min-width: 990px) {
+      padding-block: 32px 64px;
+    }
+  }
+
+  .quienes-somos__grid {
+    display: grid;
+    gap: 28px;
+
+    @media screen and (min-width: 990px) {
+      grid-template-columns: minmax(0, 65ch) minmax(0, 1fr);
+      align-items: stretch;
+      justify-content: center;
+      gap: 48px;
+    }
+  }
+
+  .quienes-somos__grid--sin-video {
+    @media screen and (min-width: 990px) {
+      grid-template-columns: minmax(0, 65ch);
+    }
+  }
+
+  .quienes-somos__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    min-width: 0;
+  }
+
+  .quienes-somos__title {
+    margin: 0;
+    text-align: center;
+  }
+
+  .quienes-somos__logo {
+    display: block;
+    width: min(var(--logo-width, 280px), 70%);
+    height: auto;
+  }
+
+  /* Borde y radio como el bloque de video que tenía la página (4px, 25px). En desktop el video
+     va absoluto dentro del marco: la fila toma la altura del contenido y el video la llena
+     (si no, el alto natural de un video vertical estiraría la fila). */
+  .quienes-somos__media {
+    position: relative;
+    overflow: hidden;
+    border: 4px solid var(--bs-turquoise-soft);
+    border-radius: 25px;
+    background-color: #fff;
+
+    @media screen and (min-width: 990px) {
+      min-height: 420px;
+    }
+  }
+
+  .quienes-somos__video {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 80vh;
+    object-fit: cover;
+
+    @media screen and (min-width: 990px) {
+      position: absolute;
+      inset: 0;
+      height: 100%;
+      max-height: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Quiénes somos",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "label": "Ancho del logo",
+      "min": 120,
+      "max": 400,
+      "step": 10,
+      "unit": "px",
+      "default": 280
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Video"
+    },
+    {
+      "type": "text",
+      "id": "fallback_title",
+      "label": "Título si la página no tiene",
+      "default": "Quiénes somos"
+    }
+  ],
+  "blocks": [
+    { "type": "mision-vision" }
+  ],
+  "max_blocks": 1,
+  "presets": [
+    {
+      "name": "Quiénes somos",
+      "blocks": [{ "type": "mision-vision" }]
+    }
+  ],
+  "enabled_on": {
+    "templates": ["page"]
+  }
+}
+{% endschema %}
