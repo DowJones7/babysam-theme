@@ -479,7 +479,37 @@
     - font-size del <h1> con clamp: se baja solo acá, no toca otros h1 ni
       desktop.
   */
+  /*
+    Legibilidad del texto sobre el video (y sobre el poster mientras carga):
+    sombra suave compartida por título y frase. La frase no usa el carmesí del
+    esquema (scheme-1 foreground) sino crema claro, Poppins 500 (cargada en
+    snippets/theme-styles-variables.liquid). El color y el tamaño van acá
+    porque blocks/text.liquid ignora las settings color/font_size del bloque.
+  */
+  .hero {
+    --hero-text-shadow: 0 1px 3px rgb(0 0 0 / 0.55), 0 2px 12px rgb(0 0 0 / 0.35);
+  }
+
+  .hero .richtext-content h1 {
+    text-shadow: var(--hero-text-shadow);
+  }
+
+  .hero .richtext-content p {
+    color: #fff8f0;
+    font-family: var(--font-body--family);
+    font-weight: 500;
+    font-size: 1.25rem;
+    line-height: 1.5;
+    text-shadow: var(--hero-text-shadow);
+  }
+
+  /* Botón "Comprar ahora": estilo en assets/base.css (.button--babysam-carmesi + variante Hero). */
+
   @media screen and (max-width: 749px) {
+    .hero .richtext-content p {
+      font-size: 1.0625rem;
+    }
+
     .hero .content-container,
     .hero .image-and-text-container,
     .hero .richtext-content {

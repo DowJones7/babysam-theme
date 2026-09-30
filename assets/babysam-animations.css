@@ -130,21 +130,8 @@
     animation: bs-hero-in 620ms both;
   }
 
-  /* --- 1. Hero: hover del botón "Comprar ahora" ----------------------------
-     Mantiene las transiciones de color/sombra del tema y solo cambia la de
-     `transform` a 160ms con la curva de rebote. El hundimiento a scale(.97)
-     en :active lo sigue poniendo assets/base.css. */
-  [id$="__hero_main"] .button {
-    transition:
-      color var(--animation-speed) var(--animation-easing),
-      box-shadow var(--animation-speed) var(--animation-easing),
-      background-color var(--animation-speed) var(--animation-easing),
-      transform 160ms var(--bs-ease-bounce);
-  }
-
-  [id$="__hero_main"] .button:hover {
-    transform: scale(1.05);
-  }
+  /* 1. Hero: el hover del botón "Comprar ahora" (antes rebote a scale(1.05))
+     ahora es la elevación leve del botón carmesí compartido, en assets/base.css. */
 
   /* --- 4. Marquee de marcas: hover de cada logo --------------------------- */
   [id$="__brands_marquee"] .image-block img {

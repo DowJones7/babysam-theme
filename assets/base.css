@@ -4673,7 +4673,9 @@ text-component {
 
 /* ---------------------------------------------------------------------------------------------
    Botón carmesí compartido: página del Bono y banner "Regala felicidad" (bono-regalo,
-   bono-banner). El botón "Enviar mensaje" del contacto usa las mismas variables.
+   bono-banner) y el botón primario del Hero ("Comprar ahora", bloque genérico "button", que no
+   admite clases propias: se toma por selector). El botón "Enviar mensaje" del contacto usa las
+   mismas variables.
    Carmesí más profundo que #e44068 (4,01:1 con blanco, no pasa AA): #d2345b da 4,79:1;
    hover #bc3454 (5,59:1).
    --------------------------------------------------------------------------------------------- */
@@ -4682,7 +4684,8 @@ text-component {
   --babysam-carmesi-hover: #bc3454;
 }
 
-.button--babysam-carmesi {
+.button--babysam-carmesi,
+.hero a.button:not(.button-secondary, .link) {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -4703,24 +4706,36 @@ text-component {
   transition: background-color 200ms ease, box-shadow 200ms ease, transform 200ms ease;
 }
 
-.button--babysam-carmesi:hover {
+.button--babysam-carmesi:hover,
+.hero a.button:not(.button-secondary, .link):hover {
   background-color: var(--babysam-carmesi-hover);
   color: #fff;
   transform: translateY(-2px);
   box-shadow: 0 8px 18px rgb(188 52 84 / 0.3);
 }
 
-.button--babysam-carmesi:focus-visible {
+/* Variante Hero: un poco más grande y con sombra en reposo para despegarlo del video. */
+.hero a.button:not(.button-secondary, .link) {
+  min-height: 52px;
+  padding-inline: 2.25rem;
+  font-size: 1.125rem;
+  box-shadow: 0 4px 14px rgb(0 0 0 / 0.25);
+}
+
+.button--babysam-carmesi:focus-visible,
+.hero a.button:not(.button-secondary, .link):focus-visible {
   outline: 2px solid #3d8a7d;
   outline-offset: 3px;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .button--babysam-carmesi {
+  .button--babysam-carmesi,
+  .hero a.button:not(.button-secondary, .link) {
     transition: none;
   }
 
-  .button--babysam-carmesi:hover {
+  .button--babysam-carmesi:hover,
+  .hero a.button:not(.button-secondary, .link):hover {
     transform: none;
   }
 }

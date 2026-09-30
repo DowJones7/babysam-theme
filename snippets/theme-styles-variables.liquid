@@ -10,6 +10,15 @@
   {{ primary_font_italic | font_face: font_display: 'swap' }}
   {{ primary_font_bold_italic | font_face: font_display: 'swap' }}
 
+  {%- comment -%}
+    Peso 500 (medium) del cuerpo: lo usa la frase del Hero (sections/hero.liquid). Sin esta
+    declaración el navegador cae a 400. font_modify devuelve nil si la fuente no tiene 500.
+  {%- endcomment -%}
+  {%- assign primary_font_medium = settings.type_body_font | font_modify: 'weight', '500' -%}
+  {%- if primary_font_medium -%}
+    {{ primary_font_medium | font_face: font_display: 'swap' }}
+  {%- endif %}
+
   {% if settings.type_subheading_font != settings.type_body_font %}
     {%- liquid
       assign secondary_font_bold = settings.type_subheading_font | font_modify: 'weight', 'bold'
