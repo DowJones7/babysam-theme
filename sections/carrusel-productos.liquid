@@ -248,7 +248,7 @@
 
 .collection-card-item {
   scroll-snap-align: start;
-  border: 2px solid var(--color-foreground);
+  border: 2px solid var(--bs-turquoise-soft);
   border-radius: 15px;
   overflow: hidden;
   background-image: var(--card-pattern-url);
@@ -282,7 +282,7 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  border: 2px solid var(--color-foreground);
+  border: 2px solid var(--bs-turquoise-soft);
   background: var(--color-background);
   cursor: pointer;
   padding: 0;
@@ -314,7 +314,7 @@
 }
 
 .card-collection__title {
-  font-size: 1.35rem;
+  font-size: var(--bs-h3-size);
   font-weight: 600;
   margin: 0 0 4px;
   line-height: 1.2;
@@ -343,9 +343,9 @@
    (0,2,0) y a su variante en @media(min-width:990px), sin !important */
 .collection-carousel .card-collection__overlay .card-collection__title {
   margin: 0;
-  /* Tarjetas grandes (ver grid-auto-columns): título a 1.15rem, igual que la
-     página /collections. Antes 1rem porque las tarjetas eran de ~180px. */
-  font-size: 1.15rem;
+  /* Título de tarjeta: H3 del sistema de diseño (--bs-h3-size, base.css), igual
+     que la página /collections. */
+  font-size: var(--bs-h3-size);
   font-weight: 600;
   line-height: 1.2;
   color: #fff;

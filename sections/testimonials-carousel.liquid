@@ -315,8 +315,8 @@
 
 {% stylesheet %}
 /*
-  Testimonios: tarjetas blancas redondeadas, texto café oscuro (#5a3f28, 9+:1 sobre blanco),
-  comillas turquesa, círculo con la inicial y estrellas grandes. Drag + snap (script de arriba);
+  Testimonios: tarjetas blancas redondeadas (.babysam-card), texto --bs-text, comillas y círculo
+  con la inicial en --bs-turquoise, estrellas grandes. Drag + snap (script de arriba);
   en mobile cada tarjeta ocupa 85% para que la siguiente se asome.
   Tarjetas cortadas en el borde: desvanecido (mask) solo del lado con contenido fuera de vista.
   Debajo, el botón que abre el formulario de reseñas en un modal.
@@ -396,7 +396,7 @@
   position: absolute;
   top: 6px;
   left: 20px;
-  color: #78c0b3;
+  color: var(--bs-turquoise);
   font-family: var(--font-accent), var(--font-heading--family);
   font-size: 4rem;
   font-weight: 700;
@@ -418,7 +418,7 @@
 .testimonial-card-item__quote {
   flex: 1;
   margin: 0;
-  font-size: 1rem;
+  font-size: var(--bs-body-size);
   line-height: 1.6;
   overflow-wrap: anywhere;
 }
@@ -430,7 +430,7 @@
   margin: 0;
 }
 
-/* Blanco sobre #3d8a7d: 4,1:1, suficiente para texto grande en negrilla. */
+/* Blanco sobre --bs-turquoise: 3,2:1, suficiente para texto grande en negrilla (19px+). */
 .testimonial-card-item__avatar {
   display: inline-grid;
   place-items: center;
@@ -438,9 +438,9 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: #3d8a7d;
+  background-color: var(--bs-turquoise);
   color: #fff;
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   font-weight: 700;
 }
 
@@ -483,7 +483,7 @@
   position: absolute;
   top: 12px;
   right: 12px;
-  color: #5a3f28;
+  color: var(--bs-text);
 }
 
 /* Campos y botón de .form--babysam / .button--babysam-carmesi (base.css). */
@@ -494,8 +494,8 @@
 
 .resena-form__titulo {
   margin: 0 48px 16px 0;
-  color: var(--babysam-texto);
-  font-size: 1.25rem;
+  color: var(--bs-text);
+  font-size: var(--bs-h3-size);
 }
 
 .resena-form__form {
@@ -559,7 +559,7 @@
   margin: 0;
   align-self: flex-end;
   font-size: var(--font-size--sm);
-  color: rgb(90 63 40 / 0.75);
+  color: var(--bs-text-muted);
 }
 
 .resena-form__contador.is-limite {
@@ -577,10 +577,10 @@
   gap: var(--gap-xs);
   max-width: 480px;
   padding: var(--padding-md) var(--padding-lg);
-  border: 1.5px solid #78c0b3;
+  border: 1.5px solid var(--bs-turquoise-soft);
   border-radius: 16px;
   background-color: rgb(120 192 179 / 0.18);
-  color: #5a3f28; /* fuera de .form--babysam: sin sus variables */
+  color: var(--bs-text);
   font-weight: 600;
   line-height: 1.4;
 }

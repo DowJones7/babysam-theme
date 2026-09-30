@@ -6,8 +6,8 @@
   (snippets/bono-valores.liquid). Abajo, "Así de fácil": los pasos como tarjetas (bloques
   «Paso», editables), lado a lado en desktop y apiladas en mobile.
 
-  Colores sobre el crema #fffaf7: títulos Fredoka en #e44068 (3,87:1, texto grande), texto en
-  #5a3f28 (9,3:1) a 17 px. Botones: .button--babysam-carmesi y .button--babysam-wa (base.css).
+  Colores: tokens del sistema de diseño (assets/base.css): títulos Fredoka en --bs-turquoise
+  (texto grande), texto en --bs-text. Botones: .button--babysam-carmesi y .button--babysam-wa (base.css).
 {%- endcomment -%}
 
 {%- liquid
@@ -92,10 +92,10 @@
 
 {% stylesheet %}
   .bono-regalo {
-    --br-texto: #5a3f28;
-    --br-titulo: #e44068;
-    --br-turquesa: #78c0b3;
-    --br-turquesa-oscuro: #3d8a7d;
+    --br-texto: var(--bs-text);
+    --br-titulo: var(--bs-turquoise);
+    --br-turquesa: var(--bs-turquoise-soft);
+    --br-turquesa-oscuro: var(--bs-turquoise);
 
     background-color: #fffaf7;
     color: var(--br-texto);
@@ -138,7 +138,7 @@
   .bono-regalo__title {
     margin: 0;
     color: var(--br-titulo);
-    font-size: clamp(2rem, 4vw, 2.75rem);
+    font-size: var(--bs-h1-size);
     line-height: 1.1;
   }
 
@@ -146,12 +146,12 @@
   .bono-regalo__steps-title {
     margin: 0;
     color: var(--br-titulo);
-    font-size: clamp(1.375rem, 2.4vw, 1.75rem);
+    font-size: var(--bs-h2-size);
     line-height: 1.2;
   }
 
   .bono-regalo__text {
-    font-size: 1.0625rem;
+    font-size: var(--bs-body-size);
     line-height: 1.6;
   }
 
@@ -231,7 +231,7 @@
     color: var(--br-texto);
     font-family: var(--font-body--family);
     font-weight: 700;
-    font-size: 1.125rem;
+    font-size: var(--bs-h3-size);
   }
 
   .bono-regalo__paso-text {

@@ -168,7 +168,7 @@
 {% stylesheet %}
   /* Todo prefijado con .baby-shower-form. Campos, foco y errores: .form--babysam (base.css). */
   .baby-shower-form {
-    --bs-titulo: #e44068; /* Fredoka 700 grande sobre blanco: 4,01:1, válido para texto grande */
+    --bsf-titulo: var(--bs-turquoise); /* token del sistema de diseño (assets/base.css) */
 
     width: 100%;
     max-width: 760px;
@@ -183,8 +183,8 @@
   /* Título limpio en Fredoka (regla global de h2 en base.css), sin cinta ni sombra. */
   .baby-shower-form .baby-shower-form__title {
     margin: 0 0 var(--margin-md);
-    color: var(--bs-titulo);
-    font-size: clamp(1.75rem, 3.5vw, 2.25rem);
+    color: var(--bsf-titulo);
+    font-size: var(--bs-h2-size);
     line-height: 1.15;
     text-align: center;
   }
@@ -240,7 +240,7 @@
   .baby-shower-form .baby-shower-form__estado {
     margin-block-start: var(--margin-md);
     padding: var(--padding-md) var(--padding-lg);
-    border: 1.5px solid #78c0b3;
+    border: 1.5px solid var(--bs-turquoise-soft);
     border-radius: 16px;
     background-color: rgb(120 192 179 / 0.15);
     font-weight: 600;

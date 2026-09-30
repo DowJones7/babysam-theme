@@ -1,9 +1,8 @@
 {%- comment -%}
   Franja de confianza del home (Envíos seguros / Cuotas sin interés / Tiendas físicas).
   Tarjetas blancas (.babysam-card, assets/base.css, la misma superficie de los testimonios) sobre
-  el crema de la página, ícono blanco en círculo #3d8a7d como las redes del footer (4,1:1; el
-  turquesa #78c0b3 da 2,1:1 y un ícono necesita 3:1). Título café #5a3f28 (9+:1) y subtítulo
-  gris oscuro #5c5550 (7+:1) sobre blanco.
+  el crema de la página, ícono blanco en círculo --bs-turquoise como las redes del footer (3,2:1).
+  Título --bs-text y subtítulo --bs-text-muted (tokens en base.css).
   Con enlace, la tarjeta entera es el <a>. "/#tiendas" abre el panel Nuestras tiendas del header
   (assets/stores-panel.js escucha cualquier enlace a #tiendas).
   Ícono a la izquierda y texto a la derecha en todos los anchos: 3 columnas desde 750px, apiladas
@@ -96,7 +95,7 @@
   }
 
   .trust-bs__card--link:focus-visible {
-    outline: 2px solid #3d8a7d;
+    outline: 2px solid var(--bs-turquoise);
     outline-offset: 3px;
   }
 
@@ -107,7 +106,7 @@
     width: 44px;
     height: 44px;
     border-radius: 50%;
-    background-color: #3d8a7d;
+    background-color: var(--bs-turquoise);
     color: #fff;
 
     @media screen and (min-width: 750px) {
@@ -130,16 +129,16 @@
   }
 
   .trust-bs__title {
-    color: #5a3f28;
+    color: var(--bs-text);
     font-family: var(--font-body--family);
-    font-size: 1rem;
+    font-size: var(--bs-h3-size);
     font-weight: 600;
     line-height: 1.3;
   }
 
   .trust-bs__subtitle {
-    color: #5c5550;
-    font-size: 0.875rem;
+    color: var(--bs-text-muted);
+    font-size: var(--bs-small-size);
     line-height: 1.4;
   }
 

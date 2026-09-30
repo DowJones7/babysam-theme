@@ -476,8 +476,8 @@
     font_size) se desborda a la derecha.
     - width: 100% !important en la cadena de contenedores para ganarle al
       max-width inline.
-    - font-size del <h1> con clamp: se baja solo acá, no toca otros h1 ni
-      desktop.
+    - El tamaño del <h1> sale de --bs-h1-size (tokens en base.css), que ya
+      baja en mobile.
   */
   /*
     Legibilidad del texto sobre el video (y sobre el poster mientras carga):
@@ -491,6 +491,8 @@
   }
 
   .hero .richtext-content h1 {
+    color: var(--bs-turquoise);
+    font-size: var(--bs-h1-size);
     text-shadow: var(--hero-text-shadow);
   }
 
@@ -518,7 +520,6 @@
     }
 
     .hero .richtext-content h1 {
-      font-size: clamp(1.7rem, 7vw, 2.4rem);
       text-wrap: balance;
       overflow-wrap: break-word;
     }

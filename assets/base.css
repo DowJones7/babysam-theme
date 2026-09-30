@@ -962,16 +962,53 @@ h2 {
   Selector con tag+clase para ganarle a estilos propios de un bloque
   específico (ej. .form-title) sin depender del orden de carga del CSS.
 */
-h2.home-section-title,
-.home-section-title {
-  font-size: var(--font-h2--size);
-  font-weight: var(--font-h2--weight);
-  line-height: 1.35;
+/* Doble clase (0,2,0) y después de .h2.h2 en este archivo: gana sin !important. */
+.home-section-title.home-section-title {
+  color: var(--bs-turquoise);
+  font-size: var(--bs-h2-size);
+  font-weight: 700;
+  line-height: 1.2;
 }
 
 p.home-section-body,
 .home-section-body {
-  font-size: var(--font-size--body-md);
+  font-size: var(--bs-body-size);
+}
+
+/*
+  Sistema de diseño Babysam (tokens). Úsalos en toda sección, bloque o snippet propio.
+  Colores de texto (solo estos 4):
+  - --bs-text #5a3f28: texto principal (párrafos, nombres, precios). 9,7:1 sobre blanco.
+  - --bs-text-muted #5c5550: texto secundario (subtítulos, apoyo). 7,3:1 sobre blanco.
+  - --bs-turquoise #499d8e: títulos de sección e íconos (y círculos con ícono blanco). Es el tono
+    más cercano a #78c0b3 con 3:1: 3,2:1 contra blanco y 3,0:1 contra el crema de la página
+    (#fbf7f4). Solo títulos grandes (24px+, o 19px+ en negrilla); nunca texto de párrafo.
+  - --bs-crimson #d2345b (hover #bc3454): botones, enlaces y acentos. 4,8:1 con blanco.
+  --bs-turquoise-soft #78c0b3 es SOLO decorativo (bordes, fondos, halos): nunca texto ni íconos.
+  Escala tipográfica (mobile / desde 750px): H1 del Hero 34/56px, H2 de título de sección
+  28/40px, H3 de tarjeta o columna 18/20px, cuerpo 16px, pequeño 14px.
+*/
+:root {
+  --bs-text: #5a3f28;
+  --bs-text-muted: #5c5550;
+  --bs-turquoise: #499d8e;
+  --bs-turquoise-soft: #78c0b3;
+  --bs-crimson: #d2345b;
+  --bs-crimson-hover: #bc3454;
+
+  --bs-h1-size: 2.125rem;
+  --bs-h2-size: 1.75rem;
+  --bs-h3-size: 1.125rem;
+  --bs-body-size: 1rem;
+  --bs-small-size: 0.875rem;
+}
+
+@media screen and (min-width: 750px) {
+  :root {
+    --bs-h1-size: 3.5rem;
+    --bs-h2-size: 2.5rem;
+    --bs-h3-size: 1.25rem;
+  }
 }
 
 /*
@@ -983,7 +1020,7 @@ p.home-section-body,
   border-radius: 24px;
   background-color: #fff;
   box-shadow: 0 6px 20px rgb(90 63 40 / 0.1);
-  color: #5a3f28;
+  color: var(--bs-text);
 }
 
 :first-child:is(.h1, .h2, .h3, .h4, .h5, .h6) {
@@ -4560,15 +4597,15 @@ text-component {
    Baby Shower (blocks/baby-shower-form.liquid). Campos en píldora, textarea redondeada, foco
    turquesa con anillo accesible para teclado, errores y etiquetas. Lo propio de cada formulario
    (íconos, botón de envío) vive en su archivo.
-   - Texto y etiquetas en café #5a3f28 (9,3:1 sobre crema, más sobre blanco).
-   - Foco: borde #78c0b3 + halo; con teclado, anillo #3d8a7d (el turquesa da 2,1:1 y un indicador
-     de foco necesita 3:1; #3d8a7d da 4,1:1).
+   - Texto y etiquetas en --bs-text (tokens del sistema de diseño, más arriba en este archivo).
+   - Foco: borde --bs-turquoise-soft + halo; con teclado, anillo --bs-turquoise (3,2:1: un
+     indicador de foco necesita 3:1).
    - Especificidad (0,2,0) a propósito: le gana a los estilos base del tema para inputs.
    --------------------------------------------------------------------------------------------- */
 .form--babysam {
-  --babysam-texto: #5a3f28;
-  --babysam-turquesa: #78c0b3;
-  --babysam-turquesa-foco: #3d8a7d;
+  --babysam-texto: var(--bs-text);
+  --babysam-turquesa: var(--bs-turquoise-soft);
+  --babysam-turquesa-foco: var(--bs-turquoise);
   --babysam-transicion: 200ms ease;
 }
 
@@ -4649,8 +4686,8 @@ text-component {
    hover #bc3454 (5,59:1).
    --------------------------------------------------------------------------------------------- */
 :root {
-  --babysam-carmesi: #d2345b;
-  --babysam-carmesi-hover: #bc3454;
+  --babysam-carmesi: var(--bs-crimson);
+  --babysam-carmesi-hover: var(--bs-crimson-hover);
 }
 
 .button--babysam-carmesi,
@@ -4707,7 +4744,7 @@ text-component {
 
 .button--babysam-carmesi:focus-visible,
 .hero a.button:not(.button-secondary, .link):focus-visible {
-  outline: 2px solid #3d8a7d;
+  outline: 2px solid var(--bs-turquoise);
   outline-offset: 3px;
 }
 
