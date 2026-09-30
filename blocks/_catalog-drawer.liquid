@@ -86,7 +86,7 @@
 
         {%- if show_search -%}
           <form
-            class="catalog-drawer__search"
+            class="catalog-drawer__search form--babysam"
             action="{{ routes.search_url }}"
             method="get"
             role="search"
@@ -94,7 +94,7 @@
             <input
               type="search"
               name="q"
-              class="catalog-drawer__search-input"
+              class="catalog-drawer__search-input form-babysam__input"
               placeholder="{{ placeholder | escape }}"
               aria-label="{{ placeholder | escape }}"
               autocomplete="off"
@@ -152,9 +152,9 @@
         {%- endcomment -%}
         {%- if block.settings.catalog_drawer_show_stores -%}
           <div class="catalog-drawer__extra">
-            <a class="catalog-drawer__link catalog-drawer__link--stores" href="#tiendas">
+            <a class="catalog-drawer__link catalog-drawer__link--stores babysam-card" href="#tiendas">
               <span class="catalog-drawer__pin" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
                   <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0Z" />
                   <circle cx="12" cy="10" r="3" />
                 </svg>
@@ -179,12 +179,11 @@
     --catalog-drawer-width-mobile: 85vw;
     --catalog-drawer-padding: var(--padding-lg, 1.25rem);
 
-    /* Acento del drawer. NO usa --color-primary a propósito: en el esquema del header y en
-       scheme-2 (el que usa el drawer) `primary` vale rgba(0,0,0,0), o sea transparente, y el
-       anillo de foco y la barra del ítem activo quedarían invisibles. --color-foreground es
-       un color real en los 14 esquemas del tema. Para cambiar el acento, tocar solo esto. */
-    --catalog-drawer-accent: var(--color-foreground);
-    --catalog-drawer-accent-rgb: var(--color-foreground-rgb);
+    /* Colores: el fondo crema y el texto (--bs-text) los da drawer_color_scheme = scheme-1
+       (fondo opaco en assets/base.css). Acá solo lo que el esquema no resuelve: acento
+       turquesa del sistema de diseño y una sola línea neutra para todos los separadores. */
+    --catalog-drawer-accent: var(--bs-turquoise);
+    --catalog-drawer-line: rgb(90 63 40 / 0.12);
 
     --catalog-drawer-easing: cubic-bezier(0.22, 1, 0.36, 1);
     --animation-speed: 350ms;
@@ -238,7 +237,7 @@
     padding: 0;
     overflow: hidden;
     border: 0;
-    border-inline-end: 1px solid var(--color-border);
+    border-inline-end: 1px solid var(--catalog-drawer-line);
     background-color: var(--color-background);
     color: var(--color-foreground);
     box-shadow: var(--shadow-drawer, 0 0 32px rgb(0 0 0 / 14%));
@@ -281,17 +280,16 @@
     justify-content: space-between;
     gap: var(--padding-sm, 0.75rem);
     padding: var(--catalog-drawer-padding, 1.25rem);
-    border-block-end: 1px solid var(--color-border);
+    border-block-end: 1px solid var(--catalog-drawer-line);
   }
 
-  /* `color` explícito y no heredado: base.css fuerza sobre todo h2
-     `color: var(--color, var(--font-h2--color))`, y en varios esquemas del tema
-     --color-foreground-heading vale rgba(0,0,0,0). Sin esta línea el título es transparente. */
+  /* Fredoka en --bs-turquoise (color explícito: la regla global de h2 usa
+     --font-h2--color, que en otros esquemas del tema puede ser transparente). */
   .catalog-drawer__heading {
     margin: 0;
-    color: var(--color-foreground);
+    color: var(--catalog-drawer-accent);
     font-family: var(--font-accent);
-    font-size: var(--font-size--lg, 1.125rem);
+    font-size: var(--bs-h3-size);
     font-weight: 700;
     line-height: 1.2;
   }
@@ -322,38 +320,15 @@
 
   /* ---------------------------------------------------------------- buscador */
 
+  /* Píldora, borde suave y foco turquesa: .form--babysam / .form-babysam__input (base.css).
+     Acá solo el margen y la lupa dentro del campo. */
   .catalog-drawer__search {
-    display: flex;
-    align-items: center;
-    gap: var(--padding-xs, 0.5rem);
+    position: relative;
     margin: var(--catalog-drawer-padding, 1.25rem);
-    padding-inline: 1rem;
-    border: 1px solid var(--color-border);
-    border-radius: var(--style-border-radius-pills, 999px);
-    background-color: var(--color-input-background, var(--color-background));
-    transition:
-      border-color 180ms var(--catalog-drawer-easing),
-      box-shadow 180ms var(--catalog-drawer-easing);
   }
 
-  .catalog-drawer__search:focus-within {
-    border-color: var(--catalog-drawer-accent);
-    box-shadow: 0 0 0 3px rgb(var(--catalog-drawer-accent-rgb) / 18%);
-  }
-
-  .catalog-drawer__search-input {
-    flex: 1 1 auto;
-    min-width: 0;
-    padding-block: 0.7rem;
-    border: 0;
-    background: none;
-    color: var(--color-input-text, var(--color-foreground));
-    font-family: var(--font-body--family);
-    font-size: var(--font-size--sm, 0.95rem);
-  }
-
-  .catalog-drawer__search-input:focus {
-    outline: none;
+  .catalog-drawer__search.form--babysam .catalog-drawer__search-input {
+    padding-inline-end: 3rem;
   }
 
   /* La X nativa del type=search rompe la píldora en WebKit. */
@@ -362,15 +337,14 @@
   }
 
   .catalog-drawer__search-submit {
-    flex: none;
-    width: 28px;
-    height: 28px;
-    opacity: 0.7;
-    transition: opacity 180ms var(--catalog-drawer-easing);
-  }
-
-  .catalog-drawer__search-submit:hover {
-    opacity: 1;
+    position: absolute;
+    inset-block: 0;
+    inset-inline-end: 0.5rem;
+    width: 40px;
+    margin-block: auto;
+    height: 40px;
+    border-radius: 999px;
+    color: var(--catalog-drawer-accent);
   }
 
   .catalog-drawer__search-submit .svg-wrapper {
@@ -391,7 +365,7 @@
   }
 
   .catalog-drawer__item + .catalog-drawer__item {
-    border-block-start: 1px solid rgb(var(--color-border-rgb) / 55%);
+    border-block-start: 1px solid var(--catalog-drawer-line);
   }
 
   .catalog-drawer__link {
@@ -407,8 +381,9 @@
   }
 
   .catalog-drawer__link:hover,
-  .catalog-drawer__link:focus-visible {
-    background-color: rgb(var(--color-foreground-rgb) / 6%);
+  .catalog-drawer__link:focus-visible,
+  .catalog-drawer__link:active {
+    background-color: rgb(120 192 179 / 0.14);
   }
 
   /* Barra lateral del ítem activo. Va como box-shadow interior para no correr el texto. */
@@ -426,11 +401,9 @@
     flex: none;
     width: 14px;
     height: 14px;
-    opacity: 0.45;
+    color: var(--catalog-drawer-accent);
     rotate: -90deg;
-    transition:
-      transform 180ms var(--catalog-drawer-easing),
-      opacity 180ms var(--catalog-drawer-easing);
+    transition: transform 180ms var(--catalog-drawer-easing);
   }
 
   .catalog-drawer__link:hover .catalog-drawer__link-text,
@@ -440,39 +413,49 @@
 
   .catalog-drawer__link:hover .catalog-drawer__chevron,
   .catalog-drawer__link:focus-visible .catalog-drawer__chevron {
-    opacity: 0.9;
     transform: translateX(4px);
   }
 
-  /* Acceso a tiendas: separado de la lista con un borde grueso arriba. */
+  /* Acceso a tiendas: tarjeta destacada al final (.babysam-card, base.css), con el pin en
+     círculo turquesa como la franja de confianza del home. */
   .catalog-drawer__extra {
-    margin-block-start: var(--catalog-drawer-padding, 1.25rem);
-    border-block-start: 1px solid var(--color-border);
-    padding-block-start: 0.35rem;
+    margin: 0 var(--catalog-drawer-padding, 1.25rem) var(--catalog-drawer-padding, 1.25rem);
   }
 
   .catalog-drawer__link--stores {
+    padding: 0.85rem 1rem;
+    border-radius: 16px;
     font-weight: 600;
   }
 
+  .catalog-drawer__link--stores:hover,
+  .catalog-drawer__link--stores:focus-visible,
+  .catalog-drawer__link--stores:active {
+    background-color: #fff;
+    box-shadow: 0 8px 22px rgb(90 63 40 / 0.14);
+  }
+
   .catalog-drawer__pin {
-    display: block;
+    display: grid;
+    place-items: center;
     flex: none;
-    width: 17px;
-    height: 17px;
-    opacity: 0.75;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--catalog-drawer-accent);
+    color: #fff;
   }
 
   .catalog-drawer__pin svg {
     display: block;
-    width: 100%;
-    height: 100%;
+    width: 20px;
+    height: 20px;
   }
 
   /* Preparado para el contador; el markup que lo usa está comentado. */
   .catalog-drawer__count {
     flex: none;
-    color: rgb(var(--color-foreground-rgb) / 55%);
+    color: var(--bs-text-muted);
     font-size: var(--font-size--xs, 0.85rem);
   }
 
@@ -519,8 +502,6 @@
     }
 
     .catalog-drawer__close,
-    .catalog-drawer__search,
-    .catalog-drawer__search-submit,
     .catalog-drawer__link,
     .catalog-drawer__link-text,
     .catalog-drawer__chevron {

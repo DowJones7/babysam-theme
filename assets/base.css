@@ -1012,6 +1012,17 @@ p.home-section-body,
 }
 
 /*
+  Drawers con drawer_color_scheme = scheme-1 (carrito, filtros, menú del tema, catálogo, retiro
+  en tienda). El fondo de scheme-1 es translúcido (#e3c4ab21): sobre la página da el crema
+  #fbf7f4, pero un drawer encima del contenido quedaba casi transparente. Acá se fija ese mismo
+  crema, opaco, solo en los drawers (los filtros llevan la clase de esquema en el contenedor).
+*/
+:is(.dialog-drawer, .menu-drawer, .menu-drawer__submenu, .facets-block-wrapper--drawer).color-scheme-1 {
+  --color-background: rgb(251 247 244);
+  --color-background-rgb: 251 247 244;
+}
+
+/*
   Superficie de tarjeta Babysam: blanca, redondeada y con sombra suave sobre el crema de la
   página. La comparten las tarjetas de testimonios (snippets/testimonial-card.liquid) y la
   franja de confianza (sections/trust-row-babysam.liquid).
