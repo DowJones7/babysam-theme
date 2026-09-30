@@ -1,5 +1,6 @@
 /**
- * Caja pública de reseñas del home (sections/testimonials-carousel.liquid).
+ * Caja pública de reseñas del home (sections/testimonials-carousel.liquid), en un modal
+ * (dialog-component del tema). Al cerrarlo, el foco vuelve al botón "Escribe tu reseña".
  *
  * Es el formulario nativo de comentarios de Shopify (`form 'new_comment'`) sobre la entrada
  * Reseñas › Opiniones de clientes. Validación en español compartida (@theme/form-babysam) para
@@ -93,7 +94,7 @@ function mostrarExito() {
   if (exito) {
     exito.hidden = false;
     exito.focus({ preventScroll: true });
-    exito.closest('.resena-form')?.scrollIntoView({ block: 'center' });
+    exito.closest('.resenas-cta')?.scrollIntoView({ block: 'center' });
   }
 
   // Que recargar la página no vuelva a mostrar el mensaje.
@@ -103,5 +104,12 @@ function mostrarExito() {
 
 for (const form of document.querySelectorAll('form[data-babysam-resena]')) {
   iniciar(/** @type {HTMLFormElement} */ (form));
+}
+
+// El <dialog> nativo intenta devolver el foco al cerrar, pero el componente del tema restaura el
+// scroll justo antes: se fija explícito, sin mover la página.
+for (const componente of document.querySelectorAll('.resenas-cta')) {
+  const abrir = /** @type {HTMLElement | null} */ (componente.querySelector('.resenas-cta__abrir'));
+  componente.addEventListener('dialog:close', () => abrir?.focus({ preventScroll: true }));
 }
 mostrarExito();

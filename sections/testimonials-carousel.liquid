@@ -15,7 +15,7 @@
   endif
 -%}
 
-<div class="testimonios-layout page-width{% if resenas_abiertas %} testimonios-layout--con-form{% endif %}">
+<div class="testimonios-layout page-width">
   <ul
     class="testimonials-carousel"
     id="Slider-{{ section.id }}"
@@ -59,94 +59,131 @@
     {%- endif -%}
   </ul>
 
+  {%- comment -%}
+    Formulario de reseñas en ventana emergente: dialog-component del tema (assets/dialog.js,
+    el mismo de popup-link) sobre un <dialog> nativo con showModal(): el resto de la página queda
+    inerte (foco atrapado), cierra con la X, con Escape y con clic afuera, y bloquea el scroll
+    del fondo. assets/resenas-babysam.js devuelve el foco al botón al cerrar.
+    El mensaje de éxito vive fuera del modal: tras enviar, Shopify vuelve al home con
+    ?resena=enviada#resenas y se muestra junto al botón.
+  {%- endcomment -%}
   {%- if resenas_abiertas -%}
-    <div class="resena-form form--babysam" id="resenas">
-      <h3 class="resena-form__titulo">{{ section.settings.titulo_form | escape }}</h3>
-
+    <script src="{{ 'dialog.js' | asset_url }}" type="module"></script>
+    <dialog-component class="resenas-cta" id="resenas">
       <div class="resena-form__exito" role="status" tabindex="-1" hidden>
         {{- 'icon-checkmark.svg' | inline_asset_content -}}
         <span>¡Gracias por tu reseña! 💕 En unos minutos aparece en el carrusel.</span>
       </div>
 
-      {%- assign form_id = 'ResenaForm-' | append: section.id -%}
-      {%- capture volver -%}{{ routes.root_url }}?resena=enviada#resenas{%- endcapture -%}
-      {%- form 'new_comment', articulo, id: form_id, class: 'resena-form__form', novalidate: 'novalidate', data-babysam-resena: 'true', return_to: volver -%}
-        <fieldset class="resena-form__estrellas-grupo" aria-describedby="{{ form_id }}-rating-error">
-          <legend class="form-babysam__label">Tu calificación</legend>
-          <div class="resena-form__estrellas">
-            {%- for i in (1..5) -%}
+      <button
+        type="button"
+        class="button--babysam-carmesi button--babysam-carmesi--outline resenas-cta__abrir"
+        on:click="/showDialog"
+        aria-haspopup="dialog"
+      >
+        <span aria-hidden="true">✍️</span> Escribe tu reseña
+      </button>
+
+      {%- assign titulo_id = 'ResenaTitulo-' | append: section.id -%}
+      <dialog
+        ref="dialog"
+        class="dialog-modal resena-dialog"
+        aria-labelledby="{{ titulo_id }}"
+        scroll-lock
+      >
+        <button
+          type="button"
+          class="button button-unstyled close-button resena-dialog__cerrar"
+          on:click="/closeDialog"
+          aria-label="Cerrar"
+        >
+          {{- 'icon-close.svg' | inline_asset_content -}}
+        </button>
+
+        <div class="resena-form form--babysam">
+          <h3 class="resena-form__titulo" id="{{ titulo_id }}">{{ section.settings.titulo_form | escape }}</h3>
+
+          {%- assign form_id = 'ResenaForm-' | append: section.id -%}
+          {%- capture volver -%}{{ routes.root_url }}?resena=enviada#resenas{%- endcapture -%}
+          {%- form 'new_comment', articulo, id: form_id, class: 'resena-form__form', novalidate: 'novalidate', data-babysam-resena: 'true', return_to: volver -%}
+            <fieldset class="resena-form__estrellas-grupo" aria-describedby="{{ form_id }}-rating-error">
+              <legend class="form-babysam__label">Tu calificación</legend>
+              <div class="resena-form__estrellas">
+                {%- for i in (1..5) -%}
+                  <input
+                    type="radio"
+                    class="visually-hidden"
+                    id="{{ form_id }}-rating-{{ i }}"
+                    name="rating"
+                    value="{{ i }}"
+                  >
+                  <label for="{{ form_id }}-rating-{{ i }}">
+                    <span aria-hidden="true">★</span>
+                    <span class="visually-hidden">{{ i }} de 5 estrellas</span>
+                  </label>
+                {%- endfor -%}
+              </div>
+              <p class="form-babysam__error" id="{{ form_id }}-rating-error" hidden></p>
+            </fieldset>
+
+            <div class="form-babysam__field">
+              <label class="form-babysam__label" for="{{ form_id }}-body">Tu reseña</label>
+              <textarea
+                id="{{ form_id }}-body"
+                class="form-babysam__input form-babysam__textarea"
+                name="comment[body]"
+                rows="4"
+                maxlength="200"
+                placeholder="Cuéntanos cómo te fue con Babysam"
+                aria-describedby="{{ form_id }}-body-count {{ form_id }}-body-error"
+                data-babysam-rule="required"
+                data-babysam-msg="Escribe tu reseña."
+                data-babysam-required
+              ></textarea>
+              <p class="resena-form__contador" id="{{ form_id }}-body-count">0/200</p>
+              <p class="form-babysam__error" id="{{ form_id }}-body-error" hidden></p>
+            </div>
+
+            <div class="form-babysam__field">
+              <label class="form-babysam__label" for="{{ form_id }}-author">Tu nombre</label>
               <input
-                type="radio"
-                class="visually-hidden"
-                id="{{ form_id }}-rating-{{ i }}"
-                name="rating"
-                value="{{ i }}"
+                type="text"
+                id="{{ form_id }}-author"
+                class="form-babysam__input"
+                name="comment[author]"
+                autocomplete="name"
+                aria-describedby="{{ form_id }}-author-error"
+                data-babysam-rule="required"
+                data-babysam-msg="Escribe tu nombre."
+                data-babysam-required
               >
-              <label for="{{ form_id }}-rating-{{ i }}">
-                <span aria-hidden="true">★</span>
-                <span class="visually-hidden">{{ i }} de 5 estrellas</span>
+              <p class="form-babysam__error" id="{{ form_id }}-author-error" hidden></p>
+            </div>
+
+            <div class="form-babysam__field">
+              <label class="form-babysam__label" for="{{ form_id }}-email">
+                Tu correo <span class="resena-form__nota">(No se publicará)</span>
               </label>
-            {%- endfor -%}
-          </div>
-          <p class="form-babysam__error" id="{{ form_id }}-rating-error" hidden></p>
-        </fieldset>
+              <input
+                type="email"
+                id="{{ form_id }}-email"
+                class="form-babysam__input"
+                name="comment[email]"
+                autocomplete="email"
+                spellcheck="false"
+                autocapitalize="off"
+                aria-describedby="{{ form_id }}-email-error"
+                data-babysam-rule="email"
+                data-babysam-required
+              >
+              <p class="form-babysam__error" id="{{ form_id }}-email-error" hidden></p>
+            </div>
 
-        <div class="form-babysam__field">
-          <label class="form-babysam__label" for="{{ form_id }}-body">Tu reseña</label>
-          <textarea
-            id="{{ form_id }}-body"
-            class="form-babysam__input form-babysam__textarea"
-            name="comment[body]"
-            rows="4"
-            maxlength="200"
-            placeholder="Cuéntanos cómo te fue con Babysam"
-            aria-describedby="{{ form_id }}-body-count {{ form_id }}-body-error"
-            data-babysam-rule="required"
-            data-babysam-msg="Escribe tu reseña."
-            data-babysam-required
-          ></textarea>
-          <p class="resena-form__contador" id="{{ form_id }}-body-count">0/200</p>
-          <p class="form-babysam__error" id="{{ form_id }}-body-error" hidden></p>
+            <button type="submit" class="button--babysam-carmesi resena-form__enviar">Publicar reseña</button>
+          {%- endform -%}
         </div>
-
-        <div class="form-babysam__field">
-          <label class="form-babysam__label" for="{{ form_id }}-author">Tu nombre</label>
-          <input
-            type="text"
-            id="{{ form_id }}-author"
-            class="form-babysam__input"
-            name="comment[author]"
-            autocomplete="name"
-            aria-describedby="{{ form_id }}-author-error"
-            data-babysam-rule="required"
-            data-babysam-msg="Escribe tu nombre."
-            data-babysam-required
-          >
-          <p class="form-babysam__error" id="{{ form_id }}-author-error" hidden></p>
-        </div>
-
-        <div class="form-babysam__field">
-          <label class="form-babysam__label" for="{{ form_id }}-email">
-            Tu correo <span class="resena-form__nota">(No se publicará)</span>
-          </label>
-          <input
-            type="email"
-            id="{{ form_id }}-email"
-            class="form-babysam__input"
-            name="comment[email]"
-            autocomplete="email"
-            spellcheck="false"
-            autocapitalize="off"
-            aria-describedby="{{ form_id }}-email-error"
-            data-babysam-rule="email"
-            data-babysam-required
-          >
-          <p class="form-babysam__error" id="{{ form_id }}-email-error" hidden></p>
-        </div>
-
-        <button type="submit" class="button--babysam-carmesi resena-form__enviar">Publicar reseña</button>
-      {%- endform -%}
-    </div>
+      </dialog>
+    </dialog-component>
     <script src="{{ 'resenas-babysam.js' | asset_url }}" type="module" fetchpriority="low"></script>
   {%- endif -%}
 </div>
@@ -200,6 +237,16 @@
       if (Math.abs(walk) > 5) moved = true;
       slider.scrollLeft = startScrollLeft - walk;
     });
+
+    // Desvanecido en los bordes solo del lado donde queda contenido fuera de vista (CSS: mask).
+    function updateFade() {
+      var max = slider.scrollWidth - slider.clientWidth;
+      slider.classList.toggle('has-fade-start', slider.scrollLeft > 2);
+      slider.classList.toggle('has-fade-end', slider.scrollLeft < max - 2);
+    }
+    updateFade();
+    slider.addEventListener('scroll', updateFade, { passive: true });
+    window.addEventListener('resize', updateFade);
 
     slider.addEventListener('mouseup', endDrag);
     slider.addEventListener('mouseleave', endDrag);
@@ -271,19 +318,13 @@
   Testimonios: tarjetas blancas redondeadas, texto café oscuro (#5a3f28, 9+:1 sobre blanco),
   comillas turquesa, círculo con la inicial y estrellas grandes. Drag + snap (script de arriba);
   en mobile cada tarjeta ocupa 85% para que la siguiente se asome.
-  Con formulario de reseñas: carrusel 2/3 + caja 1/3 desde 990px; debajo en anchos menores.
+  Tarjetas cortadas en el borde: desvanecido (mask) solo del lado con contenido fuera de vista.
+  Debajo, el botón que abre el formulario de reseñas en un modal.
 */
 .testimonios-layout {
   display: grid;
   gap: 32px;
   padding-block-end: 48px;
-}
-
-@media screen and (min-width: 990px) {
-  .testimonios-layout--con-form {
-    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
-    align-items: start;
-  }
 }
 
 .testimonials-carousel {
@@ -301,6 +342,21 @@
   margin: 0;
   cursor: grab;
   user-select: none;
+}
+
+.testimonials-carousel {
+  --fade-start: 0px;
+  --fade-end: 0px;
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 var(--fade-start), #000 calc(100% - var(--fade-end)), transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 var(--fade-start), #000 calc(100% - var(--fade-end)), transparent 100%);
+}
+
+.testimonials-carousel.has-fade-start {
+  --fade-start: 48px;
+}
+
+.testimonials-carousel.has-fade-end {
+  --fade-end: 64px;
 }
 
 .testimonials-carousel::-webkit-scrollbar {
@@ -336,10 +392,6 @@
 @media screen and (min-width: 990px) {
   .testimonial-card-item {
     width: 30%;
-  }
-
-  .testimonios-layout--con-form .testimonial-card-item {
-    width: 46%;
   }
 }
 
@@ -395,18 +447,56 @@
   font-weight: 700;
 }
 
-/* Caja de reseñas: campos y botón de .form--babysam / .button--babysam-carmesi (base.css). */
-.resena-form {
-  padding: 28px 24px;
+/* Botón "Escribe tu reseña" y mensaje de éxito, centrados bajo el carrusel. */
+.resenas-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  scroll-margin-top: 120px;
+}
+
+/* Modal: .dialog-modal del tema (backdrop oscuro y animación); acá tamaño y forma.
+   Doble clase para ganarle a .dialog-modal sin depender del orden de carga. */
+.dialog-modal.resena-dialog {
+  width: min(480px, calc(100% - 32px));
+  padding: 0;
   border-radius: 24px;
   background-color: #fff;
-  box-shadow: 0 6px 20px rgb(90 63 40 / 0.1);
+  overflow: auto;
+}
+
+.resena-dialog::backdrop {
+  background: rgb(0 0 0 / 0.55);
+}
+
+/* Mobile: casi toda la pantalla (el tema la pone a 100dvh sin bordes). */
+@media screen and (max-width: 749px) {
+  .dialog-modal.resena-dialog {
+    width: calc(100dvw - 24px);
+    height: auto;
+    max-height: calc(100dvh - 24px);
+    margin: auto;
+    padding: 0;
+    border-radius: 20px;
+  }
+}
+
+.resena-dialog__cerrar {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  color: #5a3f28;
+}
+
+/* Campos y botón de .form--babysam / .button--babysam-carmesi (base.css). */
+.resena-form {
+  padding: 32px 24px 24px;
   color: var(--babysam-texto);
-  scroll-margin-top: 100px;
 }
 
 .resena-form__titulo {
-  margin: 0 0 16px;
+  margin: 0 48px 16px 0;
   color: var(--babysam-texto);
   font-size: 1.25rem;
 }
@@ -488,11 +578,12 @@
   display: flex;
   align-items: center;
   gap: var(--gap-xs);
-  margin-block-end: 16px;
+  max-width: 480px;
   padding: var(--padding-md) var(--padding-lg);
-  border: 1.5px solid var(--babysam-turquesa);
+  border: 1.5px solid #78c0b3;
   border-radius: 16px;
   background-color: rgb(120 192 179 / 0.18);
+  color: #5a3f28; /* fuera de .form--babysam: sin sus variables */
   font-weight: 600;
   line-height: 1.4;
 }
@@ -510,6 +601,12 @@
 @media (prefers-reduced-motion: reduce) {
   .resena-form__estrellas label {
     transition: none;
+  }
+
+  .resena-dialog[open],
+  .resena-dialog.dialog-closing,
+  .resena-dialog[open]::backdrop {
+    animation: none;
   }
 
   .resena-form__estrellas label:hover,
