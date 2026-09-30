@@ -2,9 +2,11 @@
   Sección: collection-list-babysam
   -------------------------------------------------------------------------
   Página /collections (templates/list-collections.json). Muestra EXACTAMENTE
-  las 18 categorías del catálogo del home — ni las 2 duplicadas legacy
-  (jugueteria-1, panaleras) ni las 3 fuera de alcance (bonos-de-regalo,
-  caminadores, panales-premium) que sí listaría el objeto global `collections`.
+  las 13 categorías del catálogo del home, en el mismo orden (las mismas del
+  footer). Fuera a propósito: Didácticos (jugueteria), cobijas, comedores,
+  toallas y ajuares (retiradas del sitio; las colecciones siguen existiendo),
+  las duplicadas legacy (jugueteria-1, panaleras) y las fuera de alcance
+  (bonos-de-regalo, caminadores, panales-premium) que sí listaría `collections`.
 
   Reutiliza el MISMO card visual del home (snippet card-collection.liquid:
   imagen full-bleed object-fit:cover + degradado en el tercio inferior +
@@ -18,7 +20,7 @@
 {% endcomment %}
 
 {% liquid
-  assign category_handles = 'accesorios,cobijas,coches,comedores,coleccion-mi-primer-dia,jugueteria,lenceria,panaleras-1,teteros,toallas,cuidado-materno,lactancia,aseo,ajuares,baneras,gimnasios,silla-de-carro,sillas-mecedoras' | split: ','
+  assign category_handles = 'accesorios,coches,coleccion-mi-primer-dia,lenceria,panaleras-1,teteros,cuidado-materno,lactancia,aseo,baneras,gimnasios,silla-de-carro,sillas-mecedoras' | split: ','
 %}
 
 <div class="section-background color-{{ section.settings.color_scheme }}"></div>
@@ -45,32 +47,22 @@
         case handle
           when 'accesorios'
             assign card_image = section.settings.image_accesorios
-          when 'cobijas'
-            assign card_image = section.settings.image_cobijas
           when 'coches'
             assign card_image = section.settings.image_coches
-          when 'comedores'
-            assign card_image = section.settings.image_comedores
           when 'coleccion-mi-primer-dia'
             assign card_image = section.settings.image_mi_primer_dia
-          when 'jugueteria'
-            assign card_image = section.settings.image_jugueteria
           when 'lenceria'
             assign card_image = section.settings.image_lenceria
           when 'panaleras-1'
             assign card_image = section.settings.image_panaleras
           when 'teteros'
             assign card_image = section.settings.image_teteros
-          when 'toallas'
-            assign card_image = section.settings.image_toallas
           when 'cuidado-materno'
             assign card_image = section.settings.image_cuidado_materno
           when 'lactancia'
             assign card_image = section.settings.image_lactancia
           when 'aseo'
             assign card_image = section.settings.image_aseo
-          when 'ajuares'
-            assign card_image = section.settings.image_ajuares
           when 'baneras'
             assign card_image = section.settings.image_baneras
           when 'gimnasios'
@@ -135,19 +127,14 @@
     { "type": "header", "content": "Fotos de las categorías" },
     { "type": "paragraph", "content": "Mismas portadas que el carrusel del home. Si se deja vacía, la tarjeta muestra solo el mosaico decorativo de fondo." },
     { "type": "image_picker", "id": "image_accesorios", "label": "Foto de Accesorios" },
-    { "type": "image_picker", "id": "image_cobijas", "label": "Foto de Cobijas" },
     { "type": "image_picker", "id": "image_coches", "label": "Foto de Coches" },
-    { "type": "image_picker", "id": "image_comedores", "label": "Foto de Comedores" },
     { "type": "image_picker", "id": "image_mi_primer_dia", "label": "Foto de Corrales" },
-    { "type": "image_picker", "id": "image_jugueteria", "label": "Foto de Didacticos" },
     { "type": "image_picker", "id": "image_lenceria", "label": "Foto de Lencería" },
     { "type": "image_picker", "id": "image_panaleras", "label": "Foto de Pañaleras" },
     { "type": "image_picker", "id": "image_teteros", "label": "Foto de Teteros" },
-    { "type": "image_picker", "id": "image_toallas", "label": "Foto de Toallas" },
     { "type": "image_picker", "id": "image_cuidado_materno", "label": "Foto de Cuidado Materno" },
     { "type": "image_picker", "id": "image_lactancia", "label": "Foto de Lactancia" },
     { "type": "image_picker", "id": "image_aseo", "label": "Foto de Aseo" },
-    { "type": "image_picker", "id": "image_ajuares", "label": "Foto de Ajuares" },
     { "type": "image_picker", "id": "image_baneras", "label": "Foto de Bañeras" },
     { "type": "image_picker", "id": "image_gimnasios", "label": "Foto de Gimnasios" },
     { "type": "image_picker", "id": "image_silla_de_carro", "label": "Foto de Silla de carro" },
