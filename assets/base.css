@@ -4543,6 +4543,23 @@ text-component {
   }
 }
 
+/* "Comprar ahora por Addi" (bloque genérico "button" en la ficha, estilo secundario): píldora
+   turquesa a todo lo ancho, el aspecto que tenía cuando se hizo el bloque E. Ese aspecto salía
+   del botón secundario de scheme-7; desde que scheme-7 pasó a secundario en contorno carmesí
+   (bloque T) hay que fijarlo aquí. `a.button-secondary` deja fuera el botón de realidad
+   aumentada de la galería, que es <button>. */
+.product-information a.button.button-secondary:not(.button-unstyled) {
+  --button-color: #fffaf7;
+  --button-background-color: var(--bs-turquoise-soft, #78c0b3);
+  --button-border-color: var(--bs-turquoise-soft, #78c0b3);
+}
+
+.product-information a.button.button-secondary:not(.button-unstyled):hover {
+  --button-color: #ffffff;
+  --button-background-color: #531003;
+  --button-border-color: #531003;
+}
+
 /* Header: menú principal de escritorio en negrilla (Poppins 600, ya cargada: es el peso de los
    títulos) y separación entre links de 20 a 14 px. Medido con Chromium en theme dev: con el
    logo a 52 px y el menú en 600, a 1280 px el último link se iba al botón "Más"; con 14 px de
