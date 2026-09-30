@@ -183,13 +183,47 @@ select {
     box-shadow: none;
   }
 
-  /* Sombra al hover en tarjetas de producto (complementa card_hover_effect,
-     que solo controla transform). Las reglas de .header/.header-drawer de
-     arriba ya la cancelan ahí por tener mayor especificidad. */
-  .product-card:hover,
-  .collection-card:hover,
-  .resource-card:hover {
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15);
+  /* Zoom de la imagen DENTRO del marco (ver regla compartida de hover abajo). */
+  .product-card .card-gallery {
+    transition: border-color 250ms ease-out, box-shadow 250ms ease-out;
+  }
+
+  .product-card .card-gallery img {
+    transition: transform 250ms ease-out;
+  }
+
+  .product-card:hover .card-gallery img {
+    transform: scale(1.05);
+  }
+
+  .header .product-card:hover .card-gallery img,
+  .header-drawer .product-card:hover .card-gallery img,
+  .predictive-search-results__card .product-card:hover .card-gallery img {
+    transform: none;
+  }
+}
+
+/* Hover de tarjetas de producto (home, colecciones, búsqueda, recomendados).
+   card_hover_effect va en "none": las opciones del tema movían o escalaban el
+   marco entero y el contenedor lo cortaba. El borde turquesa redondeado vive en
+   el bloque galería (.card-gallery, vía border-override), no en .product-card,
+   así que el realce va ahí: el box-shadow sigue su border-radius y nada se
+   desplaza. Sin transición ni zoom bajo reduced-motion (regla de arriba). */
+@media (any-pointer: fine) {
+  .product-card .card-gallery {
+    overflow: hidden;
+  }
+
+  .product-card:hover .card-gallery {
+    border-color: color-mix(in srgb, rgb(var(--color-border-rgb)) 80%, black);
+    box-shadow: 0 6px 18px rgb(0 0 0 / 0.12);
+  }
+
+  .header .product-card:hover .card-gallery,
+  .header-drawer .product-card:hover .card-gallery,
+  .predictive-search-results__card .product-card:hover .card-gallery {
+    border-color: var(--border-color);
+    box-shadow: none;
   }
 }
 
