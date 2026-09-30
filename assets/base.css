@@ -4496,3 +4496,135 @@ text-component {
 .header-menu .menu-list {
   --menu-horizontal-gap: 0.875rem;
 }
+
+/* ---------------------------------------------------------------------------------------------
+   Botón verde de WhatsApp compartido: ficha de producto (blocks/whatsapp-cod.liquid), acceso bajo
+   el formulario de contacto (snippets/contact-form.liquid) y formulario de Baby Shower
+   (blocks/baby-shower-form.liquid). Un solo lugar para el verde y la forma.
+   Verde WhatsApp oscurecido: el #25D366 de la marca con texto blanco da 1,98:1; #15803D da 5,02:1
+   (AA). Cada uso ajusta solo lo propio (ancho, tamaño de letra) con selectores más específicos.
+   --------------------------------------------------------------------------------------------- */
+.button--babysam-wa {
+  --babysam-wa-bg: #15803d;
+  --babysam-wa-bg-hover: #116b33;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-xs);
+  min-height: 48px;
+  padding: var(--padding-sm) var(--padding-xl);
+  border: 0;
+  border-radius: 999px;
+  background-color: var(--babysam-wa-bg);
+  color: #fff;
+  font-family: var(--font-body--family);
+  font-weight: 600;
+  font-size: 1.0625rem;
+  line-height: 1.3;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color var(--animation-speed) var(--animation-easing);
+}
+
+.button--babysam-wa:hover {
+  background-color: var(--babysam-wa-bg-hover);
+  color: #fff;
+}
+
+.button--babysam-wa:focus-visible {
+  outline: 2px solid var(--babysam-wa-bg);
+  outline-offset: 3px;
+}
+
+.button--babysam-wa svg {
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+}
+
+/* ---------------------------------------------------------------------------------------------
+   Formularios Babysam compartidos (.form--babysam): contacto (snippets/contact-form.liquid) y
+   Baby Shower (blocks/baby-shower-form.liquid). Campos en píldora, textarea redondeada, foco
+   turquesa con anillo accesible para teclado, errores y etiquetas. Lo propio de cada formulario
+   (íconos, botón de envío) vive en su archivo.
+   - Texto y etiquetas en café #5a3f28 (9,3:1 sobre crema, más sobre blanco).
+   - Foco: borde #78c0b3 + halo; con teclado, anillo #3d8a7d (el turquesa da 2,1:1 y un indicador
+     de foco necesita 3:1; #3d8a7d da 4,1:1).
+   - Especificidad (0,2,0) a propósito: le gana a los estilos base del tema para inputs.
+   --------------------------------------------------------------------------------------------- */
+.form--babysam {
+  --babysam-texto: #5a3f28;
+  --babysam-turquesa: #78c0b3;
+  --babysam-turquesa-foco: #3d8a7d;
+  --babysam-transicion: 200ms ease;
+}
+
+.form--babysam .form-babysam__field {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-2xs);
+  width: 100%;
+  min-width: 0;
+}
+
+.form--babysam .form-babysam__label {
+  color: var(--babysam-texto);
+  font-weight: 600;
+  font-size: var(--font-size--sm);
+}
+
+.form--babysam .form-babysam__input {
+  width: 100%;
+  min-height: 48px;
+  padding: var(--padding-md) var(--padding-xl);
+  border: 1.5px solid rgb(90 63 40 / 0.22);
+  border-radius: 999px;
+  background-color: #fff;
+  color: var(--babysam-texto);
+  font: inherit;
+  font-size: max(16px, 1rem); /* 16 px evita el zoom automático de iOS al enfocar */
+  transition: border-color var(--babysam-transicion), box-shadow var(--babysam-transicion);
+}
+
+.form--babysam .form-babysam__input::placeholder {
+  color: rgb(90 63 40 / 0.55);
+}
+
+.form--babysam .form-babysam__textarea {
+  border-radius: 20px;
+  resize: vertical;
+}
+
+.form--babysam .form-babysam__input:focus {
+  outline: none;
+  border-color: var(--babysam-turquesa);
+  box-shadow: 0 0 0 4px rgb(120 192 179 / 0.28);
+}
+
+.form--babysam .form-babysam__input:focus-visible {
+  outline: 2px solid var(--babysam-turquesa-foco);
+  outline-offset: 2px;
+}
+
+.form--babysam .form-babysam__input[aria-invalid='true'] {
+  border-color: var(--color-error);
+  box-shadow: 0 0 0 4px rgb(139 0 0 / 0.1);
+}
+
+.form--babysam .form-babysam__error {
+  margin: 0;
+  padding-inline-start: 1.25rem;
+  color: var(--color-error);
+  font-size: var(--font-size--sm);
+  font-weight: 600;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .form--babysam .form-babysam__input,
+  .button--babysam-wa {
+    transition: none;
+  }
+}

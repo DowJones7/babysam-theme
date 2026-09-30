@@ -1,273 +1,280 @@
-{% comment %}
-  Este bloque es la versión anterior del formulario,
-  sin las correcciones para la visibilidad en dispositivos móviles.
-  El código JavaScript para el manejo de la URL de WhatsApp
-  y la lógica del formulario siguen siendo funcionales.
-{% endcomment %}
+{%- doc -%}
+  Formulario "Crea tu Lista de Baby Shower": arma un mensaje de WhatsApp con los datos y lo abre
+  (no guarda nada en Shopify). Se usa en la página Baby Shower, en Club de Mamás y en el home
+  (sección oculta).
 
-<div class="baby-shower-form-container color-scheme-{{ block.settings.color_scheme }}">
-  <div class="form-header-ribbon">
-    <h2 class="form-title home-section-title">{{ block.settings.form_title }}</h2>
-  </div>
-  
-  <div class="form-description-paper">
-    {{ block.settings.form_description }}
-  </div>
+  - Estilo compartido con el formulario de contacto: .form--babysam (campos, foco, errores,
+    etiquetas) y .button--babysam-wa (botón verde), en assets/base.css. Acá solo lo propio.
+  - Validación en español compartida (@theme/form-babysam) y armado del mensaje en
+    assets/baby-shower-form.js. El formulario va con `novalidate`.
+  - Todo el CSS está prefijado con .baby-shower-form: la versión anterior traía reglas globales
+    (.button, .form-field, .form-title…) en un <style> en línea que restilaban todos los botones
+    de la página donde aparecía el formulario.
+{%- enddoc -%}
 
-  <form id="whatsapp-form" onsubmit="handleWhatsappSubmit(event)">
-    <div id="form-message" class="form-message"></div>
+{%- liquid
+  # Número: solo dígitos y con 57 (mismo criterio que snippets/whatsapp-url.liquid).
+  assign wa = block.settings.whatsapp_number | remove: ' ' | remove: '-' | remove: '(' | remove: ')' | remove: '+' | remove: '.'
+  if wa != blank
+    assign wa_pref = wa | slice: 0, 2
+    unless wa_pref == '57'
+      assign wa = '57' | append: wa
+    endunless
+  endif
 
-    <div class="form-fields">
-      <div class="form-field-group">
-        <div class="form-field">
-          <label for="ParentName-{{ block.id }}">Nombre de los futuros padres</label>
-          <input type="text" id="ParentName-{{ block.id }}" name="parent_name" placeholder="Ej. Ana y Carlos" required>
-        </div>
+  assign intro = block.settings.message_intro | default: '¡Hola, Babysam! 👋🍼'
+  assign cierre = block.settings.message_closing | default: '¿Me confirman la disponibilidad? 💕'
+  assign uid = block.id
+-%}
 
-        <div class="form-field">
-          <label for="Email-{{ block.id }}">Correo electrónico</label>
-          <input type="email" id="Email-{{ block.id }}" name="email" placeholder="ejemplo@correo.com" required>
-        </div>
+<div
+  class="baby-shower-form baby-shower-form-container form--babysam{% if block.settings.inherit_color_scheme == false %} color-{{ block.settings.color_scheme }}{% endif %}"
+  {{ block.shopify_attributes }}
+>
+  <h2 class="baby-shower-form__title">{{ block.settings.form_title }}</h2>
+
+  {%- if block.settings.form_description != blank -%}
+    <div class="baby-shower-form__intro">{{ block.settings.form_description }}</div>
+  {%- endif -%}
+
+  <script src="{{ 'baby-shower-form.js' | asset_url }}" type="module" fetchpriority="low"></script>
+
+  <form
+    class="baby-shower-form__form"
+    novalidate
+    data-babysam-bs
+    data-whatsapp="{{ wa }}"
+    data-intro="{{ intro | escape }}"
+    data-cierre="{{ cierre | escape }}"
+  >
+    <div class="baby-shower-form__grid">
+      <div class="form-babysam__field">
+        <label class="form-babysam__label" for="ParentName-{{ uid }}">Nombre de los futuros padres *</label>
+        <input
+          type="text"
+          id="ParentName-{{ uid }}"
+          class="form-babysam__input"
+          name="parent_name"
+          autocomplete="name"
+          placeholder="Ej. Ana y Carlos"
+          aria-describedby="ParentName-{{ uid }}-error"
+          data-babysam-rule="required"
+          data-babysam-msg="Escribe el nombre de los futuros padres."
+          data-bs-campo="padres"
+        >
+        <p class="form-babysam__error" id="ParentName-{{ uid }}-error" hidden></p>
       </div>
 
-      <div class="form-field-group">
-        <div class="form-field">
-          <label for="Phone-{{ block.id }}">Número de teléfono</label>
-          <input type="tel" id="Phone-{{ block.id }}" name="phone" placeholder="Ej. 123-456-7890" required>
-        </div>
-        
-        <div class="form-field">
-          <label for="Date-{{ block.id }}">Fecha probable para la cita en tienda</label>
-          <input type="date" id="Date-{{ block.id }}" name="date">
-        </div>
+      <div class="form-babysam__field">
+        <label class="form-babysam__label" for="Email-{{ uid }}">Correo electrónico *</label>
+        <input
+          type="email"
+          id="Email-{{ uid }}"
+          class="form-babysam__input"
+          name="email"
+          autocomplete="email"
+          spellcheck="false"
+          autocapitalize="off"
+          placeholder="Ej. ana@correo.com"
+          aria-describedby="Email-{{ uid }}-error"
+          data-babysam-rule="email"
+          data-babysam-required
+          data-bs-campo="correo"
+        >
+        <p class="form-babysam__error" id="Email-{{ uid }}-error" hidden></p>
       </div>
 
-      <div class="form-field">
-        <label for="GuestCount-{{ block.id }}">Número de invitados estimados</label>
-        <input type="number" id="GuestCount-{{ block.id }}" name="guest_count">
+      <div class="form-babysam__field">
+        <label class="form-babysam__label" for="Phone-{{ uid }}">Número de teléfono *</label>
+        <input
+          type="tel"
+          id="Phone-{{ uid }}"
+          class="form-babysam__input"
+          name="phone"
+          autocomplete="tel"
+          inputmode="tel"
+          placeholder="Ej. 310 123 4567"
+          aria-describedby="Phone-{{ uid }}-error"
+          data-babysam-rule="phone"
+          data-babysam-required
+          data-bs-campo="telefono"
+        >
+        <p class="form-babysam__error" id="Phone-{{ uid }}-error" hidden></p>
       </div>
 
-      <div class="form-field">
-        <label for="Comments-{{ block.id }}">Comentarios adicionales</label>
-        <textarea id="Comments-{{ block.id }}" name="comments" placeholder="¿Tienes alguna preferencia de horario o pregunta?"></textarea>
+      <div class="form-babysam__field">
+        <label class="form-babysam__label" for="Date-{{ uid }}">Fecha probable para la cita en tienda</label>
+        <input
+          type="date"
+          id="Date-{{ uid }}"
+          class="form-babysam__input"
+          name="date"
+          data-bs-campo="fecha"
+        >
+      </div>
+
+      <div class="form-babysam__field">
+        <label class="form-babysam__label" for="GuestCount-{{ uid }}">Número de invitados estimados</label>
+        <input
+          type="number"
+          id="GuestCount-{{ uid }}"
+          class="form-babysam__input"
+          name="guest_count"
+          min="1"
+          step="1"
+          inputmode="numeric"
+          placeholder="Ej. 30"
+          aria-describedby="GuestCount-{{ uid }}-error"
+          data-babysam-rule="positive"
+          data-bs-campo="invitados"
+        >
+        <p class="form-babysam__error" id="GuestCount-{{ uid }}-error" hidden></p>
+      </div>
+
+      <div class="form-babysam__field baby-shower-form__full">
+        <label class="form-babysam__label" for="Comments-{{ uid }}">Comentarios adicionales</label>
+        <textarea
+          id="Comments-{{ uid }}"
+          class="form-babysam__input form-babysam__textarea"
+          name="comments"
+          rows="4"
+          placeholder="Ej. Prefiero en la mañana, o tengo una duda sobre…"
+          data-bs-campo="comentarios"
+        ></textarea>
       </div>
     </div>
 
-    <div class="form-button-container">
-      <button type="submit" class="button">Agendar Cita</button>
+    <p class="baby-shower-form__nota">Al enviar, se abrirá WhatsApp con tus datos listos 💬</p>
+
+    <button type="submit" class="button--babysam-wa baby-shower-form__submit">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+        <path d="M12 2a10 10 0 0 0-8.6 15.09L2 22l5.05-1.32A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.18-1.14l-.3-.18-3 .78.8-2.92-.2-.31A8.2 8.2 0 1 1 12 20.2Z" />
+        <path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.76-1.66-2.06-.17-.3-.02-.46.13-.61.14-.14.3-.35.45-.53.15-.18.2-.3.3-.5.1-.2.05-.38-.02-.53-.08-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.38-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.22 3.08c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.7.63.71.23 1.36.2 1.87.12.57-.08 1.76-.72 2-1.41.25-.7.25-1.29.18-1.41-.07-.13-.27-.2-.57-.35Z" />
+      </svg>
+      <span>{{ block.settings.button_label | default: 'Agendar cita por WhatsApp' | escape }}</span>
+    </button>
+
+    <div class="baby-shower-form__estado" role="status" hidden>
+      <p>¡Listo! 💕 Abrimos WhatsApp con tus datos. Solo tienes que tocar «Enviar».</p>
+      <p>¿No se abrió? <a class="baby-shower-form__respaldo" href="#" target="_blank" rel="noopener">Ábrelo aquí</a>.</p>
     </div>
+
+    {%- if wa == blank and request.design_mode -%}
+      <p class="form-babysam__error">Configura el número de WhatsApp en los ajustes del bloque.</p>
+    {%- endif -%}
   </form>
 </div>
 
-<script>
-  function handleWhatsappSubmit(e) {
-    e.preventDefault();
+{% stylesheet %}
+  /* Todo prefijado con .baby-shower-form. Campos, foco y errores: .form--babysam (base.css). */
+  .baby-shower-form {
+    --bs-titulo: #e44068; /* Fredoka 700 grande sobre blanco: 4,01:1, válido para texto grande */
 
-    const parentName = document.getElementById('ParentName-{{ block.id }}').value;
-    const email = document.getElementById('Email-{{ block.id }}').value;
-    const phone = document.getElementById('Phone-{{ block.id }}').value;
-    const date = document.getElementById('Date-{{ block.id }}').value;
-    const guestCount = document.getElementById('GuestCount-{{ block.id }}').value;
-    const comments = document.getElementById('Comments-{{ block.id }}').value;
-    
-    // Obtener el número de WhatsApp desde la configuración del bloque
-    const whatsappNumber = '{{ block.settings.whatsapp_number }}';
-    const messageDiv = document.getElementById('form-message');
-
-    if (!whatsappNumber || whatsappNumber.trim() === '') {
-      messageDiv.innerHTML = '<p>Error: El número de WhatsApp no ha sido configurado. Por favor, revisa la configuración del bloque en el editor.</p>';
-      messageDiv.style.backgroundColor = '#f8d7da';
-      messageDiv.style.color = '#721c24';
-      messageDiv.style.padding = '1rem';
-      messageDiv.style.marginBottom = '1rem';
-      messageDiv.style.borderRadius = '8px';
-      return;
-    }
-
-    // Construir el mensaje de WhatsApp
-    let message = `¡Hola! Me gustaría agendar una cita para la Lista de Baby Shower.\n\n`;
-    message += `*Nombre de los padres:* ${parentName}\n`;
-    message += `*Correo electrónico:* ${email}\n`;
-    message += `*Número de teléfono:* ${phone}\n`;
-    if (date) {
-      message += `*Fecha sugerida:* ${date}\n`;
-    }
-    if (guestCount) {
-      message += `*Número de invitados:* ${guestCount}\n`;
-    }
-    if (comments) {
-      message += `*Comentarios adicionales:* ${comments}\n`;
-    }
-    
-    // Codificar el mensaje para la URL
-    const encodedMessage = encodeURIComponent(message);
-    
-    // Construir la URL completa de WhatsApp
-    const whatsappUrl = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodedMessage}`;
-
-    // Abrir el enlace en una nueva pestaña
-    window.open(whatsappUrl, '_blank');
-
-    // Mostrar un mensaje de éxito más útil
-    messageDiv.innerHTML = '<p>¡Listo! Se ha abierto una nueva pestaña para iniciar el chat en WhatsApp. Por favor, revisa si se abrió la aplicación o la versión web para enviar el mensaje.</p>';
-    messageDiv.style.backgroundColor = '#d4edda';
-    messageDiv.style.color = '#155724';
-    messageDiv.style.padding = '1rem';
-    messageDiv.style.marginBottom = '1rem';
-    messageDiv.style.borderRadius = '8px';
-  }
-</script>
-
-<style>
-  .baby-shower-form-container {
-    padding: 2rem;
-    max-width: 800px;
-    margin: 0 auto;
-    border-radius: 12px;
-    position: relative;
+    width: 100%;
+    max-width: 760px;
+    margin-inline: auto;
+    padding: clamp(1.5rem, 4vw, 2.75rem);
+    border-radius: 32px;
+    background-color: #fff;
+    box-shadow: 0 12px 32px rgb(90 63 40 / 0.1);
+    color: var(--babysam-texto);
   }
 
-  /* Estilo del título con efecto de lazo */
-  .form-header-ribbon {
-    position: relative;
+  /* Título limpio en Fredoka (regla global de h2 en base.css), sin cinta ni sombra. */
+  .baby-shower-form .baby-shower-form__title {
+    margin: 0 0 var(--margin-md);
+    color: var(--bs-titulo);
+    font-size: clamp(1.75rem, 3.5vw, 2.25rem);
+    line-height: 1.15;
     text-align: center;
-    margin-bottom: 2rem;
   }
 
-  .form-title {
-    display: inline-block;
-    padding: 0.5rem 2rem;
-    font-weight: bold;
-    color: var(--color-text); /* Herencia del esquema de color del tema */
-    background: var(--color-background-accent); /* Color de fondo del esquema */
-    position: relative;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-
-  /* Efecto de "cinta" en el título */
-  .form-title::before,
-  .form-title::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 30px;
-    height: 100%;
-    background-color: var(--color-background-accent);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    z-index: -1;
-  }
-
-  .form-title::before {
-    left: -20px;
-    border-radius: 8px 0 0 8px;
-    transform: translateY(-50%) skewY(-10deg);
-  }
-
-  .form-title::after {
-    right: -20px;
-    border-radius: 0 8px 8px 0;
-    transform: translateY(-50%) skewY(10deg);
-  }
-
-  /* Estilo de la descripción con efecto de "hoja de papel" */
-  .form-description-paper {
-    background-color: var(--color-background); /* Color de fondo del esquema */
-    border: 1px solid var(--color-border); /* Color de borde del esquema */
-    padding: 1.5rem;
-    margin-bottom: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  /* Recuadro informativo: crema suave, sin borde ni sombra, más discreto que los campos. */
+  .baby-shower-form .baby-shower-form__intro {
+    margin-block-end: var(--margin-xl);
+    padding: var(--padding-md) var(--padding-lg);
+    border-radius: 16px;
+    background-color: #fffaf7;
+    font-size: 0.9375rem;
     line-height: 1.5;
-    color: var(--color-text);
-  }
-
-  .form-description-paper p {
-    margin-bottom: 0;
-  }
-
-  /* Estilos para los campos del formulario */
-  .form-fields {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-  }
-  
-  .form-field-group {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-  }
-
-  .form-field {
-    flex: 1 1 45%;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .form-field label {
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-    color: var(--color-text);
-  }
-
-  .form-field input,
-  .form-field textarea {
-    padding: 0.75rem;
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-    color: var(--color-text);
-    background-color: var(--color-background-input); /* Fondo de campos del esquema */
-    transition: border-color 0.2s ease-in-out;
-  }
-
-  .form-field input:focus,
-  .form-field textarea:focus {
-    outline: none;
-    border-color: var(--color-primary-focus);
-    box-shadow: 0 0 0 1px var(--color-primary-focus);
-  }
-  
-  .form-button-container {
     text-align: center;
-    margin-top: 2rem;
-  }
-  
-  .button {
-    background-color: var(--color-primary); /* Color primario del esquema */
-    color: var(--color-on-primary); /* Color de texto sobre primario */
-    padding: 1rem 2rem;
-    border: none;
-    border-radius: 25px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.2s ease-in-out;
   }
 
-  .button:hover {
-    background-color: var(--color-primary-hover);
-  }
-
-  /* Estilos para la respuesta del formulario */
-  .form-message {
-    padding: 0;
-    margin-bottom: 0;
-    border-radius: 8px;
-    transition: all 0.3s ease-in-out;
-  }
-
-  .form-message p {
+  .baby-shower-form .baby-shower-form__intro p {
     margin: 0;
   }
 
-  /* Media queries para adaptar a dispositivos móviles */
-  @media (max-width: 768px) {
-    .form-field-group {
-      flex-direction: column;
+  .baby-shower-form .baby-shower-form__intro p + p {
+    margin-block-start: var(--margin-2xs);
+  }
+
+  .baby-shower-form .baby-shower-form__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--gap-md);
+  }
+
+  @media screen and (min-width: 750px) {
+    .baby-shower-form .baby-shower-form__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--gap-md) var(--gap-lg);
+    }
+
+    .baby-shower-form .baby-shower-form__full {
+      grid-column: 1 / -1;
     }
   }
-</style>
+
+  .baby-shower-form .baby-shower-form__nota {
+    margin: var(--margin-xl) 0 var(--margin-xs);
+    font-size: var(--font-size--sm);
+    text-align: center;
+  }
+
+  /* Botón: .button--babysam-wa (verde compartido); acá solo el ancho. */
+  .baby-shower-form .baby-shower-form__submit {
+    display: flex;
+    width: 100%;
+  }
+
+  .baby-shower-form .baby-shower-form__estado {
+    margin-block-start: var(--margin-md);
+    padding: var(--padding-md) var(--padding-lg);
+    border: 1.5px solid #78c0b3;
+    border-radius: 16px;
+    background-color: rgb(120 192 179 / 0.15);
+    font-weight: 600;
+    line-height: 1.4;
+    text-align: center;
+  }
+
+  .baby-shower-form .baby-shower-form__estado p {
+    margin: 0;
+  }
+
+  .baby-shower-form .baby-shower-form__estado p + p {
+    margin-block-start: var(--margin-2xs);
+    font-weight: 400;
+  }
+
+  .baby-shower-form .baby-shower-form__estado a {
+    color: inherit;
+    text-decoration: underline;
+  }
+
+  /* Mobile, solo en secciones con video + este formulario (página Baby Shower): el formulario
+     primero y el video después, centrado, para que el botón no quede escondido tras el video
+     vertical. Club de Mamás (título + formulario, sin video) no se toca. */
+  @media screen and (max-width: 749px) {
+    .section-content-wrapper:has(> deferred-media):has(.baby-shower-form) > :has(.baby-shower-form) {
+      order: -1;
+    }
+
+    .section-content-wrapper:has(> deferred-media):has(.baby-shower-form) > deferred-media {
+      align-self: center;
+    }
+  }
+{% endstylesheet %}
 
 {% schema %}
 {
@@ -289,8 +296,27 @@
     {
       "type": "text",
       "id": "whatsapp_number",
-      "label": "Número de WhatsApp (con código de país, sin +)",
-      "info": "Ejemplo: 573123456789"
+      "label": "Número de WhatsApp",
+      "info": "Con o sin 57; se normaliza solo."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Texto del botón",
+      "default": "Agendar cita por WhatsApp"
+    },
+    {
+      "type": "textarea",
+      "id": "message_intro",
+      "label": "Inicio del mensaje de WhatsApp",
+      "info": "Va antes de los datos del formulario. Los *asteriscos* salen en negrita en WhatsApp.",
+      "default": "¡Hola, Babysam! 👋🍼\nQuiero agendar una cita para crear mi *Lista de Baby Shower* 🎁"
+    },
+    {
+      "type": "text",
+      "id": "message_closing",
+      "label": "Cierre del mensaje de WhatsApp",
+      "default": "¿Me confirman la disponibilidad? 💕"
     },
     {
       "type": "select",

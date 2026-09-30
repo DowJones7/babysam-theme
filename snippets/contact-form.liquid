@@ -18,7 +18,7 @@
 
 <div
   class="
-    contact-form contact-form--babysam
+    contact-form contact-form--babysam form--babysam
     spacing-style size-style
     {% if settings.inherit_color_scheme == false %}color-{{ settings.color_scheme }}{% endif %}
   "
@@ -64,7 +64,7 @@
     {%- endif -%}
 
     <div class="contact-form__form-row">
-      <div class="contact-form__field">
+      <div class="contact-form__field form-babysam__field">
         <label
           class="visually-hidden"
           for="ContactForm-name"
@@ -77,7 +77,7 @@
         <input
           type="text"
           id="ContactForm-name"
-          class="contact-form__input"
+          class="contact-form__input form-babysam__input"
           autocomplete="name"
           name="contact[name]"
           value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}"
@@ -85,7 +85,7 @@
         >
       </div>
 
-      <div class="contact-form__field">
+      <div class="contact-form__field form-babysam__field">
         <label
           class="visually-hidden"
           for="ContactForm-email"
@@ -99,7 +99,7 @@
         <input
           type="email"
           id="ContactForm-email"
-          class="contact-form__input"
+          class="contact-form__input form-babysam__input"
           autocomplete="email"
           name="contact[email]"
           spellcheck="false"
@@ -112,14 +112,15 @@
           {% endif %}
           placeholder="{{ 'blocks.contact_form.email' | t }}"
           data-babysam-rule="email"
+          data-babysam-required
         >
-        <p class="contact-form__field-error" id="ContactForm-email-error" {% unless form.errors contains 'email' %}hidden{% endunless %}>
+        <p class="contact-form__field-error form-babysam__error" id="ContactForm-email-error" {% unless form.errors contains 'email' %}hidden{% endunless %}>
           {%- if form.errors contains 'email' -%}Revisa tu correo: debe verse como nombre@correo.com.{%- endif -%}
         </p>
       </div>
     </div>
 
-    <div class="contact-form__field">
+    <div class="contact-form__field form-babysam__field">
       <label
         class="visually-hidden"
         for="ContactForm-phone"
@@ -132,7 +133,7 @@
       <input
         type="tel"
         id="ContactForm-phone"
-        class="contact-form__input"
+        class="contact-form__input form-babysam__input"
         autocomplete="tel"
         inputmode="tel"
         name="contact[phone]"
@@ -142,10 +143,10 @@
         aria-describedby="ContactForm-phone-error"
         data-babysam-rule="phone"
       >
-      <p class="contact-form__field-error" id="ContactForm-phone-error" hidden></p>
+      <p class="contact-form__field-error form-babysam__error" id="ContactForm-phone-error" hidden></p>
     </div>
 
-    <div class="contact-form__field contact-form__field--textarea">
+    <div class="contact-form__field contact-form__field--textarea form-babysam__field">
       <label
         class="visually-hidden"
         for="ContactForm-body"
@@ -158,7 +159,7 @@
       <textarea
         rows="10"
         id="ContactForm-body"
-        class="contact-form__input contact-form__input--textarea"
+        class="contact-form__input contact-form__input--textarea form-babysam__input form-babysam__textarea"
         name="contact[body]"
         placeholder="{{ 'blocks.contact_form.comment' | t }}"
       >
@@ -179,7 +180,7 @@
         <p class="contact-form__whatsapp-intro">{{ settings.whatsapp_intro | escape }}</p>
       {%- endif -%}
       <a
-        class="contact-form__whatsapp-button"
+        class="contact-form__whatsapp-button button--babysam-wa"
         href="{% render 'whatsapp-url', number: settings.whatsapp_number, message: wa_mensaje %}"
         target="_blank"
         rel="noopener"
@@ -237,27 +238,16 @@
     gap: var(--gap-xs);
   }
 
-  /* ---------- Versión Babysam: todo cuelga de .contact-form--babysam ---------- */
+  /* ---------- Versión Babysam ----------
+     Campos, foco, errores y etiquetas: .form--babysam (assets/base.css), compartido con el
+     formulario de Baby Shower. Botón verde: .button--babysam-wa (assets/base.css). Acá solo lo
+     propio del contacto: íconos dentro de los campos, tarjetas de éxito/error, botón carmesí y
+     el acceso a WhatsApp. */
   .contact-form--babysam {
-    --babysam-turquesa: #78c0b3;
-    /* Turquesa oscuro para el anillo de teclado: el #78c0b3 da 2,1:1 sobre blanco y un
-       indicador de foco necesita 3:1; #3d8a7d da 4,1:1. */
-    --babysam-turquesa-foco: #3d8a7d;
     /* Carmesí del botón un poco más profundo que #e44068 (4,01:1 con blanco, no pasa AA):
        #d2345b da 4,79:1; hover #bc3454 (5,59:1), el mismo hover del botón primario. */
     --babysam-carmesi: #d2345b;
     --babysam-carmesi-hover: #bc3454;
-    --babysam-wa: #15803d;
-    --babysam-wa-hover: #116b33;
-    --babysam-transicion: 200ms ease;
-  }
-
-  .contact-form--babysam .contact-form__field {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: var(--gap-2xs);
-    width: 100%;
   }
 
   .contact-form--babysam .contact-form__icon {
@@ -266,15 +256,15 @@
     inset-inline-start: 1.1rem;
     display: flex;
     align-items: center;
-    height: calc(var(--padding-lg) * 2 + 1.5em);
-    color: rgb(var(--color-foreground-rgb) / 0.55);
+    height: 48px;
+    color: rgb(90 63 40 / 0.55);
     pointer-events: none;
     transition: color var(--babysam-transicion);
   }
 
   .contact-form--babysam .contact-form__field--textarea .contact-form__icon {
     height: auto;
-    top: calc(var(--padding-lg) + 0.1em);
+    top: calc(var(--padding-md) + 0.15em);
   }
 
   .contact-form--babysam .contact-form__icon svg {
@@ -282,43 +272,13 @@
     height: 20px;
   }
 
-  .contact-form--babysam .contact-form__input {
+  /* Espacio para el ícono: (0,3,0) para ganarle al padding de .form--babysam. */
+  .contact-form--babysam .contact-form__field .contact-form__input {
     padding-inline-start: 3rem;
-    border: 1.5px solid rgb(var(--color-foreground-rgb) / 0.18);
-    border-radius: 999px;
-    transition: border-color var(--babysam-transicion), box-shadow var(--babysam-transicion);
-  }
-
-  .contact-form--babysam .contact-form__input--textarea {
-    border-radius: 20px;
-  }
-
-  .contact-form--babysam .contact-form__input:focus {
-    outline: none;
-    border-color: var(--babysam-turquesa);
-    box-shadow: 0 0 0 4px rgb(120 192 179 / 0.28);
-  }
-
-  .contact-form--babysam .contact-form__input:focus-visible {
-    outline: 2px solid var(--babysam-turquesa-foco);
-    outline-offset: 2px;
   }
 
   .contact-form--babysam .contact-form__field:focus-within .contact-form__icon {
     color: var(--babysam-turquesa-foco);
-  }
-
-  .contact-form--babysam .contact-form__input[aria-invalid='true'] {
-    border-color: var(--color-error);
-    box-shadow: 0 0 0 4px rgb(139 0 0 / 0.1);
-  }
-
-  .contact-form--babysam .contact-form__field-error {
-    margin: 0;
-    padding-inline-start: 1.25rem;
-    color: var(--color-error);
-    font-size: var(--font-size--sm);
-    font-weight: 600;
   }
 
   .contact-form--babysam :is(.contact-form__error, .contact-form__success) {
@@ -331,7 +291,7 @@
   .contact-form--babysam .contact-form__success {
     background-color: rgb(120 192 179 / 0.18);
     border: 1.5px solid var(--babysam-turquesa);
-    color: var(--color-foreground);
+    color: var(--babysam-texto);
   }
 
   .contact-form--babysam .contact-form__error {
@@ -390,7 +350,7 @@
     }
   }
 
-  /* WhatsApp debajo del formulario: mismo botón verde que la ficha (blocks/whatsapp-cod.liquid). */
+  /* WhatsApp debajo del formulario (el botón es .button--babysam-wa). */
   .contact-form--babysam .contact-form__whatsapp {
     display: flex;
     flex-direction: column;
@@ -398,44 +358,13 @@
     gap: var(--gap-sm);
     margin-block-start: var(--margin-2xl);
     padding-block-start: var(--padding-xl);
-    border-top: 1px solid rgb(var(--color-foreground-rgb) / 0.12);
+    border-top: 1px solid rgb(90 63 40 / 0.14);
   }
 
   .contact-form--babysam .contact-form__whatsapp-intro {
     margin: 0;
+    color: var(--babysam-texto);
     font-weight: 600;
-  }
-
-  .contact-form--babysam .contact-form__whatsapp-button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--gap-xs);
-    min-height: 48px;
-    padding: var(--padding-sm) var(--padding-2xl);
-    border-radius: 999px;
-    background-color: var(--babysam-wa);
-    color: #fff;
-    font-family: var(--font-body--family);
-    font-weight: 600;
-    font-size: 1.0625rem;
-    text-decoration: none;
-    transition: background-color var(--babysam-transicion);
-  }
-
-  .contact-form--babysam .contact-form__whatsapp-button:hover {
-    background-color: var(--babysam-wa-hover);
-  }
-
-  .contact-form--babysam .contact-form__whatsapp-button:focus-visible {
-    outline: 2px solid var(--babysam-wa);
-    outline-offset: 3px;
-  }
-
-  .contact-form--babysam .contact-form__whatsapp-button svg {
-    flex: 0 0 auto;
-    width: 22px;
-    height: 22px;
   }
 
   @media screen and (max-width: 749px) {
@@ -445,7 +374,7 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .contact-form--babysam :is(.contact-form__input, .contact-form__icon, .submit-button, .contact-form__whatsapp-button) {
+    .contact-form--babysam :is(.contact-form__icon, .submit-button) {
       transition: none;
     }
 
