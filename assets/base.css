@@ -975,46 +975,15 @@ p.home-section-body,
 }
 
 /*
-  Fila de confianza (Envíos seguros / Cuotas sin interés / Tiendas
-  físicas): en mobile el título y la descripción de cada columna
-  quedaban a la izquierda mientras el ícono se veía centrado. Se
-  fuerza el centrado solo para esta sección.
-  Breakpoint ampliado de 749px a 990px: en un iPhone real el fix no
-  estaba entrando aunque en DevTools sí. El breakpoint que realmente
-  controla si las 3 columnas se apilan (vs. quedan en fila) sigue
-  siendo 749px (.mobile-column en base.css) — ese no se tocó, así que
-  esto no afecta el layout de desktop, que empieza en 750px igual que
-  antes.
+  Superficie de tarjeta Babysam: blanca, redondeada y con sombra suave sobre el crema de la
+  página. La comparten las tarjetas de testimonios (snippets/testimonial-card.liquid) y la
+  franja de confianza (sections/trust-row-babysam.liquid).
 */
-@media screen and (max-width: 990px) {
-  [id$='__trust_row'] .richtext-content {
-    text-align: center !important;
-  }
-
-  /*
-    Causa real: el ícono queda envuelto en su propio bloque
-    (".icon-block", ancho auto ~56px) mientras que el bloque de texto
-    (el "text" simplificado del tema) no tiene ese mismo wrapper — es
-    directamente su propio ".content-container" con max-width:980px.
-    Con align-items:center, cada uno se centra según SU PROPIO ancho
-    auto-calculado, que no tiene por qué coincidir entre los dos.
-    Fix: se hace que ambos ocupen el 100% del ancho de la columna, así
-    sus centros coinciden matemáticamente sin importar esa diferencia.
-  */
-  [id$='__trust_row'] .group-block-content {
-    align-items: stretch !important;
-  }
-
-  [id$='__trust_row'] .icon-block {
-    display: flex !important;
-    justify-content: center !important;
-    width: 100% !important;
-  }
-
-  [id$='__trust_row'] .content-container {
-    width: 100% !important;
-    max-width: 100% !important;
-  }
+.babysam-card {
+  border-radius: 24px;
+  background-color: #fff;
+  box-shadow: 0 6px 20px rgb(90 63 40 / 0.1);
+  color: #5a3f28;
 }
 
 :first-child:is(.h1, .h2, .h3, .h4, .h5, .h6) {
