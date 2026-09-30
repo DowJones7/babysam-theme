@@ -516,18 +516,13 @@
         "image_sillas_mecedoras": "shopify://shop_images/portada_silla_electrica.png"
       }
     },
-    "divider_zApW4A": {
-      "type": "divider",
-      "name": "t:names.divider_section",
+    "culebrita_catalogo": {
+      "type": "divider-culebrita",
       "settings": {
-        "color_scheme": "scheme-4",
-        "section_width": "full-width",
-        "thickness": 1,
-        "corner_radius": "rounded",
-        "width_percent": 11,
-        "alignment_horizontal": "center",
-        "padding-block-start": 1,
-        "padding-block-end": 1
+        "width": 150,
+        "color": "turquoise",
+        "padding_top": 24,
+        "padding_bottom": 24
       }
     },
     "bono_banner": {
@@ -1161,7 +1156,7 @@
     "brands_marquee",
     "trust_row",
     "carrusel_productos_w3cKLp",
-    "divider_zApW4A",
+    "culebrita_catalogo",
     "bono_banner",
     "section_qNjNr8",
     "testimonials_row",

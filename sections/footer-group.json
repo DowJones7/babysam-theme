@@ -262,6 +262,15 @@
         "padding-block-end": 0
       }
     },
+    "culebrita_footer": {
+      "type": "divider-culebrita",
+      "settings": {
+        "width": 150,
+        "color": "turquoise",
+        "padding_top": 24,
+        "padding_bottom": 24
+      }
+    },
     "footer_babysam": {
       "type": "footer-babysam",
       "blocks": {
@@ -349,6 +358,7 @@
   },
   "order": [
     "footer",
+    "culebrita_footer",
     "footer_babysam"
   ]
 }

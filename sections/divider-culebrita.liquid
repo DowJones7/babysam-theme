@@ -1,0 +1,115 @@
+{%- comment -%}
+  Separador "culebrita": línea ondulada corta y centrada entre secciones. Es el único separador
+  del sitio (sistema de diseño, assets/base.css); se agrega o se quita como sección desde el
+  Customizer, en el home o en el grupo del footer.
+  El color sale de los tokens (--bs-turquoise por defecto). El SVG se estira al ancho elegido y
+  `vector-effect: non-scaling-stroke` mantiene el grosor del trazo en cualquier ancho.
+{%- endcomment -%}
+
+{%- liquid
+  case section.settings.color
+    when 'crimson'
+      assign trazo = 'var(--bs-crimson)'
+    when 'soft'
+      assign trazo = 'var(--bs-turquoise-soft)'
+    else
+      assign trazo = 'var(--bs-turquoise)'
+  endcase
+-%}
+
+<div
+  class="culebrita"
+  style="--culebrita-width: {{ section.settings.width }}px; --culebrita-color: {{ trazo }}; --culebrita-pt: {{ section.settings.padding_top }}px; --culebrita-pb: {{ section.settings.padding_bottom }}px;"
+>
+  <svg
+    class="culebrita__svg"
+    viewBox="0 0 150 16"
+    preserveAspectRatio="none"
+    fill="none"
+    aria-hidden="true"
+    focusable="false"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path d="M3 8 Q 11 1 19 8 T 35 8 T 51 8 T 67 8 T 83 8 T 99 8 T 115 8 T 131 8 T 147 8" />
+  </svg>
+</div>
+
+{% stylesheet %}
+  .culebrita {
+    display: flex;
+    justify-content: center;
+    padding-block: var(--culebrita-pt) var(--culebrita-pb);
+    padding-inline: var(--page-margin, 16px);
+  }
+
+  .culebrita__svg {
+    display: block;
+    width: min(var(--culebrita-width), 100%);
+    height: 14px;
+    overflow: visible;
+  }
+
+  .culebrita__svg path {
+    stroke: var(--culebrita-color);
+    stroke-width: 3px;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Separador culebrita",
+  "tag": "div",
+  "class": "section culebrita-section",
+  "settings": [
+    {
+      "type": "range",
+      "id": "width",
+      "label": "Ancho",
+      "min": 80,
+      "max": 240,
+      "step": 10,
+      "unit": "px",
+      "default": 150
+    },
+    {
+      "type": "select",
+      "id": "color",
+      "label": "Color",
+      "options": [
+        { "value": "turquoise", "label": "Turquesa (títulos e íconos)" },
+        { "value": "soft", "label": "Turquesa suave" },
+        { "value": "crimson", "label": "Carmesí" }
+      ],
+      "default": "turquoise"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Espacio arriba",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Espacio abajo",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    }
+  ],
+  "presets": [
+    {
+      "name": "Separador culebrita"
+    }
+  ]
+}
+{% endschema %}
