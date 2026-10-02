@@ -18,6 +18,13 @@
   mapeo handle->campo y las mismas portadas que el carrusel del home. Si se
   agrega una categoría nueva: agregar su handle a `category_handles`, su
   campo al schema y su rama al `case`.
+
+  Fuente única (menú): si se elige un menú en "Menú de categorías"
+  (normalmente `catalogo`) y tiene links, la lista sale de ese menú, en su
+  orden — el mismo que usa el carrusel del home — y `category_handles` queda
+  solo de respaldo. Solo cuentan los links a colecciones publicadas. En modo
+  menú la foto es la imagen nativa de la colección (collection.image), con la
+  del `case` de respaldo; así una categoría nueva no requiere código.
 {% endcomment %}
 
 {% liquid
@@ -37,42 +44,64 @@
     role="list"
     style="--card-pattern-url: url('{{ 'backupd_catalogo.png' | file_img_url: '400x400' }}');"
   >
-    {%- for handle in category_handles -%}
-      {%- assign card_collection = collections[handle] -%}
+    {% liquid
+      assign catalogo_menu = linklists[section.settings.menu]
+      assign from_menu = false
+      assign card_items = category_handles
+      if section.settings.menu != blank and catalogo_menu.links.size > 0
+        assign from_menu = true
+        assign card_items = catalogo_menu.links
+      endif
+    %}
+    {%- for item in card_items -%}
+      {% liquid
+        if from_menu
+          if item.type != 'collection_link'
+            continue
+          endif
+          assign card_collection = item.object
+        else
+          assign card_collection = collections[item]
+        endif
+      %}
       {%- if card_collection == blank -%}
         {%- continue -%}
       {%- endif -%}
 
       {% liquid
         assign card_image = blank
-        case handle
-          when 'accesorios'
-            assign card_image = section.settings.image_accesorios
-          when 'coches'
-            assign card_image = section.settings.image_coches
-          when 'coleccion-mi-primer-dia'
-            assign card_image = section.settings.image_mi_primer_dia
-          when 'lenceria'
-            assign card_image = section.settings.image_lenceria
-          when 'panaleras-1'
-            assign card_image = section.settings.image_panaleras
-          when 'teteros'
-            assign card_image = section.settings.image_teteros
-          when 'cuidado-materno'
-            assign card_image = section.settings.image_cuidado_materno
-          when 'lactancia'
-            assign card_image = section.settings.image_lactancia
-          when 'aseo'
-            assign card_image = section.settings.image_aseo
-          when 'baneras'
-            assign card_image = section.settings.image_baneras
-          when 'gimnasios'
-            assign card_image = section.settings.image_gimnasios
-          when 'silla-de-carro'
-            assign card_image = section.settings.image_silla_de_carro
-          when 'sillas-mecedoras'
-            assign card_image = section.settings.image_sillas_mecedoras
-        endcase
+        if from_menu and card_collection.image != blank
+          assign card_image = card_collection.image
+        else
+          case card_collection.handle
+            when 'accesorios'
+              assign card_image = section.settings.image_accesorios
+            when 'coches'
+              assign card_image = section.settings.image_coches
+            when 'coleccion-mi-primer-dia'
+              assign card_image = section.settings.image_mi_primer_dia
+            when 'lenceria'
+              assign card_image = section.settings.image_lenceria
+            when 'panaleras-1'
+              assign card_image = section.settings.image_panaleras
+            when 'teteros'
+              assign card_image = section.settings.image_teteros
+            when 'cuidado-materno'
+              assign card_image = section.settings.image_cuidado_materno
+            when 'lactancia'
+              assign card_image = section.settings.image_lactancia
+            when 'aseo'
+              assign card_image = section.settings.image_aseo
+            when 'baneras'
+              assign card_image = section.settings.image_baneras
+            when 'gimnasios'
+              assign card_image = section.settings.image_gimnasios
+            when 'silla-de-carro'
+              assign card_image = section.settings.image_silla_de_carro
+            when 'sillas-mecedoras'
+              assign card_image = section.settings.image_sillas_mecedoras
+          endcase
+        endif
       %}
 
       {%- comment -%}
@@ -106,6 +135,7 @@
   "class": "section",
   "settings": [
     { "type": "text", "id": "title", "default": "Catálogo", "label": "Título" },
+    { "type": "link_list", "id": "menu", "label": "Menú de categorías", "info": "Elige el menú \"catalogo\" del admin, el mismo del carrusel del home. Si se deja vacío, se usa la lista fija del código." },
     {
       "type": "select",
       "id": "color_scheme",

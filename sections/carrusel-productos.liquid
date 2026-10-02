@@ -20,45 +20,77 @@
         role="list"
         style="--card-pattern-url: url('{{ 'backupd_catalogo.png' | file_img_url: '400x400' }}');"
       >
-        {%- for block in section.blocks -%}
+        {%- comment -%}
+          Fuente de las tarjetas: si la sección tiene un menú elegido ("Menú de
+          categorías", normalmente `catalogo`) y tiene links, el carrusel sale de
+          ese menú, en su orden — la misma fuente que /collections. Solo cuentan
+          los links a colecciones publicadas. Si no hay menú, se usan los bloques
+          de colección como antes.
+          Foto: en modo menú manda la imagen nativa de la colección
+          (collection.image) y la foto de los settings queda de respaldo; en
+          modo bloques se sigue usando solo la de los settings.
+        {%- endcomment -%}
+        {% liquid
+          assign catalogo_menu = linklists[section.settings.menu]
+          assign from_menu = false
+          assign card_items = section.blocks
+          if section.settings.menu != blank and catalogo_menu.links.size > 0
+            assign from_menu = true
+            assign card_items = catalogo_menu.links
+          endif
+        %}
+        {%- for item in card_items -%}
           {% liquid
+            if from_menu
+              if item.type != 'collection_link' or item.object == blank
+                continue
+              endif
+              assign card_collection = item.object
+            else
+              assign card_collection = item.settings.collection
+            endif
+
             assign card_image = blank
-            case block.settings.collection.handle
-              when 'accesorios'
-                assign card_image = section.settings.image_accesorios
-              when 'cobijas'
-                assign card_image = section.settings.image_cobijas
-              when 'coches'
-                assign card_image = section.settings.image_coches
-              when 'comedores'
-                assign card_image = section.settings.image_comedores
-              when 'coleccion-mi-primer-dia'
-                assign card_image = section.settings.image_mi_primer_dia
-              when 'lenceria'
-                assign card_image = section.settings.image_lenceria
-              when 'panaleras-1'
-                assign card_image = section.settings.image_panaleras
-              when 'teteros'
-                assign card_image = section.settings.image_teteros
-              when 'toallas'
-                assign card_image = section.settings.image_toallas
-              when 'cuidado-materno'
-                assign card_image = section.settings.image_cuidado_materno
-              when 'lactancia'
-                assign card_image = section.settings.image_lactancia
-              when 'aseo'
-                assign card_image = section.settings.image_aseo
-              when 'ajuares'
-                assign card_image = section.settings.image_ajuares
-              when 'baneras'
-                assign card_image = section.settings.image_baneras
-              when 'gimnasios'
-                assign card_image = section.settings.image_gimnasios
-              when 'silla-de-carro'
-                assign card_image = section.settings.image_silla_de_carro
-              when 'sillas-mecedoras'
-                assign card_image = section.settings.image_sillas_mecedoras
-            endcase
+            if from_menu and card_collection.image != blank
+              assign card_image = card_collection.image
+            else
+              case card_collection.handle
+                when 'accesorios'
+                  assign card_image = section.settings.image_accesorios
+                when 'cobijas'
+                  assign card_image = section.settings.image_cobijas
+                when 'coches'
+                  assign card_image = section.settings.image_coches
+                when 'comedores'
+                  assign card_image = section.settings.image_comedores
+                when 'coleccion-mi-primer-dia'
+                  assign card_image = section.settings.image_mi_primer_dia
+                when 'lenceria'
+                  assign card_image = section.settings.image_lenceria
+                when 'panaleras-1'
+                  assign card_image = section.settings.image_panaleras
+                when 'teteros'
+                  assign card_image = section.settings.image_teteros
+                when 'toallas'
+                  assign card_image = section.settings.image_toallas
+                when 'cuidado-materno'
+                  assign card_image = section.settings.image_cuidado_materno
+                when 'lactancia'
+                  assign card_image = section.settings.image_lactancia
+                when 'aseo'
+                  assign card_image = section.settings.image_aseo
+                when 'ajuares'
+                  assign card_image = section.settings.image_ajuares
+                when 'baneras'
+                  assign card_image = section.settings.image_baneras
+                when 'gimnasios'
+                  assign card_image = section.settings.image_gimnasios
+                when 'silla-de-carro'
+                  assign card_image = section.settings.image_silla_de_carro
+                when 'sillas-mecedoras'
+                  assign card_image = section.settings.image_sillas_mecedoras
+              endcase
+            endif
           %}
           {% liquid
             assign aos_step = forloop.index0 | modulo: 6
@@ -67,13 +99,13 @@
           <li
             id="Slide-{{ section.id }}-{{ forloop.index }}"
             class="collection-card-item"
-            {{ block.shopify_attributes }}
+            {% unless from_menu %}{{ item.shopify_attributes }}{% endunless %}
             role="listitem"
             data-aos="fade-up"
             data-aos-delay="{{ aos_delay }}"
           >
             {%- render 'card-collection',
-              card_collection: block.settings.collection,
+              card_collection: card_collection,
               card_image: card_image,
               media_aspect_ratio: section.settings.image_ratio,
               columns: section.settings.columns_desktop,
@@ -101,6 +133,7 @@
   "class": "section",
   "settings": [
     { "type": "text", "id": "title", "default": "Colecciones", "label": "Título" },
+    { "type": "link_list", "id": "menu", "label": "Menú de categorías", "info": "Elige el menú \"catalogo\" del admin: el carrusel y /collections muestran sus colecciones en el mismo orden. Si se deja vacío, se usan los bloques de colección." },
     {
       "type": "select",
       "id": "color_scheme",
