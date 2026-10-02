@@ -402,6 +402,7 @@
         },
         "collection_8JYgNR": {
           "type": "collection",
+          "disabled": true,
           "settings": {
             "collection": "coleccion-mi-primer-dia"
           }
@@ -540,7 +541,6 @@
     },
     "section_qNjNr8": {
       "type": "section",
-      "disabled": true,
       "blocks": {
         "group_pMBz9c": {
           "type": "group",
@@ -868,6 +868,7 @@
         "group_pMBz9c",
         "group_zc4yNL"
       ],
+      "disabled": true,
       "name": "t:names.large_logo",
       "settings": {
         "content_direction": "row",
@@ -951,6 +952,8 @@
       "name": "Testimonios",
       "settings": {
         "title": "Lo que dicen nuestras mamás y papás",
+        "articulo_resenas": "",
+        "titulo_form": "Cuéntanos tu experiencia",
         "color_scheme": "scheme-1"
       }
     },

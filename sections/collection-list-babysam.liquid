@@ -2,8 +2,9 @@
   Sección: collection-list-babysam
   -------------------------------------------------------------------------
   Página /collections (templates/list-collections.json). Muestra EXACTAMENTE
-  las 13 categorías del catálogo del home, en el mismo orden (las mismas del
-  footer). Fuera a propósito: Didácticos (jugueteria), cobijas, comedores,
+  las 12 categorías del catálogo del home, en el mismo orden (las mismas del
+  footer). Fuera a propósito: Didácticos (jugueteria), Corrales
+  (coleccion-mi-primer-dia), cobijas, comedores,
   toallas y ajuares (retiradas del sitio; las colecciones siguen existiendo),
   las duplicadas legacy (jugueteria-1, panaleras) y las fuera de alcance
   (bonos-de-regalo, caminadores, panales-premium) que sí listaría `collections`.
@@ -20,7 +21,7 @@
 {% endcomment %}
 
 {% liquid
-  assign category_handles = 'accesorios,coches,coleccion-mi-primer-dia,lenceria,panaleras-1,teteros,cuidado-materno,lactancia,aseo,baneras,gimnasios,silla-de-carro,sillas-mecedoras' | split: ','
+  assign category_handles = 'accesorios,coches,lenceria,panaleras-1,teteros,cuidado-materno,lactancia,aseo,baneras,gimnasios,silla-de-carro,sillas-mecedoras' | split: ','
 %}
 
 <div class="section-background color-{{ section.settings.color_scheme }}"></div>
